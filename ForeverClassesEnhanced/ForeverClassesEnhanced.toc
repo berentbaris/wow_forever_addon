@@ -1,0 +1,55 @@
+## Interface: 16001
+## Title: Forever Classes Enhanced
+## Version: 0.1.0
+## Author: Beba
+## Notes: Extra lore-based character classes for your WoW Forever run. Tracks challenge requirements as you level.
+## Category: Quests
+## IconTexture: Interface\Icons\INV_Misc_Book_09
+## X-Family: Mainline
+## X-Game: Camelot
+## SavedVariables: FCE_GlobalDB, FCE_AccountDB
+## SavedVariablesPerCharacter: FCE_CharDB
+
+ForeverCompat.lua
+APIProbe.lua
+FCE_Style.lua
+CharacterData.lua
+ClassPortraits.lua
+LoreData.lua
+SelectionUI.lua
+MinimapButtonStandalone.lua
+MinimapButtonBroker.lua
+RequirementsPanel.lua
+LevelAlert.lua
+EquipmentCheck.lua
+CuratedItems.lua
+ForbiddenAlert.lua
+ProfessionCheck.lua
+WeaponProficiencyCheck.lua
+TalentRequirements.lua
+TalentCheck.lua
+SelfFoundCheck.lua
+ZoneCheck.lua
+BehavioralCheck.lua
+ExplorerCheck.lua
+EventChallenges.lua
+ChallengeCheck.lua
+ItemSourceData.lua
+QuestCheck.lua
+QuestChainData.lua
+QuestJournal.lua
+CompanionCheck.lua
+HunterPetCheck.lua
+MountCheck.lua
+SettingsPanel.lua
+ProgressSummary.lua
+DoubtSystem.lua
+SavagerySystem.lua
+BrewmasterSystem.lua
+ElixirSystem.lua
+LevelUpSummary.lua
+GameplayTips.lua
+CatalogUI.lua
+AddonComm.lua
+AchievementSystem.lua
+ForeverClassesEnhanced.lua
