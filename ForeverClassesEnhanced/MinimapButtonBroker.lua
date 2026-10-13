@@ -8,7 +8,7 @@ local Broker = {}
 FCE.MinimapButtonBroker = Broker
 
 local OBJECT_NAME = "ForeverClassesEnhanced"
-local ICON_PATH = "Interface\\AddOns\\ForeverClassesEnhanced\\Textures\\minimap_cce"
+local ICON_PATH = "Interface\\AddOns\\ForeverClassesEnhanced\\Textures\\minimap_fce"
 
 local iconLibrary
 

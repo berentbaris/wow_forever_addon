@@ -56,7 +56,11 @@ end
 
 local function exists(path) return isFunc(G(path)) end
 local function secret(v) return C.IsSecret(v) end
-local function plain(v, fb) return C.Plain(v, fb or "<secret>") end
+-- nil stays nil (prints as "nil"); only real secrets become "<secret>"
+local function plain(v, fb)
+    if v == nil then return nil end
+    return C.Plain(v, fb or "<secret>")
+end
 local function s(v) return tostring(plain(v)) end
 
 local scratch = CreateFrame("Frame")
@@ -490,6 +494,9 @@ end)
 P("Pets", "Mount collection", "MOUNT requirements (Wolf, Skeletal horse, Ram, Frostsaber...)", function()
     if C_MountJournal and isFunc(C_MountJournal.GetMountIDs) and isFunc(C_MountJournal.GetMountInfoByID) then
         local ids = C_MountJournal.GetMountIDs() or {}
+        if #ids == 0 then
+            return INFO, "C_MountJournal exists but is empty — mounts are bag items on this client (Classic Era behaviour)"
+        end
         local collected = 0
         for _, id in ipairs(ids) do
             local isCollected = select(11, C_MountJournal.GetMountInfoByID(id))
