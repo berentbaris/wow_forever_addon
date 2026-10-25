@@ -2,7 +2,7 @@
 -- ForeverClassesEnhanced  —  Addon Communication  (v4)
 --
 -- Modelled after AutoLayer_Vanilla's proven pattern:
---   - Hidden custom channel "hce"
+--   - Hidden custom channel "fce"
 --   - Messages queued, sent only on hardware events (mouse/key)
 --     because SendChatMessage is protected in Classic 1.15.x
 --   - ChatFrame_RemoveChannel hides protocol traffic
@@ -16,7 +16,7 @@ FCE = FCE or {}
 local Comm = {}
 FCE.AddonComm = Comm
 
-local CHANNEL_NAME = "hce"
+local CHANNEL_NAME = "fce"
 local PROTO_TAG    = "FCE:"
 local CACHE_TTL    = 240        -- 4 min; generous AFK window since sends need hardware events
 
@@ -130,7 +130,71 @@ end
 ----------------------------------------------------------------------
 -- Channel management  (mirrors AutoLayer)
 ----------------------------------------------------------------------
-local function joinHCE()
+local LEGACY_CHANNEL = "hce"  -- pre-rename channel; leave it so it doesn't hold a channel slot
+
+-- Keep our channel numbered AFTER Blizzard's channels (General, Trade,
+-- LocalDefense, ...).  JoinChannelByName takes the lowest free number,
+-- so if we join before General auto-joins we land on /1 — and the
+-- client remembers that order.  We move ourselves down past every
+-- Blizzard server channel using the same swap the Chat Channels window
+-- uses for drag-reordering.  Other addons' custom channels are left
+-- alone (we only ever hop over Blizzard channels).
+local function serverChannelSet()
+    local set = {}
+    if EnumerateServerChannels then
+        for _, n in ipairs({ EnumerateServerChannels() }) do
+            if type(n) == "string" then set[n] = true end
+        end
+    end
+    -- Fallback names in case EnumerateServerChannels returns nothing
+    for _, n in ipairs({ "General", "Trade", "LocalDefense", "WorldDefense",
+                         "LookingForGroup", "GuildRecruitment" }) do
+        set[n] = true
+    end
+    return set
+end
+
+local function fixChannelOrder()
+    if not (C_ChatInfo and C_ChatInfo.SwapChatChannelsByChannelIndex) then return end
+    if InCombatLockdown and InCombatLockdown() then return end
+    local server = serverChannelSet()
+    for _ = 1, 10 do  -- bounded: at most one hop per Blizzard channel
+        local ours = GetChannelName(CHANNEL_NAME)
+        if not ours or ours == 0 then return end
+        -- find the next Blizzard channel numbered above ours
+        local list = { GetChannelList() }   -- id, name, disabled, id, name, ...
+        local nextServer
+        for i = 1, #list, 3 do
+            local id, name = list[i], list[i + 1]
+            local base = type(name) == "string" and name:match("^(%S+)") or nil
+            if type(id) == "number" and id > ours and base and server[base] then
+                if not nextServer or id < nextServer then nextServer = id end
+            end
+        end
+        if not nextServer then return end   -- already after all Blizzard channels
+        local ok = pcall(C_ChatInfo.SwapChatChannelsByChannelIndex, ours, nextServer)
+        if not ok then return end
+        dbg("moved channel /" .. ours .. " -> /" .. nextServer)
+    end
+end
+
+-- Re-check order whenever channels change (General/Trade often join
+-- after us).  Debounced so a burst of joins triggers one pass.
+local orderPending = false
+local function scheduleOrderFix()
+    if orderPending then return end
+    orderPending = true
+    C_Timer.After(1.0, function()
+        orderPending = false
+        fixChannelOrder()
+    end)
+end
+Comm.FixChannelOrder = fixChannelOrder
+
+local function joinCommChannel()
+    if LeaveChannelByName and GetChannelName(LEGACY_CHANNEL) and GetChannelName(LEGACY_CHANNEL) > 0 then
+        LeaveChannelByName(LEGACY_CHANNEL)
+    end
     JoinChannelByName(CHANNEL_NAME)
     local id = GetChannelName(CHANNEL_NAME)
     if id and id > 0 then
@@ -139,6 +203,7 @@ local function joinHCE()
             if cf then ChatFrame_RemoveChannel(cf, CHANNEL_NAME) end
         end
         dbg("Joined channel #" .. id)
+        scheduleOrderFix()
         return true
     end
     dbg("Join failed")
@@ -165,7 +230,7 @@ local function drainQueue()
 
     local id = GetChannelName(CHANNEL_NAME)
     if not id or id == 0 then
-        joinHCE()
+        joinCommChannel()
         id = GetChannelName(CHANNEL_NAME)
         if not id or id == 0 then return end
     end
@@ -584,7 +649,7 @@ end
 ----------------------------------------------------------------------
 function Comm.PrintStatus()
     local id = GetChannelName(CHANNEL_NAME) or 0
-    FCE.Print("|cffffd100HCE AddonComm Status:|r")
+    FCE.Print("|cffffd100FCE AddonComm Status:|r")
     FCE.Print("  Channel: " .. CHANNEL_NAME .. " #" .. tostring(id))
     FCE.Print("  My class: " .. tostring(getMyClassName() or "NONE"))
     FCE.Print("  My rank: " .. tostring(getMyRank()))
@@ -628,7 +693,7 @@ local function Init()
     local attempts = 0
     local function tryJoin()
         attempts = attempts + 1
-        if joinHCE() then
+        if joinCommChannel() then
             dbg("Channel OK on attempt " .. attempts)
         elseif attempts < 6 then
             C_Timer.After(5.0, tryJoin)
@@ -682,10 +747,14 @@ end
 
 frame:RegisterEvent("PLAYER_LOGIN")
 frame:RegisterEvent("CHAT_MSG_CHANNEL")
+frame:RegisterEvent("CHANNEL_UI_UPDATE")
+frame:RegisterEvent("CHAT_MSG_CHANNEL_NOTICE")
 
 frame:SetScript("OnEvent", function(self, event, ...)
     if event == "PLAYER_LOGIN" then
         Init()
+    elseif event == "CHANNEL_UI_UPDATE" or event == "CHAT_MSG_CHANNEL_NOTICE" then
+        scheduleOrderFix()
     elseif event == "CHAT_MSG_CHANNEL" then
         local msg, sender, _, _, _, _, _, _, channelName = ...
         onChannelMsg(msg, sender, channelName)

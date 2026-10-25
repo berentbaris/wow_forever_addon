@@ -642,6 +642,9 @@ end)
 
 shimmed("Chat", "ChatFrame_AddMessageEventFilter", "AddonComm chat tags", "ChatFrameUtil.AddMessageEventFilter")
 shimmed("Chat", "ChatFrame_RemoveChannel", "AddonComm hides its protocol channel", "ChatFrameUtil.RemoveChannel")
+needFunc("Chat", "C_ChatInfo.SwapChatChannelsByChannelIndex", "AddonComm keeps its channel after General/Trade (not on /1)", WARN,
+    "missing — the fce channel may land on /1 again")
+needFunc("Chat", "GetChannelList", "AddonComm channel ordering", WARN)
 needFunc("Chat", "DoEmote", "Voodoo Ritual (dance), Seeking a Pardon (kneel), The New Plague (cackle)")
 needFunc("Social", "C_PartyInfo.InviteUnit", "AddonComm invite button", WARN)
 needFunc("Social", "IsInGuild", "guild achievement announcements")
