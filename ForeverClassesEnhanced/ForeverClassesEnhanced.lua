@@ -98,7 +98,7 @@ local function TryAutoDetect()
         FCE.Print("Auto-detected your enhanced class: |cffffd100" .. char.name .. "|r (" .. char.spec .. " " .. char.class:sub(1,1) .. char.class:sub(2):lower() .. ")")
     else
         if FCE.CatalogUI and FCE.CatalogUI.ShowForPlayer then
-            C_Timer.After(0.5, FCE.CatalogUI.ShowForPlayer)
+            FCE.After("ForeverClassesEnhanced", 0.5, FCE.CatalogUI.ShowForPlayer)
         end
     end
 end
@@ -455,6 +455,22 @@ SlashCmdList["FCE"] = function(msg)
     elseif cmd == "compat" then
         if FCE.Compat and FCE.Compat.Report then FCE.Compat.Report() end
 
+    elseif cmd == "errors" then
+        local log = FCE_GlobalDB and FCE_GlobalDB.errorLog
+        local n = 0
+        if type(log) == "table" then for _ in pairs(log) do n = n + 1 end end
+        FCE.Print(n .. " distinct error(s) logged" .. (n > 0 and " \226\128\148 opening the report window" or ""))
+        local text = FCE.Compat.ErrorReport()
+        if FCE.APIProbe and FCE.APIProbe.ShowWindow then
+            FCE.APIProbe.ShowWindow(text)
+        else
+            for line in text:gmatch("[^\n]+") do FCE.Print(line) end
+        end
+
+    elseif cmd == "errors clear" then
+        if FCE_GlobalDB then FCE_GlobalDB.errorLog = {} end
+        FCE.Print("Error log cleared.")
+
     elseif cmd == "apitest" or cmd:find("^apitest ") then
         local sub = cmd:match("^apitest%s+(%S+)") or ""
         if FCE.APIProbe then
@@ -562,7 +578,7 @@ SlashCmdList["FCE"] = function(msg)
         if FCE.RefreshPanel then FCE.RefreshPanel() end
         -- Auto-open the catalog for the player's class
         if FCE.CatalogUI and FCE.CatalogUI.ShowForPlayer then
-            C_Timer.After(0.3, FCE.CatalogUI.ShowForPlayer)
+            FCE.After("ForeverClassesEnhanced", 0.3, FCE.CatalogUI.ShowForPlayer)
         end
 
     elseif cmd == "companion" or cmd == "pet" or cmd == "critter" then
@@ -964,7 +980,7 @@ local function AnnounceGroupJoin(retries)
     local count = (GetNumGroupMembers or GetNumPartyMembers or function() return 0 end)()
     if count < 2 then
         if retries < 10 then
-            C_Timer.After(2.0, function() AnnounceGroupJoin(retries + 1) end)
+            FCE.After("ForeverClassesEnhanced", 2.0, function() AnnounceGroupJoin(retries + 1) end)
         end
         return
     end
@@ -994,7 +1010,7 @@ eventFrame:SetScript("OnEvent", function(self, event, ...)
         -- Snapshot current group state so a /reload while already grouped
         -- doesn't trigger a false "just joined" announcement.
         FCE._wasInGroup = HCE_IsInGroup()
-        C_Timer.After(1.0, function()
+        FCE.After("ForeverClassesEnhanced", 1.0, function()
             TryAutoDetect()
             FCE.PrintWelcome()
         end)
@@ -1003,7 +1019,7 @@ eventFrame:SetScript("OnEvent", function(self, event, ...)
             FCE.Achieve.Init()
         end
         -- Language support check
-        C_Timer.After(4.0, function()
+        FCE.After("ForeverClassesEnhanced", 4.0, function()
             local locale = GetLocale()
             if locale ~= "enUS" and locale ~= "enGB" then
                 local f = CreateFrame("Frame", "FCE_LanguageWarning", UIParent, "BackdropTemplate")
@@ -1050,7 +1066,7 @@ eventFrame:SetScript("OnEvent", function(self, event, ...)
         if inGroup and not FCE._wasInGroup then
             -- Just joined a group - announce after a short delay
             FCE._wasInGroup = true  -- set immediately to prevent double-fire
-            C_Timer.After(2.0, function()
+            FCE.After("ForeverClassesEnhanced", 2.0, function()
                 AnnounceGroupJoin()
             end)
         elseif not inGroup then
@@ -1061,3 +1077,6 @@ eventFrame:SetScript("OnEvent", function(self, event, ...)
         -- Future: persist runtime state
     end
 end)
+
+-- Route event errors through the FCE error guard (ForeverCompat.lua)
+FCE.Compat.GuardScript(eventFrame, "OnEvent", "ForeverClassesEnhanced")

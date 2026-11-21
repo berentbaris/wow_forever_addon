@@ -222,7 +222,7 @@ local function CreateRitualFrame()
         print("|cff9933cc[FCE]|r |cffffcc00Voodoo Ritual complete!|r The spirits of Jintha'Alor acknowledge your dark dance.")
         f:Hide()
         if FCE.ChallengeCheck and FCE.ChallengeCheck.CheckAndWarn then
-            C_Timer.After(0.5, FCE.ChallengeCheck.CheckAndWarn)
+            FCE.After("EventChallenges", 0.5, FCE.ChallengeCheck.CheckAndWarn)
         end
     end)
     f.ritualBtn = btn
@@ -317,7 +317,7 @@ local function OnCombatLogEvent(sub, sourceGUID, sourceName, destGUID, destName,
             db.gnomishJustice = true
             print("|cffe6b422[FCE]|r |cffffcc00Gnomish Justice complete!|r Trade Master Kovic has been dealt with.")
             if FCE.ChallengeCheck and FCE.ChallengeCheck.CheckAndWarn then
-                C_Timer.After(0.5, FCE.ChallengeCheck.CheckAndWarn)
+                FCE.After("EventChallenges", 0.5, FCE.ChallengeCheck.CheckAndWarn)
             end
         end
     end
@@ -383,9 +383,9 @@ local function CompleteScarletRedemption()
     if redemptionFrame then redemptionFrame:Hide() end
     hadTabardAtChapel = false
     if FCE.ChallengeCheck and FCE.ChallengeCheck.CheckAndWarn then
-        C_Timer.After(0.5, FCE.ChallengeCheck.CheckAndWarn)
+        FCE.After("EventChallenges", 0.5, FCE.ChallengeCheck.CheckAndWarn)
     end
-    if FCE.RefreshPanel then C_Timer.After(0.6, FCE.RefreshPanel) end
+    if FCE.RefreshPanel then FCE.After("EventChallenges", 0.6, FCE.RefreshPanel) end
 end
 
 
@@ -635,7 +635,7 @@ local function CreatePlagueFrame()
         print("|cff44ff44[FCE]|r The Royal Apothecary Society's work is complete.")
         f:Hide()
         if FCE.ChallengeCheck and FCE.ChallengeCheck.CheckAndWarn then
-            C_Timer.After(0.5, FCE.ChallengeCheck.CheckAndWarn)
+            FCE.After("EventChallenges", 0.5, FCE.ChallengeCheck.CheckAndWarn)
         end
     end)
     f.plagueBtn = btn
@@ -765,7 +765,7 @@ local function OnPlagueshifterCombatLog(sub, destGUID, extraSpellID, extraSpellN
     if effective >= CLEANSE_REQUIRED then
         print("|cff55cc55[FCE]|r |cffffcc00Disease Cleansing complete!|r")
         if FCE.ChallengeCheck and FCE.ChallengeCheck.CheckAndWarn then
-            C_Timer.After(0.5, FCE.ChallengeCheck.CheckAndWarn)
+            FCE.After("EventChallenges", 0.5, FCE.ChallengeCheck.CheckAndWarn)
         end
     end
 end
@@ -869,7 +869,7 @@ local function installInsularHooks()
     local function afterLangChange()
         if isInsularActive() then
             if C_Timer and C_Timer.After then
-                C_Timer.After(0, enforceInsular)
+                FCE.After("EventChallenges", 0, enforceInsular)
             end
         end
     end
@@ -926,7 +926,7 @@ function EC.ResetInsular()
     if db then db.nativeTongueViolations = 0 end
     print("|cffe6b422[FCE]|r Insular violations reset.")
     if FCE.ChallengeCheck and FCE.ChallengeCheck.CheckAndWarn then
-        C_Timer.After(0.5, FCE.ChallengeCheck.CheckAndWarn)
+        FCE.After("EventChallenges", 0.5, FCE.ChallengeCheck.CheckAndWarn)
     end
 end
 
@@ -1131,7 +1131,7 @@ local function OnMasterTrainerCombatLog(sub, sourceGUID, spellID)
         db.masterTrainer = true
         print("|cffe6b422[FCE]|r |cffffcc00Master Trainer complete!|r Your pet has mastered all required abilities.")
         if FCE.ChallengeCheck and FCE.ChallengeCheck.CheckAndWarn then
-            C_Timer.After(0.5, FCE.ChallengeCheck.CheckAndWarn)
+            FCE.After("EventChallenges", 0.5, FCE.ChallengeCheck.CheckAndWarn)
         end
     end
 end
@@ -1209,7 +1209,7 @@ local function OnPardonQuestTurnedIn(questID)
         db.seekingPardon = true
         print("|cffe6b422[FCE]|r |cffffcc00Seeking a Pardon complete!|r You have earned your faction's trust.")
         if FCE.ChallengeCheck and FCE.ChallengeCheck.CheckAndWarn then
-            C_Timer.After(0.5, FCE.ChallengeCheck.CheckAndWarn)
+            FCE.After("EventChallenges", 0.5, FCE.ChallengeCheck.CheckAndWarn)
         end
     else
         -- Violation: turned in a quest before getting the pardon
@@ -1267,7 +1267,7 @@ local function OnAgnosticQuestTurnedIn(questID)
     db.agnostic = true
     print("|cffe6b422[FCE]|r |cffffcc00Agnostic complete!|r You may now use Holy spells.")
     if FCE.ChallengeCheck and FCE.ChallengeCheck.CheckAndWarn then
-        C_Timer.After(0.5, FCE.ChallengeCheck.CheckAndWarn)
+        FCE.After("EventChallenges", 0.5, FCE.ChallengeCheck.CheckAndWarn)
     end
 end
 
@@ -1331,7 +1331,7 @@ local function OnMasterSmelterCombatLog(sub, sourceGUID, spellID)
     db.masterSmelter = true
     print("|cffe6b422[FCE]|r |cffffcc00Master Smelter complete!|r You have smelted Dark Iron.")
     if FCE.ChallengeCheck and FCE.ChallengeCheck.CheckAndWarn then
-        C_Timer.After(0.5, FCE.ChallengeCheck.CheckAndWarn)
+        FCE.After("EventChallenges", 0.5, FCE.ChallengeCheck.CheckAndWarn)
     end
 end
 
@@ -1372,7 +1372,7 @@ local function OnXXXCombatLog(sub, destGUID)
     db.xxx = true
     print("|cffe6b422[FCE]|r |cffffcc00XXX complete!|r")
     if FCE.ChallengeCheck and FCE.ChallengeCheck.CheckAndWarn then
-        C_Timer.After(0.5, FCE.ChallengeCheck.CheckAndWarn)
+        FCE.After("EventChallenges", 0.5, FCE.ChallengeCheck.CheckAndWarn)
     end
 end
 
@@ -1490,7 +1490,7 @@ do
     end
 end
 ef:RegisterEvent("BAG_UPDATE")
-ef:RegisterEvent("UNIT_AURA")
+ef:RegisterUnitEvent("UNIT_AURA", "player")
 ef:RegisterEvent("CHAT_MSG_SAY")
 ef:RegisterEvent("CHAT_MSG_YELL")
 ef:RegisterEvent("QUEST_TURNED_IN")
@@ -1503,7 +1503,7 @@ end
 
 ef:SetScript("OnEvent", function(_, event, arg1, arg2, arg3)
     if event == "PLAYER_LOGIN" then
-        C_Timer.After(3, function()
+        FCE.After("EventChallenges", 3, function()
             RefreshChallengeCache()
             CreateRitualFrame()
             CreateRedemptionFrame()
@@ -1520,7 +1520,7 @@ ef:SetScript("OnEvent", function(_, event, arg1, arg2, arg3)
             installInsularHooks()
             enforceInsular()
             -- Periodic coordinate check for ritual UIs (cheap: early-returns when not in zone)
-            ritualTicker = C_Timer.NewTicker(2, UpdateAllFrames)
+            ritualTicker = FCE.NewTicker("EventChallenges", 2, UpdateAllFrames)
         end)
 
     elseif event == "ZONE_CHANGED_NEW_AREA"
@@ -1536,7 +1536,7 @@ ef:SetScript("OnEvent", function(_, event, arg1, arg2, arg3)
         if plagueFrame then UpdatePlagueFrame() end
 
     elseif event == "UNIT_AURA" then
-        if arg1 == "player" then
+        if arg1 == "player" and not FCE.Compat.AurasMayBeSecret() then
             if plagueFrame then UpdatePlagueFrame() end
             updateDiseaseList()
         end
@@ -1587,3 +1587,6 @@ ef:SetScript("OnEvent", function(_, event, arg1, arg2, arg3)
         end
     end
 end)
+
+-- Route event errors through the FCE error guard (ForeverCompat.lua)
+FCE.Compat.GuardScript(ef, "OnEvent", "EventChallenges")

@@ -622,7 +622,7 @@ function BC.OnDurabilityUpdate()
     if not merchantOpen then return end
     if not hasChallenge("Ephemeral") then return end
     -- Small delay so the durability values have settled
-    C_Timer.After(0.2, function()
+    FCE.After("BehavioralCheck", 0.2, function()
         if merchantOpen then
             BC.CheckForRepair()
         end
@@ -868,8 +868,12 @@ eventFrame:SetScript("OnEvent", function(_, event, ...)
             spellID = arg2
         end
 
+        spellID = FCE.Compat.Plain(spellID)
         if unit and spellID then
             BC.OnSpellCast(unit, nil, spellID)
         end
     end
 end)
+
+-- Route event errors through the FCE error guard (ForeverCompat.lua)
+FCE.Compat.GuardScript(eventFrame, "OnEvent", "BehavioralCheck")

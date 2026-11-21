@@ -398,10 +398,10 @@ eventFrame:SetScript("OnEvent", function(_, event, ...)
         -- Defer so CharacterData + SavedVariables are ready and the
         -- panel has a chance to build before we potentially call its
         -- refresh.
-        C_Timer.After(1.5, Alert.Check)
+        FCE.After("LevelAlert", 1.5, Alert.Check)
     elseif event == "PLAYER_LEVEL_UP" then
         -- UnitLevel isn't updated until after this frame.
-        C_Timer.After(0.15, Alert.Check)
+        FCE.After("LevelAlert", 0.15, Alert.Check)
     end
 end)
 
@@ -411,10 +411,13 @@ end)
 
 FCE.TestAlert = function()
     Alert.Toast("Equipment", "Flask trinkets", 50, true)
-    C_Timer.After(0.4, function()
+    FCE.After("LevelAlert", 0.4, function()
         Alert.Toast("Challenge", "Homebound", 20, false, "Homebound")
     end)
-    C_Timer.After(0.8, function()
+    FCE.After("LevelAlert", 0.8, function()
         Alert.Toast("Mount", "Self-made mechanostrider", 40, false)
     end)
 end
+
+-- Route event errors through the FCE error guard (ForeverCompat.lua)
+FCE.Compat.GuardScript(eventFrame, "OnEvent", "LevelAlert")

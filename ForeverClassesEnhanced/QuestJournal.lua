@@ -381,7 +381,7 @@ local function navigate(delta)
     PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON)
     selectedIdx = next
     Journal.LayoutSelected()
-    C_Timer.After(0, centerTrack)
+    FCE.After("QuestJournal", 0, centerTrack)
 end
 
 ----------------------------------------------------------------------
@@ -848,7 +848,7 @@ function Journal.Open(quests, results, theme)
             PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON)
             selectedIdx = idx
             Journal.LayoutSelected()
-            C_Timer.After(0, centerTrack)
+            FCE.After("QuestJournal", 0, centerTrack)
         end)
 
         node:Show()

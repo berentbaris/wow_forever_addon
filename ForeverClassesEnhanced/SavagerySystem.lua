@@ -121,7 +121,7 @@ local function OnTick()
         print("|cffff4444Savagery reached 0 %, you have failed the \"|cffffcc00"
             .. "Savagery" .. "|cffff4444\" challenge.|r")
         print("|cffff4444Type |cffffcc00/fce savagery reset|cffff4444 to reset.|r")
-        if FCE.RefreshPanel then C_Timer.After(0.3, FCE.RefreshPanel) end
+        if FCE.RefreshPanel then FCE.After("SavagerySystem", 0.3, FCE.RefreshPanel) end
     end
 
     Savagery.UpdateBar()
@@ -286,7 +286,7 @@ function Savagery.Init()
     Savagery.UpdateBar()
 
     if not ticker then
-        ticker = C_Timer.NewTicker(TICK_INTERVAL, OnTick)
+        ticker = FCE.NewTicker("SavagerySystem", TICK_INTERVAL, OnTick)
     end
 end
 
@@ -298,8 +298,11 @@ local ef = CreateFrame("Frame")
 ef:RegisterEvent("PLAYER_LOGIN")
 ef:SetScript("OnEvent", function(_, event)
     if event == "PLAYER_LOGIN" then
-        C_Timer.After(3.5, function()   -- slightly after doubt bar
+        FCE.After("SavagerySystem", 3.5, function()   -- slightly after doubt bar
             Savagery.Init()
         end)
     end
 end)
+
+-- Route event errors through the FCE error guard (ForeverCompat.lua)
+FCE.Compat.GuardScript(ef, "OnEvent", "SavagerySystem")

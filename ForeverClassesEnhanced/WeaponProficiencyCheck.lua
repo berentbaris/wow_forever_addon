@@ -396,25 +396,28 @@ eventFrame:SetScript("OnEvent", function(_, event, ...)
     end
 
     if event == "PLAYER_LOGIN" then
-        C_Timer.After(2.5, function()
+        FCE.After("WeaponProficiencyCheck", 2.5, function()
             WP.RunCheck()
             initialCheckDone = true
             if FCE.RefreshPanel then FCE.RefreshPanel() end
         end)
-        C_Timer.After(5.5, function()
+        FCE.After("WeaponProficiencyCheck", 5.5, function()
             WP.CheckAndWarn()
         end)
 
     elseif event == "SKILL_LINES_CHANGED" then
         if not initialCheckDone then return end
-        C_Timer.After(0.3, function()
+        FCE.After("WeaponProficiencyCheck", 0.3, function()
             WP.CheckAndWarn()
         end)
 
     elseif event == "PLAYER_LEVEL_UP" then
         if not initialCheckDone then return end
-        C_Timer.After(0.5, function()
+        FCE.After("WeaponProficiencyCheck", 0.5, function()
             WP.CheckAndWarn()
         end)
     end
 end)
+
+-- Route event errors through the FCE error guard (ForeverCompat.lua)
+FCE.Compat.GuardScript(eventFrame, "OnEvent", "WeaponProficiencyCheck")

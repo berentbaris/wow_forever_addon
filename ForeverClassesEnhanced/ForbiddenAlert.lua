@@ -419,7 +419,7 @@ end
 
 function FCE.TestForbiddenAlert()
     Forbid.Fire("No daggers", "Dagger equipped: Bloodspike — daggers are forbidden", true, true)
-    C_Timer.After(0.5, function()
+    FCE.After("ForbiddenAlert", 0.5, function()
         Forbid.Fire("Shield", "No shield in off-hand", false, false)
     end)
 end

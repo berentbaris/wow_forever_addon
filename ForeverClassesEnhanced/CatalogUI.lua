@@ -2591,7 +2591,7 @@ function Catalog.CommitSelection()
     panelWasShown = false  -- don't double-show via Catalog.Hide
     if frame then frame:Hide() end
     if FCE.ShowPanel then
-        C_Timer.After(0.3, function()
+        FCE.After("CatalogUI", 0.3, function()
             FCE.ShowPanel()
         end)
     end
@@ -2622,7 +2622,7 @@ function Catalog.Hide()
     if frame then frame:Hide() end
     -- Restore / open requirements panel after catalog closes
     if panelWasShown and FCE.ShowPanel then
-        C_Timer.After(0.3, FCE.ShowPanel)
+        FCE.After("CatalogUI", 0.3, FCE.ShowPanel)
     end
     panelWasShown = false
 end

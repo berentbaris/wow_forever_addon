@@ -197,6 +197,17 @@ local function getEquipSnapshot()
     return state
 end
 
+--- Real equipped gear only, never the transmog look.  For challenges
+--- about an item's quality or where it came from (transmog changes
+--- neither): quality challenges, Scavenger, Partisan, Expeditionary,
+--- Off-the-shelf.
+local function getRealSnapshot()
+    if FCE.EquipmentCheck and FCE.EquipmentCheck.Snapshot then
+        return FCE.EquipmentCheck.Snapshot(false)
+    end
+    return getEquipSnapshot()
+end
+
 ----------------------------------------------------------------------
 -- Armor slot set — slots where armor can be worn (excludes shirt,
 -- tabard, weapons, trinkets, rings, neck).  Used by quality and
@@ -246,7 +257,7 @@ end
 local QUALITY_EXEMPT = {
 }
 local function qualityGearCheck(badQualityFn, ruleName, isForgivable)
-    local state = getEquipSnapshot()
+    local state = getRealSnapshot()
     local violations = {}
     local checked = 0
 
@@ -868,7 +879,7 @@ R("Scavenger", function()
         return UNCHECKED, "Quest-reward item list not loaded"
     end
 
-    local state = getEquipSnapshot()
+    local state = getRealSnapshot()
     local violations = {}
     local checked = 0
 
@@ -915,7 +926,7 @@ R("Partisan", function()
         return UNCHECKED, "Loot-drop item list not loaded"
     end
 
-    local state = getEquipSnapshot()
+    local state = getRealSnapshot()
     local violations = {}
     local checked = 0
 
@@ -959,7 +970,7 @@ R("Expeditionary", function()
         return UNCHECKED, "Curated item list not loaded"
     end
 
-    local state = getEquipSnapshot()
+    local state = getRealSnapshot()
     local violations = {}
     local checked = 0
 
@@ -1006,7 +1017,7 @@ R("Off-the-shelf", function()
         return UNCHECKED, "Vendor-item list not loaded"
     end
 
-    local state = getEquipSnapshot()
+    local state = getRealSnapshot()
     local violations = {}
     local checked = 0
 
@@ -1976,6 +1987,9 @@ end)
 -- the current demon pet for a persistent self-buff.
 R("Demonic Sacrifice", function()
     local SPELL_ID = 18788
+    if FCE.Compat.AurasMayBeSecret() then
+        return UNCHECKED, "Buffs are hidden in combat \226\128\148 rechecks afterwards"
+    end
     -- Strategy 1: scan by spell ID (locale-safe)
     for i = 1, 40 do
         local name, _, _, _, _, _, _, _, _, spellID = UnitBuff("player", i)
@@ -2025,7 +2039,14 @@ function CC.CheckAll()
         elseif playerLevel >= ch.level then
             local rule = CC.FindRule(ch.desc)
             if rule then
-                local status, detail = rule()
+                -- Gear-based challenges: real gear OR transmog look passes
+                local EQ = FCE.EquipmentCheck
+                local status, detail
+                if EQ and EQ.EitherPasses then
+                    status, detail = EQ.EitherPasses(rule)
+                else
+                    status, detail = rule()
+                end
                 results[i] = { status = status, detail = detail, desc = ch.desc }
             else
                 results[i] = { status = UNCHECKED, detail = "No rule defined for this challenge", desc = ch.desc }
@@ -2185,13 +2206,13 @@ local initialCheckDone = false
 eventFrame:SetScript("OnEvent", function(_, event, ...)
     if event == "PLAYER_LOGIN" then
         -- Defer so SavedVariables + item cache are ready
-        C_Timer.After(2.5, function()
+        FCE.After("ChallengeCheck", 2.5, function()
             CC.RunCheck()
             initialCheckDone = true
             if FCE.RefreshPanel then FCE.RefreshPanel() end
         end)
         -- Second pass for uncached items
-        C_Timer.After(5.5, function()
+        FCE.After("ChallengeCheck", 5.5, function()
             CC.CheckAndWarn()
         end)
 
@@ -2199,7 +2220,7 @@ eventFrame:SetScript("OnEvent", function(_, event, ...)
         if not initialCheckDone then return end
         -- Quality, armor-type, and item-source challenges all react to
         -- equipment changes.
-        C_Timer.After(0.4, function()
+        FCE.After("ChallengeCheck", 0.4, function()
             CC.CheckAndWarn()
         end)
 
@@ -2208,7 +2229,7 @@ eventFrame:SetScript("OnEvent", function(_, event, ...)
         -- Imp / No demon challenges react to pet changes.
         local unit = ...
         if unit == "player" then
-            C_Timer.After(0.3, function()
+            FCE.After("ChallengeCheck", 0.3, function()
                 CC.CheckAndWarn()
             end)
         end
@@ -2218,7 +2239,7 @@ eventFrame:SetScript("OnEvent", function(_, event, ...)
         -- Homebound and zone-visit challenges react to zone changes.
         -- ZoneCheck.lua handles its own zone recording; we just need
         -- to re-evaluate challenge results here.
-        C_Timer.After(0.6, function()
+        FCE.After("ChallengeCheck", 0.6, function()
             CC.CheckAndWarn()
         end)
 
@@ -2228,9 +2249,12 @@ eventFrame:SetScript("OnEvent", function(_, event, ...)
         -- BehavioralCheck.lua, which handles its own warnings and
         -- forbidden-alert toasts.  We re-run the full challenge check
         -- here so the results table stays current for the panel.
-        C_Timer.After(0.5, function()
+        FCE.After("ChallengeCheck", 0.5, function()
             CC.RunCheck()
             if FCE.RefreshPanel then FCE.RefreshPanel() end
         end)
     end
 end)
+
+-- Route event errors through the FCE error guard (ForeverCompat.lua)
+FCE.Compat.GuardScript(eventFrame, "OnEvent", "ChallengeCheck")

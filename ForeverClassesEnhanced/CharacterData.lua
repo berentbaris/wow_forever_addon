@@ -135,7 +135,7 @@ FCE.Characters = {
 
     ["Sister of Steel_WARRIOR"] = {
         class       = "WARRIOR",
-        spec        = "Arms/Prot",
+        spec        = '"Sword & Board"',
         name        = "Sister of Steel",
         races       = { "Dwarf" },
         gender      = "Female",
@@ -219,7 +219,7 @@ FCE.Characters = {
 
     ["Mountain King_WARRIOR"] = {
         class       = "WARRIOR",
-        spec        = "Fury/Prot",
+        spec        = "Flurry",
         name        = "Mountain King",
         races       = { "Dwarf" },
         gender      = "Male",
@@ -257,7 +257,7 @@ FCE.Characters = {
 
     ["Tinker_WARRIOR"] = {
         class       = "WARRIOR",
-        spec        = "Mace",
+        spec        = '"Sword & Board"',
         name        = "Tinker",
         races       = { "Gnome" },
         gender      = "Any gender",
@@ -295,7 +295,7 @@ FCE.Characters = {
 
     ["Brewmaster_WARRIOR"] = {
         class       = "WARRIOR",
-        spec        = "Slam",
+        spec        = "Arms",
         name        = "Brewmaster",
         races       = { "Gnome", "Human", "Orc", "Tauren", "Troll", "Dwarf" },
         gender      = "Any gender",
@@ -358,7 +358,7 @@ FCE.Characters = {
 
     ["Barbarian_WARRIOR"] = {
         class       = "WARRIOR",
-        spec        = "Slam",
+        spec        = "Arms",
         name        = "Barbarian",
         races       = { "Human", "Orc", "Troll", "Undead" },
         gender      = "Any gender",
@@ -421,7 +421,7 @@ FCE.Characters = {
 
     ["Demon Hunter_WARRIOR"] = {
         class       = "WARRIOR",
-        spec        = "Sword",
+        spec        = "Flurry",
         name        = "Demon Hunter",
         races       = { "Night Elf" },
         gender      = "Any gender",
@@ -502,7 +502,7 @@ FCE.Characters = {
 
     ["Prospector_WARRIOR"] = {
         class       = "WARRIOR",
-        spec        = "Arms/Prot",
+        spec        = '"Sword & Board"',
         name        = "Prospector",
         races       = { "Dwarf" },
         gender      = "Any gender",
@@ -541,7 +541,7 @@ FCE.Characters = {
 
     ["Gladiator_WARRIOR"] = {
         class       = "WARRIOR",
-        spec        = "Flurry",
+        spec        = "Gore Drinker",
         name        = "Gladiator",
         races       = { "Orc", "Human" },
         gender      = "Any gender",
@@ -594,7 +594,7 @@ FCE.Characters = {
 
     ["Blademaster_WARRIOR"] = {
         class       = "WARRIOR",
-        spec        = "Sword",
+        spec        = "Arms",
         name        = "Blademaster",
         races       = { "Orc" },
         gender      = "Any gender",
@@ -635,7 +635,7 @@ FCE.Characters = {
 
     ["Berserker_WARRIOR"] = {
         class       = "WARRIOR",
-        spec        = "Fury/Prot",
+        spec        = "Gore Drinker",
         name        = "Berserker",
         races       = { "Troll" },
         gender      = "Any gender",
@@ -672,7 +672,7 @@ FCE.Characters = {
 
     ["Brave_WARRIOR"] = {
         class       = "WARRIOR",
-        spec        = "Polearm",
+        spec        = "Arms",
         name        = "Brave",
         races       = { "Tauren" },
         gender      = "Any gender",
@@ -772,7 +772,7 @@ FCE.Characters = {
 
     ["Death Knight_WARRIOR"] = {
         class       = "WARRIOR",
-        spec        = "Fury/Prot",
+        spec        = "Arms",
         name        = "Death Knight",
         races       = { "Undead" },
         gender      = "Any gender",
@@ -941,7 +941,7 @@ FCE.Characters = {
 
     ["Mountain King_ROGUE"] = {
         class       = "ROGUE",
-        spec        = "Mace",
+        spec        = "Combat",
         name        = "Mountain King",
         races       = { "Dwarf" },
         gender      = "Male",
@@ -1020,7 +1020,7 @@ FCE.Characters = {
 
     ["Runemaster_ROGUE"] = {
         class       = "ROGUE",
-        spec        = "Fist Combat",
+        spec        = "Combat",
         name        = "Runemaster",
         races       = { "Orc", "Dwarf" },
         gender      = "Any gender",
@@ -1074,7 +1074,7 @@ FCE.Characters = {
 
     ["Tinker_ROGUE"] = {
         class       = "ROGUE",
-        spec        = "Mace",
+        spec        = "Combat",
         name        = "Tinker",
         races       = { "Gnome" },
         gender      = "Any gender",
@@ -1109,7 +1109,7 @@ FCE.Characters = {
         mount       = nil,
         gameplay    = nil,
     },
-
+    --[[
     ["Dark Ranger_ROGUE"] = {
         class       = "ROGUE",
         spec        = "Ghost",
@@ -1199,10 +1199,10 @@ FCE.Characters = {
         mount       = nil,
         gameplay    = "bow kiting",
     },
-
+    --]]
     ["Warden_ROGUE"] = {
         class       = "ROGUE",
-        spec        = "Backstab/Poison",
+        spec        = "Ghost",
         name        = "Warden",
         races       = { "Night Elf" },
         gender      = "Female",
@@ -1238,7 +1238,7 @@ FCE.Characters = {
 
     ["Demon Hunter_ROGUE"] = {
         class       = "ROGUE",
-        spec        = "Sword",
+        spec        = "Combat",
         name        = "Demon Hunter",
         races       = { "Night Elf" },
         gender      = "Any gender",
@@ -1283,7 +1283,7 @@ FCE.Characters = {
 
     ["Buccaneer_ROGUE"] = {
         class       = "ROGUE",
-        spec        = "Backstab/Riposte",
+        spec        = "Backstab",
         name        = "Buccaneer",
         races       = { "Human", "Undead", "Gnome" },
         gender      = "Any gender",
@@ -1346,7 +1346,7 @@ FCE.Characters = {
 
     ["Berserker_ROGUE"] = {
         class       = "ROGUE",
-        spec        = "Ambush",
+        spec        = "Backstab",
         name        = "Berserker",
         races       = { "Troll" },
         gender      = "Any gender",
@@ -1367,7 +1367,7 @@ FCE.Characters = {
             E("Expeditionary", 1),
         },
         equipment   = {
-            E("Dagger and sword", 10),
+            E("Dual axes", 10),
             E("Thrown", 10),
             E("Thistle tea", 16),
         },
@@ -1440,7 +1440,7 @@ FCE.Characters = {
 
     ["Apothecary_ROGUE"] = {
         class       = "ROGUE",
-        spec        = "Backstab/Poison",
+        spec        = "Poison",
         name        = "Apothecary",
         races       = { "Undead" },
         gender      = "Any gender",
@@ -1490,7 +1490,7 @@ FCE.Characters = {
         mount       = nil,
         gameplay    = nil,
     },
-
+    --[[
     ["Elven Ranger_ROGUE"] = {
         class       = "ROGUE",
         spec        = "Ghost",
@@ -1535,7 +1535,7 @@ FCE.Characters = {
         mount       = nil,
         gameplay    = "bow kiting",
     },
-
+    --]]
     ---------- PALADIN ----------
 
     ["Templar_PALADIN"] = {

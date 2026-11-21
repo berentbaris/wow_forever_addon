@@ -80,6 +80,133 @@ function Compat.Equals(a, b)
 end
 
 ----------------------------------------------------------------------
+-- Error guard
+-- Event handlers and timers run through Compat.Guard: an error prints
+-- ONE chat line per distinct error per session (instead of Blizzard's
+-- error flood) and is saved to FCE_GlobalDB.errorLog for /fce errors.
+----------------------------------------------------------------------
+
+local MAX_LOGGED = 30
+local reportedThisSession = {}
+
+local function logError(where, err, stack, quiet)
+    local msg = tostring(err)
+    local key = where .. "|" .. msg
+    if FCE_GlobalDB then
+        local log = FCE_GlobalDB.errorLog
+        if type(log) ~= "table" then log = {}; FCE_GlobalDB.errorLog = log end
+        local e = log[key]
+        if e then
+            e.count = (e.count or 1) + 1
+            e.last = date("%Y-%m-%d %H:%M:%S")
+        else
+            local n = 0
+            for _ in pairs(log) do n = n + 1 end
+            if n < MAX_LOGGED then
+                log[key] = {
+                    where = where, msg = msg, stack = stack or "",
+                    count = 1, first = date("%Y-%m-%d %H:%M:%S"),
+                    last = date("%Y-%m-%d %H:%M:%S"),
+                    zone = GetRealZoneText and GetRealZoneText() or "",
+                    combat = (InCombatLockdown and InCombatLockdown()) and true or false,
+                }
+            end
+        end
+    end
+    if not reportedThisSession[key] then
+        reportedThisSession[key] = true
+        if quiet then return end
+        if DEFAULT_CHAT_FRAME then
+            DEFAULT_CHAT_FRAME:AddMessage("|cffff5555[FCE] error in " .. where .. ":|r "
+                .. msg:sub(1, 160) .. " |cff888888(/fce errors for details)|r")
+        end
+    end
+end
+
+local function pack(...) return { n = select("#", ...), ... } end
+
+function Compat.Guard(where, fn)
+    if type(fn) ~= "function" then return fn end
+    local function handler(err)
+        return { err = err, stack = debugstack and debugstack(2, 12, 0) or "" }
+    end
+    return function(...)
+        local args = pack(...)
+        local res = pack(xpcall(function() return fn(unpack(args, 1, args.n)) end, handler))
+        if res[1] then return unpack(res, 2, res.n) end
+        local e = res[2]
+        if type(e) == "table" then logError(where, e.err, e.stack) else logError(where, e) end
+    end
+end
+
+-- Catch what the guard can't see:
+--  * ADDON_ACTION_BLOCKED / FORBIDDEN naming FCE (Blizzard's "addon
+--    tried to call a protected function" dialog; not a Lua error)
+--  * Lua errors raised anywhere (Blizzard code tainted by FCE, other
+--    addons).  FCE-related ones print a chat line; others are logged quietly.
+local ADDON_FOLDER = "ForeverClassesEnhanced"
+do
+    local f = CreateFrame("Frame")
+    f:RegisterEvent("ADDON_ACTION_BLOCKED")
+    f:RegisterEvent("ADDON_ACTION_FORBIDDEN")
+    f:SetScript("OnEvent", function(_, event, addon, func)
+        if addon == ADDON_FOLDER or addon == "*** ForceTaint_Strong ***" then
+            logError(event, tostring(func) .. " (addon: " .. tostring(addon) .. ")",
+                debugstack and debugstack(2, 12, 0) or "")
+        end
+    end)
+
+    if geterrorhandler and seterrorhandler then
+        local prev = geterrorhandler()
+        seterrorhandler(function(msg, ...)
+            pcall(function()
+                local m = tostring(msg)
+                local stack = debugstack and debugstack(3, 15, 0) or ""
+                local ours = m:find(ADDON_FOLDER, 1, true) or stack:find(ADDON_FOLDER, 1, true)
+                logError(ours and "Lua error" or "Lua error (not FCE code)", m, stack, not ours)
+            end)
+            if prev then return prev(msg, ...) end
+        end)
+    end
+end
+
+--- Re-set a frame script through the guard.
+function Compat.GuardScript(frame, script, where)
+    if frame and frame.GetScript then
+        frame:SetScript(script, Compat.Guard(where, frame:GetScript(script)))
+    end
+end
+
+--- Guarded timers (use instead of C_Timer.After / NewTicker).
+function FCE.After(where, delay, fn)
+    return C_Timer.After(delay, Compat.Guard(where .. " (timer)", fn))
+end
+function FCE.NewTicker(where, interval, fn, iterations)
+    return C_Timer.NewTicker(interval, Compat.Guard(where .. " (ticker)", fn), iterations)
+end
+
+--- Saved errors as text (for /fce errors).
+function Compat.ErrorReport()
+    local log = FCE_GlobalDB and FCE_GlobalDB.errorLog
+    local L = { "Forever Classes Enhanced - error log" }
+    if type(log) ~= "table" or not next(log) then
+        L[#L + 1] = "(no errors logged)"
+        return table.concat(L, "\n")
+    end
+    local items = {}
+    for _, e in pairs(log) do items[#items + 1] = e end
+    table.sort(items, function(a, b) return (a.last or "") > (b.last or "") end)
+    for _, e in ipairs(items) do
+        L[#L + 1] = ""
+        L[#L + 1] = string.format("[%s] x%d  %s .. %s  zone: %s%s", e.where, e.count or 1,
+            e.first or "?", e.last or "?", e.zone or "?", e.combat and "  (in combat)" or "")
+        L[#L + 1] = e.msg
+        if e.stack and e.stack ~= "" then L[#L + 1] = e.stack end
+    end
+    return table.concat(L, "\n")
+end
+
+----------------------------------------------------------------------
 -- Spells
 ----------------------------------------------------------------------
 

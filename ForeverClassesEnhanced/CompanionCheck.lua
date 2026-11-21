@@ -5,7 +5,10 @@
 -- once they reach the required level.  Uses the "critter" unit
 -- token (available in WoW Classic for summoned non-combat pets).
 --
--- Detection strategy:
+-- On Forever companions are a C_PetJournal collection and the pet must
+-- be SUMMONED to pass; while dead / flying / mounted (and 20 s after)
+-- the last result is kept.
+-- Classic detection strategy:
 --   1. UnitExists("critter") + UnitName("critter") to identify the
 --      active companion by creature name.
 --   2. A mapping from the spreadsheet's short description ("Owl",
@@ -324,6 +327,97 @@ local function findCompanionItemInBags(itemIDs)
     return nil
 end
 
+----------------------------------------------------------------------
+-- Pet journal — Forever (companions are an account collection)
+--
+-- Accepted species come from the entry's item IDs via
+-- C_PetJournal.GetPetInfoByItemID (locale-independent), plus
+-- creatureNames via FindPetIDByName as a fallback.
+----------------------------------------------------------------------
+
+local function HasPetJournal()
+    return (C_PetJournal and C_PetJournal.GetSummonedPetGUID) and true or false
+end
+
+local speciesCache = {}   -- [companionKey] = { [speciesID] = name|true }
+
+local function AcceptedSpecies(key, entry)
+    if speciesCache[key] then return speciesCache[key] end
+    local set, complete = {}, true
+    if C_PetJournal.GetPetInfoByItemID then
+        for _, itemID in ipairs(entry.itemIDs or {}) do
+            local ok, name, _, _, _, _, _, _, _, _, _, _, _, speciesID
+                = pcall(C_PetJournal.GetPetInfoByItemID, itemID)
+            if ok and speciesID then
+                set[speciesID] = name or true
+            else
+                complete = false   -- item data may not be loaded yet
+            end
+        end
+    end
+    if C_PetJournal.FindPetIDByName then
+        for n in pairs(entry.creatureNames or {}) do
+            local ok, sid = pcall(C_PetJournal.FindPetIDByName, n)
+            if ok and sid then set[sid] = set[sid] or n end
+        end
+    end
+    if complete and next(set) then speciesCache[key] = set end
+    return set
+end
+
+local function SpeciesName(set, sid)
+    if type(set[sid]) == "string" then return set[sid] end
+    local ok, name = pcall(C_PetJournal.GetPetInfoBySpeciesID, sid)
+    return ok and name or ("species " .. sid)
+end
+
+--- Returns ownedName, summonedName, summonedOK, ownedList
+local function ScanPetJournal(key, entry)
+    local set = AcceptedSpecies(key, entry)
+    local ownedName, owned = nil, {}
+    if C_PetJournal.GetNumCollectedInfo then
+        for sid in pairs(set) do
+            local ok, n = pcall(C_PetJournal.GetNumCollectedInfo, sid)
+            if ok and (tonumber(n) or 0) > 0 then
+                local name = SpeciesName(set, sid)
+                ownedName = ownedName or name
+                owned[#owned + 1] = name
+            end
+        end
+    end
+    local summonedName, summonedOK
+    local okG, guid = pcall(C_PetJournal.GetSummonedPetGUID)
+    if okG and guid then
+        local ok, sid, customName, _, _, _, _, _, name = pcall(C_PetJournal.GetPetInfoByPetID, guid)
+        if ok and sid then
+            summonedName = name or customName or SpeciesName(set, sid)
+            summonedOK = set[sid] and true or false
+        end
+    end
+    return ownedName, summonedName, summonedOK, owned
+end
+
+----------------------------------------------------------------------
+-- Pause: the companion despawns when you die, take a flight path or
+-- (sometimes) mount up.  While that's the case, and for a short grace
+-- window after, the last result is kept instead of failing.
+----------------------------------------------------------------------
+
+local PAUSE_GRACE = 20      -- seconds after the pause ends
+local pausedUntil = 0
+
+local function companionPauseReason()
+    if UnitIsDeadOrGhost("player") then return "dead" end
+    if UnitOnTaxi and UnitOnTaxi("player") then return "flying" end
+    if IsFlying and IsFlying() then return "flying" end
+    if IsMounted and IsMounted() then return "mounted" end
+    return nil
+end
+
+function CC.StartGrace()
+    pausedUntil = math.max(pausedUntil, GetTime() + PAUSE_GRACE)
+end
+
 --- Main check routine.  Returns { status, detail, critterName, owned }
 function CC.RunCheck()
     if not FCE_CharDB or not FCE_CharDB.selectedCharacter then
@@ -365,6 +459,45 @@ function CC.RunCheck()
         }
         FCE_CharDB.companionResults = r
         return r
+    end
+
+    if HasPetJournal() then
+        -- Forever rule: the companion must be SUMMONED.  Owning it isn't enough.
+        local ownedName, summonedName, summonedOK = ScanPetJournal(companionKey, dbEntry)
+        local result = { critterName = summonedName, owned = ownedName and true or false }
+
+        local pause = companionPauseReason()
+        if pause then CC.StartGrace() end
+        local prev = FCE_CharDB.companionResults
+        if not summonedOK and (pause or GetTime() < pausedUntil)
+           and prev and prev.status == PASS then
+            return prev   -- pet despawned (death / flight / mount): keep the pass
+        end
+
+        if summonedOK then
+            result.status = PASS
+            result.detail = string.format("%s is summoned \226\128\148 correct companion!", summonedName)
+        elseif summonedName then
+            result.status = FAIL
+            result.detail = string.format("%s is out \226\128\148 wrong companion! Summon a %s.",
+                summonedName, companionKey)
+        elseif ownedName then
+            result.status = FAIL
+            result.detail = ownedName .. " collected but not summoned \226\128\148 summon it"
+        else
+            local itemID = findCompanionItemInBags(dbEntry.itemIDs)
+            if itemID then
+                result.ownedItemID = itemID
+                result.status = FAIL
+                result.detail = string.format("%s in bags (item %d) \226\128\148 use it to learn the pet, then summon it",
+                    GetItemInfo(itemID) or companionKey, itemID)
+            else
+                result.status = FAIL
+                result.detail = string.format("No %s companion collected. %s", companionKey, dbEntry.notes or "")
+            end
+        end
+        FCE_CharDB.companionResults = result
+        return result
     end
 
     -- PRIMARY CHECK: scan bags for a matching companion item
@@ -437,7 +570,7 @@ local function maybeWarn(result)
     end
 
     -- "You don't own one" — mention once
-    if not result.ownedItemID and not warnedNotOwned then
+    if not result.ownedItemID and not result.owned and not warnedNotOwned then
         warnedNotOwned = true
         local char = FCE.GetCharacter(FCE_CharDB.selectedCharacter)
         if char and char.companion then
@@ -475,7 +608,7 @@ local function startHeartbeat()
     if heartbeatHandle then return end
     -- C_Timer.NewTicker returns a handle; 60s interval, runs forever
     if C_Timer and C_Timer.NewTicker then
-        heartbeatHandle = C_Timer.NewTicker(60, heartbeat)
+        heartbeatHandle = FCE.NewTicker("CompanionCheck", 15, heartbeat)
     end
 end
 
@@ -514,7 +647,7 @@ function CC.PrintStatus()
         cprint("  Accepted creatures: " .. table.concat(
             (function()
                 local names = {}
-                for n in pairs(dbEntry.creatureNames) do
+                for n in pairs(dbEntry.creatureNames or {}) do
                     table.insert(names, n)
                 end
                 table.sort(names)
@@ -537,6 +670,13 @@ function CC.PrintStatus()
         cprint("  Status: |cffff5555" .. (result.detail or "FAIL") .. "|r")
     else
         cprint("  Status: |cffffaa33" .. (result.detail or "unchecked") .. "|r")
+    end
+
+    if dbEntry and HasPetJournal() then
+        local _, summonedName, _, owned = ScanPetJournal(char.companion.desc, dbEntry)
+        cprint("  Pet journal \226\128\148 collected matches: "
+            .. ((owned and #owned > 0) and table.concat(owned, ", ") or "none"))
+        cprint("  Summoned companion: " .. (summonedName or "none"))
     end
 
     -- Bag scan
@@ -569,6 +709,9 @@ eventFrame:RegisterEvent("UNIT_PET")
 -- COMPANION_UPDATE exists in some Classic builds; try to register it
 -- but don't error if it's absent.
 pcall(function() eventFrame:RegisterEvent("COMPANION_UPDATE") end)
+-- Forever: fires on companion summon/dismiss; loading screens despawn pets
+pcall(function() eventFrame:RegisterEvent("UPDATE_SUMMONPETS_ACTION") end)
+eventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 
 eventFrame:SetScript("OnEvent", function(self, event, ...)
     -- Only run if we have a character with a companion requirement
@@ -576,9 +719,15 @@ eventFrame:SetScript("OnEvent", function(self, event, ...)
     local char = FCE.GetCharacter and FCE.GetCharacter(FCE_CharDB.selectedCharacter)
     if not char or not char.companion then return end
 
+    if event == "PLAYER_ENTERING_WORLD" then
+        CC.StartGrace()   -- give the pet time to reappear after loading
+        return
+    end
+
     if event == "PLAYER_LOGIN" then
+        CC.StartGrace()
         -- Delay to let the critter spawn after login
-        C_Timer.After(3.0, function()
+        FCE.After("CompanionCheck", 3.0, function()
             local result = CC.RunCheck()
             maybeWarn(result)
             if FCE.RefreshPanel then FCE.RefreshPanel() end
@@ -587,15 +736,16 @@ eventFrame:SetScript("OnEvent", function(self, event, ...)
 
     elseif event == "PLAYER_LEVEL_UP" then
         -- Re-check in case the requirement just became active
-        C_Timer.After(1.0, function()
+        FCE.After("CompanionCheck", 1.0, function()
             local result = CC.RunCheck()
             maybeWarn(result)
             if FCE.RefreshPanel then FCE.RefreshPanel() end
         end)
 
-    elseif event == "COMPANION_UPDATE" or event == "UNIT_PET" then
+    elseif event == "COMPANION_UPDATE" or event == "UNIT_PET"
+        or event == "UPDATE_SUMMONPETS_ACTION" then
         -- Small delay for the game state to settle
-        C_Timer.After(0.5, function()
+        FCE.After("CompanionCheck", 0.5, function()
             local result = CC.RunCheck()
             -- On COMPANION_UPDATE/UNIT_PET, re-evaluate warnings
             -- since the player may have just summoned/dismissed
@@ -613,3 +763,6 @@ eventFrame:SetScript("OnEvent", function(self, event, ...)
         end)
     end
 end)
+
+-- Route event errors through the FCE error guard (ForeverCompat.lua)
+FCE.Compat.GuardScript(eventFrame, "OnEvent", "CompanionCheck")

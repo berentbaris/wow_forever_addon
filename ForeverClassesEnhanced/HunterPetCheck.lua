@@ -405,7 +405,7 @@ eventFrame:SetScript("OnEvent", function(self, event, ...)
     if classToken ~= "HUNTER" then return end
 
     if event == "PLAYER_LOGIN" then
-        C_Timer.After(3.0, function()
+        FCE.After("HunterPetCheck", 3.0, function()
             if char and char.pet then
                 local result = HP.RunCheck()
                 maybeWarn(result)
@@ -414,7 +414,7 @@ eventFrame:SetScript("OnEvent", function(self, event, ...)
         end)
 
     elseif event == "PLAYER_LEVEL_UP" then
-        C_Timer.After(1.0, function()
+        FCE.After("HunterPetCheck", 1.0, function()
             if char and char.pet then
                 local result = HP.RunCheck()
                 maybeWarn(result)
@@ -425,7 +425,7 @@ eventFrame:SetScript("OnEvent", function(self, event, ...)
     elseif event == "UNIT_PET" then
         local unit = ...
         if unit == "player" and char and char.pet then
-            C_Timer.After(0.5, function()
+            FCE.After("HunterPetCheck", 0.5, function()
                 local result = HP.RunCheck()
                 maybeWarn(result)
                 if FCE.RefreshPanel then FCE.RefreshPanel() end
@@ -433,3 +433,6 @@ eventFrame:SetScript("OnEvent", function(self, event, ...)
         end
     end
 end)
+
+-- Route event errors through the FCE error guard (ForeverCompat.lua)
+FCE.Compat.GuardScript(eventFrame, "OnEvent", "HunterPetCheck")

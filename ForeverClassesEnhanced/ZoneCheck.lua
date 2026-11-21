@@ -440,7 +440,7 @@ local zoneInitialized = false
 zoneFrame:SetScript("OnEvent", function(_, event)
     if event == "PLAYER_LOGIN" then
         -- Deferred so SavedVariables and C_Map are ready
-        C_Timer.After(3.0, function()
+        FCE.After("ZoneCheck", 3.0, function()
             ensureHomeboundData()
             ensureZoneData()
             ZC.RecordCurrentZone()
@@ -458,7 +458,7 @@ zoneFrame:SetScript("OnEvent", function(_, event)
     elseif event == "ZONE_CHANGED_NEW_AREA" or event == "ZONE_CHANGED" then
         if not zoneInitialized then return end
         -- Short delay so the C_Map data has settled after a zone transition
-        C_Timer.After(0.5, function()
+        FCE.After("ZoneCheck", 0.5, function()
             ZC.RecordCurrentZone()
 
             -- Recheck challenges (Homebound reacts to zone changes)
@@ -507,3 +507,6 @@ function ZC.PrintStatus()
         end
     end
 end
+
+-- Route event errors through the FCE error guard (ForeverCompat.lua)
+FCE.Compat.GuardScript(zoneFrame, "OnEvent", "ZoneCheck")

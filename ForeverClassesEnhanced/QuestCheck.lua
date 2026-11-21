@@ -212,7 +212,7 @@ eventFrame:SetScript("OnEvent", function(_, event, ...)
 
     if event == "PLAYER_LOGIN" then
         -- Initial check after a short delay so other systems are ready
-        C_Timer.After(2, function()
+        FCE.After("QuestCheck", 2, function()
             QC.RunCheck()
             if FCE.RefreshPanel then FCE.RefreshPanel() end
         end)
@@ -226,14 +226,17 @@ eventFrame:SetScript("OnEvent", function(_, event, ...)
             end
         end
         -- Re-check immediately
-        C_Timer.After(0.5, function()
+        FCE.After("QuestCheck", 0.5, function()
             QC.RunCheck()
             if FCE.RefreshPanel then FCE.RefreshPanel() end
         end)
     elseif event == "QUEST_LOG_UPDATE" then
         -- Throttle quest log updates to avoid spam
-        C_Timer.After(1, function()
+        FCE.After("QuestCheck", 1, function()
             QC.RunCheck()
         end)
     end
 end)
+
+-- Route event errors through the FCE error guard (ForeverCompat.lua)
+FCE.Compat.GuardScript(eventFrame, "OnEvent", "QuestCheck")

@@ -301,6 +301,43 @@ needFunc("Items", "PickupInventoryItem", "Scarlet Redemption (destroy the tabard
 needFunc("Items", "DeleteCursorItem", "Scarlet Redemption, The New Plague", WARN,
     "missing — Forever adds C_Item.DeleteItem; switch EventChallenges to it")
 
+P("Items", "Transmog appearance (C_Transmog)", "gear requirements passing via the transmog look", function()
+    if not (C_Transmog and isFunc(C_Transmog.GetSlotVisualInfo)) then
+        return INFO, "no C_Transmog.GetSlotVisualInfo — the transmog setting will have no effect"
+    end
+    local EQ = FCE.EquipmentCheck
+    if not (EQ and EQ.GetTransmogItemID) then return FAIL, "EquipmentCheck.GetTransmogItemID missing" end
+    local mogged, hidden, examples = 0, 0, {}
+    for slot = 1, 19 do
+        local real = GetInventoryItemID("player", slot)
+        local ok, mog = pcall(EQ.GetTransmogItemID, slot)
+        if not ok then return FAIL, "error reading slot " .. slot .. ": " .. s(mog) end
+        if mog == false then
+            hidden = hidden + 1
+        elseif mog and real and mog ~= real then
+            mogged = mogged + 1
+            if #examples < 3 then
+                examples[#examples + 1] = "slot " .. slot .. ": " .. s(C.GetItemInfo(real) or real)
+                    .. " -> " .. s(C.GetItemInfo(mog) or mog)
+            end
+        end
+    end
+    local detail = mogged .. " transmogged slot(s), " .. hidden .. " hidden"
+    -- Diagnostics for the main hand, so a miss shows which step failed
+    local O = C_TransmogOutfitInfo
+    local function try(f, ...) if not f then return "n/a" end local ok, v = pcall(f, ...) return ok and s(v) or "err" end
+    local _, odbg = EQ.ReadOutfitSlot(16)   -- also syncs the viewed outfit
+    detail = detail .. " | enabled=" .. try(O and O.IsTransmogEnabled)
+        .. " activeOutfit=" .. try(O and O.GetActiveOutfitID)
+        .. " viewedOutfit=" .. try(O and O.GetCurrentlyViewedOutfitID)
+        .. " | MH " .. s(odbg)
+    if #examples > 0 then detail = detail .. " — " .. table.concat(examples, "; ") end
+    if mogged == 0 and hidden == 0 then
+        return INFO, detail .. " (transmog a piece and rerun to verify)"
+    end
+    return OK, detail
+end)
+
 ----------------------------------------------------------------------
 -- 4. Spells & auras
 ----------------------------------------------------------------------
@@ -454,9 +491,17 @@ P("Skills", "Talents", "TALENTS section for every character, spec detection", fu
         return OK, "Classic talent API present"
     end
     if C_ClassTalents and isFunc(C_ClassTalents.GetActiveConfigID) and type(C_Traits) == "table" then
+        local okS, backend, n, pts = false
+        if FCE.TalentCheck and FCE.TalentCheck.ScanSummary then
+            okS, backend, n, pts = pcall(FCE.TalentCheck.ScanSummary)
+        end
+        if okS and backend and (n or 0) > 0 then
+            return OK, backend .. ": " .. n .. " talents read, points per tree "
+                .. pts[1] .. "/" .. pts[2] .. "/" .. pts[3]
+        end
         local ok, cfg = pcall(C_ClassTalents.GetActiveConfigID)
-        return FAIL, "Classic talent API missing; C_Traits present (configID " .. (ok and s(cfg) or "error")
-            .. "). TalentCheck needs a rewrite — run /fce apitest talents to dump the tree"
+        return FAIL, "C_Traits present (configID " .. (ok and s(cfg) or "error")
+            .. ") but TalentCheck read no talents — run /fce apitest talents and send the dump"
     end
     return FAIL, "no talent API found"
 end)
@@ -483,8 +528,8 @@ P("Pets", "Companion (vanity pet) detection", "COMPANION requirements", function
         local guid = C_PetJournal.GetSummonedPetGUID()
         if guid and isFunc(C_PetJournal.GetPetInfoByPetID) then
             local speciesID, _, _, _, _, _, _, name = C_PetJournal.GetPetInfoByPetID(guid)
-            return WARN, "'critter' unit is empty but the pet journal reports " .. s(name)
-                .. " (species " .. s(speciesID) .. ") — rewrite CompanionCheck on C_PetJournal"
+            return OK, "pet journal reports " .. s(name) .. " (species " .. s(speciesID)
+                .. ") — CompanionCheck reads C_PetJournal"
         end
         return SKIP, "no companion out. C_PetJournal is present (pets are an account collection on Forever) — summon one and rerun"
     end
@@ -502,8 +547,8 @@ P("Pets", "Mount collection", "MOUNT requirements (Wolf, Skeletal horse, Ram, Fr
             local isCollected = select(11, C_MountJournal.GetMountInfoByID(id))
             if isCollected then collected = collected + 1 end
         end
-        return WARN, "mounts are a journal collection (" .. collected .. "/" .. #ids
-            .. " collected) — MountCheck scans bags for mount items; rewrite on C_MountJournal"
+        return OK, "mount journal: " .. collected .. "/" .. #ids
+            .. " collected — MountCheck reads C_MountJournal"
     end
     return INFO, "no C_MountJournal — mounts are bag items like Classic"
 end)
@@ -927,7 +972,7 @@ live:SetScript("OnEvent", function(self, event, ...)
     elseif event == "UNIT_PET" then
         local unit = ...
         if unit ~= "player" then return end
-        C_Timer.After(0.5, function()
+        FCE.After("APIProbe", 0.5, function()
             if not UnitExists("pet") then return end
             local fam, name = UnitCreatureFamily("pet"), UnitName("pet")
             if secret(fam) or secret(name) then
@@ -951,3 +996,6 @@ function Probe.ArmLive()
     p("Live probes armed for " .. LIVE_SECONDS .. "s. Now: 1) cast any spell, 2) type /say hello, 3) summon your pet (hunter/warlock).")
     p("Then run /fce apitest again to see everything in one report.")
 end
+
+-- Route event errors through the FCE error guard (ForeverCompat.lua)
+FCE.Compat.GuardScript(live, "OnEvent", "APIProbe")

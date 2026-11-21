@@ -184,7 +184,7 @@ local orderPending = false
 local function scheduleOrderFix()
     if orderPending then return end
     orderPending = true
-    C_Timer.After(1.0, function()
+    FCE.After("AddonComm", 1.0, function()
         orderPending = false
         fixChannelOrder()
     end)
@@ -227,6 +227,9 @@ end
 
 local function drainQueue()
     if #sendQueue == 0 then return end
+    -- Forever restricts chat sends in instances / combat: keep the queue for later
+    if IsInInstance and IsInInstance() then return end
+    if InCombatLockdown and InCombatLockdown() then return end
 
     local id = GetChannelName(CHANNEL_NAME)
     if not id or id == 0 then
@@ -275,6 +278,8 @@ end
 -- Receive  (CHAT_MSG_CHANNEL handler)
 ----------------------------------------------------------------------
 local function onChannelMsg(msg, sender, channelName)
+    local C = FCE.Compat
+    if C.IsSecret(msg) or C.IsSecret(sender) or C.IsSecret(channelName) then return end
     if not channelName or channelName:lower() ~= CHANNEL_NAME then return end
     if not msg or msg:sub(1, #PROTO_TAG) ~= PROTO_TAG then return end
 
@@ -319,6 +324,8 @@ local TAG_EVENTS = {
 
 local function chatTagFilter(self, event, msg, sender, ...)
     if not msg or not sender then return false end
+    -- Forever: chat text / sender can be secret inside instances
+    if FCE.Compat.IsSecret(msg) or FCE.Compat.IsSecret(sender) then return false end
     local short = sender:match("^([^%-]+)") or sender
     local cls = Comm.GetPlayerClass(sender) or Comm.GetPlayerClass(short)
     if not cls then return false end
@@ -686,7 +693,7 @@ local function Init()
 
     -- Chat tag filters (NOT on CHAT_MSG_CHANNEL)
     for _, ev in ipairs(TAG_EVENTS) do
-        ChatFrame_AddMessageEventFilter(ev, chatTagFilter)
+        ChatFrame_AddMessageEventFilter(ev, FCE.Compat.Guard("AddonComm chat filter", chatTagFilter))
     end
 
     -- Join channel with retries
@@ -696,21 +703,21 @@ local function Init()
         if joinCommChannel() then
             dbg("Channel OK on attempt " .. attempts)
         elseif attempts < 6 then
-            C_Timer.After(5.0, tryJoin)
+            FCE.After("AddonComm", 5.0, tryJoin)
         end
     end
-    C_Timer.After(3.0, tryJoin)
+    FCE.After("AddonComm", 3.0, tryJoin)
 
     -- Queue initial broadcast after channel settles
-    C_Timer.After(10.0, queueHello)
+    FCE.After("AddonComm", 10.0, queueHello)
 
     -- Heartbeat every 30 sec
-    C_Timer.NewTicker(30, function()
+    FCE.NewTicker("AddonComm", 30, function()
         queueHello()
     end)
 
     -- Print online count every 5 min
-    C_Timer.NewTicker(300, function()
+    FCE.NewTicker("AddonComm", 300, function()
         local count = 0
         local now = GetTime()
         local seen = {}
@@ -732,16 +739,16 @@ local function Init()
     -- SendChatMessage is protected; it can only run inside a
     -- hardware-event callstack.  We drain the queue on every
     -- mouse click / key press, exactly like AutoLayer does.
-    C_Timer.After(1.0, function()
-        WorldFrame:HookScript("OnMouseDown", function()
+    FCE.After("AddonComm", 1.0, function()
+        WorldFrame:HookScript("OnMouseDown", FCE.Compat.Guard("AddonComm mouse hook", function()
             drainQueue()
-        end)
+        end))
     end)
 
     local keyFrame = CreateFrame("Frame", "HCE_KeyDrain", UIParent)
-    keyFrame:SetScript("OnKeyDown", function()
+    keyFrame:SetScript("OnKeyDown", FCE.Compat.Guard("AddonComm key hook", function()
         drainQueue()
-    end)
+    end))
     keyFrame:SetPropagateKeyboardInput(true)
 end
 
@@ -760,3 +767,6 @@ frame:SetScript("OnEvent", function(self, event, ...)
         onChannelMsg(msg, sender, channelName)
     end
 end)
+
+-- Route event errors through the FCE error guard (ForeverCompat.lua)
+FCE.Compat.GuardScript(frame, "OnEvent", "AddonComm")

@@ -2,7 +2,10 @@
 -- ForeverClassesEnhanced — Mount Tracking
 --
 -- At level 40+, verifies the player owns the correct mount species.
--- In WoW Classic, mounts are items carried in bags.  Detection uses:
+-- On Forever mounts live in C_MountJournal (account collection): a
+-- collected mount whose name matches the entry passes, and the active
+-- journal mount drives the wrong-mount warning.  In WoW Classic, mounts
+-- are items carried in bags.  Detection uses:
 --   1. Bag scanning to find mount items by item ID (primary)
 --   2. Bag scanning by item name patterns (fallback)
 --   3. Buff scanning when mounted (secondary verification)
@@ -52,6 +55,8 @@ local UNCHECKED = "unchecked"
 
 MC.MountDB = {
     ["Wolf"] = {
+        -- Forever mount journal: lowercase Lua patterns on the mount name
+        journalPatterns = { "wolf" },
         -- Item IDs: mount items carried in bags
         itemIDs = {
             [1132]  = true,   -- Horn of the Timber Wolf
@@ -77,6 +82,8 @@ MC.MountDB = {
     },
 
     ["Skeletal horse"] = {
+        -- Forever mount journal: lowercase Lua patterns on the mount name
+        journalPatterns = { "skeletal", "deathcharger" },
         itemIDs = {
             [13331] = true,   -- Red Skeletal Horse
             [13332] = true,   -- Blue Skeletal Horse
@@ -100,6 +107,8 @@ MC.MountDB = {
     },
 
     ["Horse"] = {
+        -- Forever mount journal: lowercase Lua patterns on the mount name
+        journalPatterns = { "horse", "stallion", "mare", "steed", "palomino", "pinto" }, journalExclude = { "skeletal" },
         itemIDs = {
             [5656] = true,   -- Brown Horse Bridle
             [18777] = true,   -- Blue Skeletal Horse
@@ -114,6 +123,8 @@ MC.MountDB = {
     },
 
     ["Ram"] = {
+        -- Forever mount journal: lowercase Lua patterns on the mount name
+        journalPatterns = { "%f[%a]ram%f[%A]" },
         itemIDs = {
             [5864]  = true,   -- Gray Ram
             [5872]  = true,   -- Brown Ram
@@ -138,6 +149,8 @@ MC.MountDB = {
     },
 
     ["Frostsaber"] = {
+        -- Forever mount journal: lowercase Lua patterns on the mount name
+        journalPatterns = { "frostsaber" },
         itemIDs = {
             [8631]  = true,   -- Reins of the Striped Frostsaber
             [8632]  = true,   -- Reins of the Spotted Frostsaber
@@ -154,6 +167,8 @@ MC.MountDB = {
     },
 
     ["Nightsaber"] = {
+        -- Forever mount journal: lowercase Lua patterns on the mount name
+        journalPatterns = { "nightsaber", "stormsaber" },
         itemIDs = {
             [8629]  = true,   -- Reins of the Striped Frostsaber
             [18902]  = true,   -- Reins of the Spotted Frostsaber        
@@ -358,6 +373,55 @@ local function matchesMountEntry(entry, buffName, spellID)
 end
 
 ----------------------------------------------------------------------
+-- Mount journal — Forever (mounts are an account collection, not items)
+--
+-- Matching is by mount NAME (buffNames exact, or journalPatterns),
+-- not spell ID: name matching is robust to Forever's spell remaps.
+----------------------------------------------------------------------
+
+local function HasMountJournal()
+    return (C_MountJournal and C_MountJournal.GetMountIDs
+        and C_MountJournal.GetMountInfoByID) and true or false
+end
+
+local function JournalNameMatches(entry, name)
+    if type(name) ~= "string" or name == "" then return false end
+    if entry.buffNames and entry.buffNames[name] then return true end
+    local lower = name:lower()
+    for _, p in ipairs(entry.journalExclude or {}) do
+        if lower:find(p) then return false end
+    end
+    for _, p in ipairs(entry.journalPatterns or {}) do
+        if lower:find(p) then return true end
+    end
+    return false
+end
+
+--- Scan the journal for one DB entry.
+--- Returns collectedMatchName, activeMountName, activeMatches, matches (list)
+local function ScanMountJournal(entry)
+    local ok, found, activeName, activeOK, matches = pcall(function()
+        local found, activeName, activeOK
+        local matches = {}
+        for _, id in ipairs(C_MountJournal.GetMountIDs() or {}) do
+            local name, _, _, isActive, _, _, _, _, _, _, isCollected
+                = C_MountJournal.GetMountInfoByID(id)
+            local match = JournalNameMatches(entry, name)
+            if isCollected and match then
+                found = found or name
+                matches[#matches + 1] = name
+            end
+            if isActive then
+                activeName, activeOK = name, match
+            end
+        end
+        return found, activeName, activeOK, matches
+    end)
+    if not ok then return nil end
+    return found, activeName, activeOK, matches
+end
+
+----------------------------------------------------------------------
 -- Core check
 ----------------------------------------------------------------------
 
@@ -399,6 +463,41 @@ function MC.RunCheck()
                 mountKey
             ),
         }
+        FCE_CharDB.mountResults = result
+        return result
+    end
+
+    if HasMountJournal() then
+        local result = {}
+        local found, activeName, activeOK = ScanMountJournal(dbEntry)
+        if found then
+            result.status = PASS
+            result.detail = found .. " collected"
+            result.itemName = found
+        else
+            -- An unlearned mount item still in bags counts too
+            local itemName, itemID = ScanBagsForMount(dbEntry)
+            if itemName then
+                result.status = PASS
+                result.detail = string.format("%s in bags (item %d) \226\128\148 use it to learn the mount", itemName, itemID or 0)
+                result.itemName, result.itemID = itemName, itemID
+            else
+                result.status = FAIL
+                result.detail = string.format("No %s mount collected. %s", mountKey, dbEntry.notes or "")
+            end
+        end
+        if activeName then
+            if activeOK then
+                result.status = PASS
+                result.detail = string.format("Riding %s \226\128\148 correct mount!", activeName)
+            elseif result.status == PASS then
+                result.status = FAIL
+                result.detail = string.format(
+                    "Riding %s \226\128\148 wrong mount! Your requirement is a %s.",
+                    activeName, mountKey)
+            end
+            result.buffName = activeName
+        end
         FCE_CharDB.mountResults = result
         return result
     end
@@ -522,6 +621,17 @@ function MC.PrintStatus()
         cprint("  |cffffaa33Not in mount database yet|r")
     end
 
+    if dbEntry and HasMountJournal() then
+        local _, activeName, _, matches = ScanMountJournal(dbEntry)
+        cprint("  --- Mount journal ---")
+        if matches and #matches > 0 then
+            cprint("  Collected matches: " .. table.concat(matches, ", "))
+        else
+            cprint("  No matching mount collected")
+        end
+        if activeName then cprint("  Active mount: " .. activeName) end
+    end
+
     -- Bag scan results
     cprint("  --- Bag scan ---")
     local allMounts = ScanAllMountItems()
@@ -566,7 +676,10 @@ local eventFrame = CreateFrame("Frame", "HCE_MountCheckFrame", UIParent)
 eventFrame:RegisterEvent("PLAYER_LOGIN")
 eventFrame:RegisterEvent("PLAYER_LEVEL_UP")
 eventFrame:RegisterEvent("BAG_UPDATE")
-eventFrame:RegisterEvent("UNIT_AURA")
+eventFrame:RegisterUnitEvent("UNIT_AURA", "player")
+-- Forever: journal events (pcall: not every client knows them)
+pcall(eventFrame.RegisterEvent, eventFrame, "NEW_MOUNT_ADDED")
+pcall(eventFrame.RegisterEvent, eventFrame, "PLAYER_MOUNT_DISPLAY_CHANGED")
 
 local bagUpdateThrottle = 0
 
@@ -576,14 +689,14 @@ eventFrame:SetScript("OnEvent", function(self, event, ...)
     if not char or not char.mount then return end
 
     if event == "PLAYER_LOGIN" then
-        C_Timer.After(3.0, function()
+        FCE.After("MountCheck", 3.0, function()
             local result = MC.RunCheck()
             maybeWarn(result)
             if FCE.RefreshPanel then FCE.RefreshPanel() end
         end)
 
     elseif event == "PLAYER_LEVEL_UP" then
-        C_Timer.After(1.0, function()
+        FCE.After("MountCheck", 1.0, function()
             local result = MC.RunCheck()
             maybeWarn(result)
             if FCE.RefreshPanel then FCE.RefreshPanel() end
@@ -594,15 +707,17 @@ eventFrame:SetScript("OnEvent", function(self, event, ...)
         local now = GetTime()
         if now - bagUpdateThrottle < 1.0 then return end
         bagUpdateThrottle = now
-        C_Timer.After(0.5, function()
+        FCE.After("MountCheck", 0.5, function()
             local result = MC.RunCheck()
             if FCE.RefreshPanel then FCE.RefreshPanel() end
         end)
 
-    elseif event == "UNIT_AURA" then
+    elseif event == "UNIT_AURA" or event == "NEW_MOUNT_ADDED"
+        or event == "PLAYER_MOUNT_DISPLAY_CHANGED" then
         local unit = ...
-        if unit == "player" then
-            C_Timer.After(0.3, function()
+        if event == "UNIT_AURA" and FCE.Compat.AurasMayBeSecret() then return end
+        if event ~= "UNIT_AURA" or unit == "player" then
+            FCE.After("MountCheck", 0.3, function()
                 local result = MC.RunCheck()
                 if IsMounted and IsMounted() then
                     maybeWarn(result)
@@ -614,3 +729,6 @@ eventFrame:SetScript("OnEvent", function(self, event, ...)
         end
     end
 end)
+
+-- Route event errors through the FCE error guard (ForeverCompat.lua)
+FCE.Compat.GuardScript(eventFrame, "OnEvent", "MountCheck")

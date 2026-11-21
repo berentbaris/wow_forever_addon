@@ -91,7 +91,7 @@ end
 local DRUNK_PATTERNS = { "tipsy", "drunk", "smashed", "inebriated", "sloshed", "buzzed" }
 
 local function isDrunkMessage(msg)
-    if not msg then return false end
+    if not msg or FCE.Compat.IsSecret(msg) then return false end
     local lower = msg:lower()
     for _, pat in ipairs(DRUNK_PATTERNS) do
         if lower:find(pat) then return true end
@@ -126,7 +126,7 @@ local function OnTick()
         hasFailed = true
         print("|cffff4444[FCE] Happy Hour expired! You failed to drink in time.|r")
         print("|cffff4444Type |cffffcc00/fce happyhour reset|cffff4444 to reset.|r")
-        if FCE.RefreshPanel then C_Timer.After(0.3, FCE.RefreshPanel) end
+        if FCE.RefreshPanel then FCE.After("BrewmasterSystem", 0.3, FCE.RefreshPanel) end
     end
 
     HappyHour.UpdateBar()
@@ -292,7 +292,7 @@ function HappyHour.Init()
     HappyHour.UpdateBar()
 
     if not ticker then
-        ticker = C_Timer.NewTicker(TICK_INTERVAL, OnTick)
+        ticker = FCE.NewTicker("BrewmasterSystem", TICK_INTERVAL, OnTick)
     end
 end
 
@@ -305,7 +305,7 @@ ef:RegisterEvent("PLAYER_LOGIN")
 ef:RegisterEvent("CHAT_MSG_SYSTEM")
 ef:SetScript("OnEvent", function(_, event, msg)
     if event == "PLAYER_LOGIN" then
-        C_Timer.After(3.5, function()
+        FCE.After("BrewmasterSystem", 3.5, function()
             HappyHour.Init()
         end)
     elseif event == "CHAT_MSG_SYSTEM" then
@@ -317,3 +317,6 @@ ef:SetScript("OnEvent", function(_, event, msg)
         end
     end
 end)
+
+-- Route event errors through the FCE error guard (ForeverCompat.lua)
+FCE.Compat.GuardScript(ef, "OnEvent", "BrewmasterSystem")

@@ -139,11 +139,200 @@ local ROBE_EQUIPLOC = "INVTYPE_ROBE"
 -- Equipment state snapshot
 ----------------------------------------------------------------------
 
+----------------------------------------------------------------------
+-- Transmog (Forever)
+-- A gear rule passes if EITHER the real equipped gear OR the transmog
+-- look passes it (see EQ.EitherPasses).  The "look" snapshot swaps each
+-- transmogged slot for its appearance item; a hidden appearance makes
+-- the slot count as empty.  Untransmogged slots are the same in both.
+----------------------------------------------------------------------
+
+local function transmogLocation(slotID)
+    if not (Enum and Enum.TransmogType) then return nil end
+    local tType = Enum.TransmogType.Appearance
+    local mod = (Enum.TransmogModification and Enum.TransmogModification.Main) or 0
+    if TransmogUtil and TransmogUtil.GetTransmogLocation then
+        local ok, loc = pcall(TransmogUtil.GetTransmogLocation, slotID, tType, mod)
+        if ok and loc then return loc end
+    end
+    if TransmogUtil and TransmogUtil.CreateTransmogLocation then
+        local ok, loc = pcall(TransmogUtil.CreateTransmogLocation, slotID, tType, mod)
+        if ok and loc then return loc end
+    end
+    if TransmogLocationMixin and CreateFromMixins then
+        local ok, loc = pcall(function()
+            local l = CreateFromMixins(TransmogLocationMixin)
+            l:Set(slotID, tType, mod)
+            return l
+        end)
+        if ok and loc then return loc end
+    end
+    return nil
+end
+
+local function sourceToItemID(sourceID)
+    if not sourceID or sourceID == 0 then return nil end
+    if C_Transmog and C_Transmog.GetItemIDForSource then
+        local ok, id = pcall(C_Transmog.GetItemIDForSource, sourceID)
+        if ok and id and id ~= 0 then return id end
+    end
+    if C_TransmogCollection and C_TransmogCollection.GetSourceInfo then
+        local ok, info = pcall(C_TransmogCollection.GetSourceInfo, sourceID)
+        if ok and type(info) == "table" and info.itemID then return info.itemID end
+    end
+    return nil
+end
+
+-- Inventory slot -> Enum.TransmogOutfitSlot, mapped by enum NAME.
+-- (GetTransmogOutfitSlotFromInventorySlot is off by one on Forever:
+-- it returned WeaponOffHand for the main hand.)
+local OUTFIT_SLOT_NAME = {
+    [1] = "Head", [3] = "ShoulderRight", [15] = "Back", [5] = "Chest",
+    [19] = "Tabard", [4] = "Body", [9] = "Wrist", [10] = "Hand",
+    [6] = "Waist", [7] = "Legs", [8] = "Feet",
+    [16] = "WeaponMainHand", [17] = "WeaponOffHand", [18] = "WeaponRanged",
+}
+local OUTFIT_SLOT_DEFAULT = {
+    Head = 0, ShoulderRight = 1, Back = 3, Chest = 4, Tabard = 5, Body = 6,
+    Wrist = 7, Hand = 8, Waist = 9, Legs = 10, Feet = 11,
+    WeaponMainHand = 12, WeaponOffHand = 13, WeaponRanged = 14,
+}
+
+local function outfitSlotFor(slotID)
+    local name = OUTFIT_SLOT_NAME[slotID]
+    if not name then return nil end
+    local E = Enum and Enum.TransmogOutfitSlot
+    return (E and E[name]) or OUTFIT_SLOT_DEFAULT[name]
+end
+
+-- Slot info is only exposed for the "viewed" outfit, which is 0 unless
+-- the transmog window has set it.  Point it at the active outfit
+-- (never while the player is at a transmogrifier, so the UI isn't disturbed).
+local viewedSyncDisabled = false
+local lastViewedSync = 0
+local function ensureViewedIsActive()
+    local O = C_TransmogOutfitInfo
+    if viewedSyncDisabled then return end
+    if not (O.GetActiveOutfitID and O.GetCurrentlyViewedOutfitID and O.ChangeViewedOutfit) then return end
+    -- Never in combat or inside instances (restricted there); at most every 10 s
+    if InCombatLockdown and InCombatLockdown() then return end
+    if IsInInstance and IsInInstance() then return end
+    if GetTime() - lastViewedSync < 10 then return end
+    if C_Transmog and C_Transmog.IsAtTransmogNPC then
+        local ok, at = pcall(C_Transmog.IsAtTransmogNPC)
+        if ok and at then return end
+    end
+    local okA, active = pcall(O.GetActiveOutfitID)
+    local okV, viewed = pcall(O.GetCurrentlyViewedOutfitID)
+    if okA and active and active ~= 0 and okV and viewed ~= active then
+        lastViewedSync = GetTime()
+        pcall(O.ChangeViewedOutfit, active)
+        local ok2, now = pcall(O.GetCurrentlyViewedOutfitID)
+        if not ok2 or now ~= active then
+            viewedSyncDisabled = true   -- didn't stick: stop trying this session
+        end
+    end
+end
+
+--- Forever / Midnight: transmog is slot-based ("outfits").
+--- Returns sourceID | false (hidden) | nil (shows equipped item / unknown), plus a debug string.
+function EQ.ReadOutfitSlot(slotID)
+    local O = C_TransmogOutfitInfo
+    if not (O and O.GetViewedOutfitSlotInfo) then
+        return nil, "no C_TransmogOutfitInfo"
+    end
+    local oSlot = outfitSlotFor(slotID)
+    if oSlot == nil then return nil, "no outfit slot" end
+    ensureViewedIsActive()
+    local option = 0
+    if O.GetEquippedSlotOptionFromTransmogSlot then
+        local ok2, opt = pcall(O.GetEquippedSlotOptionFromTransmogSlot, oSlot)
+        if ok2 and opt then option = opt end
+    end
+    local appearance = (Enum and Enum.TransmogType and Enum.TransmogType.Appearance) or 0
+    local ok3, info = pcall(O.GetViewedOutfitSlotInfo, oSlot, appearance, option)
+    if not ok3 or type(info) ~= "table" then
+        return nil, "slot " .. tostring(oSlot) .. " opt " .. tostring(option) .. ": no info"
+    end
+    local dbg = string.format("oslot %s opt %s display %s id %s mog %s",
+        tostring(oSlot), tostring(option), tostring(info.displayType),
+        tostring(info.transmogID), tostring(info.isTransmogrified))
+    local DT = Enum and Enum.TransmogOutfitDisplayType
+    local HIDDEN, ASSIGNED = (DT and DT.Hidden) or 3, (DT and DT.Assigned) or 1
+    if info.displayType == HIDDEN then return false, dbg end
+    if info.displayType == ASSIGNED and info.transmogID and info.transmogID ~= 0 then
+        return info.transmogID, dbg
+    end
+    return nil, dbg
+end
+
+--- Is transmog switched on for this player?  (nil = API unknown)
+function EQ.TransmogActive()
+    local O = C_TransmogOutfitInfo
+    if O and O.IsTransmogEnabled then
+        local ok, v = pcall(O.IsTransmogEnabled)
+        if ok then return v and true or false end
+    end
+    return nil
+end
+
+--- Appearance item in a slot.
+--- @return number|false|nil  itemID of the applied appearance; false if the
+---         appearance is hidden; nil if no transmog / API unavailable.
+function EQ.GetTransmogItemID(slotID)
+    if EQ.TransmogActive() == false then return nil end   -- player has transmog off
+
+    -- 1. Forever outfit system
+    local src = EQ.ReadOutfitSlot(slotID)
+    if src == false then return false end
+    if src then
+        local id = sourceToItemID(src)
+        if id then return id end
+    end
+
+    -- 2. Item-based transmog (pre-Midnight clients)
+    if C_Item and C_Item.GetAppliedItemTransmogInfo and ItemLocation and ItemLocation.CreateFromEquipmentSlot then
+        local ok, info = pcall(function()
+            return C_Item.GetAppliedItemTransmogInfo(ItemLocation:CreateFromEquipmentSlot(slotID))
+        end)
+        if ok and type(info) == "table" and info.appearanceID and info.appearanceID ~= 0 then
+            local id = sourceToItemID(info.appearanceID)
+            if id then return id end
+        end
+    end
+
+    -- 3. Slot visual info
+    if not (C_Transmog and C_Transmog.GetSlotVisualInfo) then return nil end
+    local loc = transmogLocation(slotID)
+    if not loc then return nil end
+    -- 12.x returns a struct; older clients return positional values
+    local ok, a, _, c, _, _, _, _, h = pcall(C_Transmog.GetSlotVisualInfo, loc)
+    if not ok or a == nil then return nil end
+    local applied, hidden
+    if type(a) == "table" then
+        applied, hidden = a.appliedSourceID, a.isHideVisual
+    else
+        applied, hidden = c, h
+    end
+    if hidden then return false end
+    return sourceToItemID(applied)
+end
+
 --- Read item info for a single inventory slot.
 --- @return table|nil  { id, name, link, quality, classID, subclassID, equipLoc, speed }
-local function readSlot(slotID)
-    local itemID = GetInventoryItemID("player", slotID)
-    if not itemID then return nil end
+local function readSlot(slotID, useMog)
+    local realID = GetInventoryItemID("player", slotID)
+    if not realID then return nil end
+
+    local itemID = realID
+    if useMog then
+        local mogID = EQ.GetTransmogItemID(slotID)
+        if mogID == false then return nil end          -- hidden: looks empty
+        if mogID and mogID ~= realID then
+            local mClass = select(12, GetItemInfo(mogID))
+            if mClass then itemID = mogID end          -- uncached: real item this pass
+        end
+    end
 
     local name, link, quality, _, _, itemType, itemSubType,
           _, equipLoc, _, _, classID, subclassID = GetItemInfo(itemID)
@@ -162,9 +351,11 @@ local function readSlot(slotID)
 
     -- Extract enchant ID from the item link.
     -- Classic item links: |Hitem:itemID:enchantID:...|h
+    -- (from the REAL item's instance link: enchants aren't transmogged)
     local enchantID = 0
-    if link then
-        local eID = link:match("|Hitem:%d+:(%d+)")
+    local realLink = GetInventoryItemLink("player", slotID)
+    if realLink then
+        local eID = realLink:match("|Hitem:%d+:(%d+)")
         enchantID = tonumber(eID) or 0
     end
 
@@ -179,20 +370,75 @@ local function readSlot(slotID)
         speed      = speed,
         enchantID  = enchantID,
         slotID     = slotID,
+        realID     = realID,
+        transmog   = (itemID ~= realID) or nil,
     }
 end
 
+-- Which snapshot EQ.Snapshot() returns: "real" gear or the transmog "mog"
+-- look.  Set only by EQ.EitherPasses.  Snapshots are cached per frame
+-- (GetTime() is constant within a frame) so evaluating every rule twice
+-- doesn't rescan the gear each time.
+EQ.snapshotMode = "real"
+local snapCache = {}
+local snapshotUsed = false
+
 --- Take a snapshot of all equipped items.
+--- @param useMog boolean|nil  true = transmog look; nil = current mode
 --- @return table  slotID -> item info table (only occupied slots)
-function EQ.Snapshot()
+function EQ.Snapshot(useMog)
+    if useMog == nil then useMog = (EQ.snapshotMode == "mog") end
+    snapshotUsed = true
+    local key, now = useMog and "mog" or "real", GetTime()
+    local c = snapCache[key]
+    if c and c.t == now then return c.state end
     local state = {}
     for name, id in pairs(SLOT) do
-        local info = readSlot(id)
+        local info = readSlot(id, useMog)
         if info then
             state[id] = info
         end
     end
+    snapCache[key] = { t = now, state = state }
     return state
+end
+
+--- Does any equipped slot show a different appearance (or a hidden one)?
+local mogCache = { t = -1 }
+function EQ.HasTransmog()
+    local now = GetTime()
+    if mogCache.t == now then return mogCache.v end
+    local v = false
+    if C_Transmog and C_Transmog.GetSlotVisualInfo then
+        for _, id in pairs(SLOT) do
+            local real = GetInventoryItemID("player", id)
+            if real then
+                local mog = EQ.GetTransmogItemID(id)
+                if mog == false or (mog and mog ~= real) then v = true break end
+            end
+        end
+    end
+    mogCache.t, mogCache.v = now, v
+    return v
+end
+
+--- Run a rule against the real gear; if it doesn't pass and the rule
+--- looked at gear while something is transmogged, run it again against
+--- the transmog look.  Either pass counts.
+function EQ.EitherPasses(fn)
+    snapshotUsed = false
+    EQ.snapshotMode = "real"
+    local status, detail = fn()
+    if status == "pass" or not snapshotUsed or not EQ.HasTransmog() then
+        return status, detail
+    end
+    EQ.snapshotMode = "mog"
+    local ok, s2, d2 = pcall(fn)
+    EQ.snapshotMode = "real"
+    if ok and s2 == "pass" then
+        return "pass", (d2 or "") .. " (transmog)"
+    end
+    return status, detail
 end
 
 ----------------------------------------------------------------------
@@ -2860,7 +3106,6 @@ function EQ.CheckAll()
     if not char then return results end
 
     local playerLevel = UnitLevel("player") or 1
-    local state = EQ.Snapshot()
 
     for i, eq in ipairs(FCE.GetCharEquipment(char)) do
         if eq.endLevel and playerLevel > eq.endLevel then
@@ -2870,7 +3115,9 @@ function EQ.CheckAll()
             -- This requirement is active — check it
             local rule = EQ.FindRule(eq.desc)
             if rule then
-                local status, detail = rule(state)
+                local status, detail = EQ.EitherPasses(function()
+                    return rule(EQ.Snapshot())
+                end)
                 results[i] = { status = status, detail = detail, desc = eq.desc }
             else
                 results[i] = { status = UNCHECKED, detail = "No rule defined for this requirement", desc = eq.desc }
@@ -2972,6 +3219,9 @@ local eventFrame = CreateFrame("Frame")
 eventFrame:RegisterEvent("PLAYER_LOGIN")
 eventFrame:RegisterEvent("PLAYER_EQUIPMENT_CHANGED")
 eventFrame:RegisterEvent("BAG_UPDATE")
+pcall(eventFrame.RegisterEvent, eventFrame, "TRANSMOGRIFY_SUCCESS")
+pcall(eventFrame.RegisterEvent, eventFrame, "TRANSMOG_DISPLAYED_OUTFIT_CHANGED")   -- Forever outfits
+pcall(eventFrame.RegisterEvent, eventFrame, "TRANSMOG_OUTFITS_CHANGED")
 
 -- Track whether we've done the initial check (defer until data is ready)
 local initialCheckDone = false
@@ -2981,20 +3231,21 @@ eventFrame:SetScript("OnEvent", function(_, event, ...)
         -- Defer so SavedVariables, CharacterData, and item cache are ready.
         -- GetItemInfo may return nil for uncached items on first login,
         -- so we do a second pass after a longer delay.
-        C_Timer.After(2.0, function()
+        FCE.After("EquipmentCheck", 2.0, function()
             EQ.RunCheck()
             initialCheckDone = true
             if FCE.RefreshPanel then FCE.RefreshPanel() end
         end)
         -- Second pass to catch any items that weren't cached
-        C_Timer.After(5.0, function()
+        FCE.After("EquipmentCheck", 5.0, function()
             EQ.CheckAndWarn()
         end)
 
-    elseif event == "PLAYER_EQUIPMENT_CHANGED" then
+    elseif event == "PLAYER_EQUIPMENT_CHANGED" or event == "TRANSMOGRIFY_SUCCESS"
+        or event == "TRANSMOG_DISPLAYED_OUTFIT_CHANGED" or event == "TRANSMOG_OUTFITS_CHANGED" then
         if not initialCheckDone then return end
         -- Small delay to let GetItemInfo cache the new item
-        C_Timer.After(0.3, function()
+        FCE.After("EquipmentCheck", 0.3, function()
             EQ.CheckAndWarn()
         end)
 
@@ -3003,9 +3254,12 @@ eventFrame:SetScript("OnEvent", function(_, event, ...)
         -- Bag contents changed — re-check bag-item requirements
         -- (herb pouch, jungle remedy, restoration potion).
         -- Use a slightly longer delay so rapid bag shuffles coalesce.
-        C_Timer.After(0.5, function()
+        FCE.After("EquipmentCheck", 0.5, function()
             EQ.RunCheck()
             if FCE.RefreshPanel then FCE.RefreshPanel() end
         end)
     end
 end)
+
+-- Route event errors through the FCE error guard (ForeverCompat.lua)
+FCE.Compat.GuardScript(eventFrame, "OnEvent", "EquipmentCheck")

@@ -455,13 +455,13 @@ eventFrame:SetScript("OnEvent", function(_, event, ...)
     if event == "PLAYER_LOGIN" then
         -- Defer so SavedVariables and CharacterData are ready,
         -- and the skill list has populated.
-        C_Timer.After(2.5, function()
+        FCE.After("ProfessionCheck", 2.5, function()
             PC.RunCheck()
             initialCheckDone = true
             if FCE.RefreshPanel then FCE.RefreshPanel() end
         end)
         -- Second pass to catch late-loading skill data
-        C_Timer.After(5.5, function()
+        FCE.After("ProfessionCheck", 5.5, function()
             PC.CheckAndWarn()
         end)
 
@@ -469,15 +469,18 @@ eventFrame:SetScript("OnEvent", function(_, event, ...)
         if not initialCheckDone then return end
         if scanningProfessions then return end  -- ignore events from our own ExpandSkillHeader
         -- Small delay to let the skill data settle
-        C_Timer.After(0.3, function()
+        FCE.After("ProfessionCheck", 0.3, function()
             PC.CheckAndWarn()
         end)
 
     elseif event == "PLAYER_LEVEL_UP" then
         if not initialCheckDone then return end
         -- Re-check on level up because the expected rank changes
-        C_Timer.After(0.5, function()
+        FCE.After("ProfessionCheck", 0.5, function()
             PC.CheckAndWarn()
         end)
     end
 end)
+
+-- Route event errors through the FCE error guard (ForeverCompat.lua)
+FCE.Compat.GuardScript(eventFrame, "OnEvent", "ProfessionCheck")

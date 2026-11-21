@@ -83,6 +83,17 @@ local function CheckSelfFoundBuff()
         return UNCHECKED, "UnitBuff API not available"
     end
 
+    -- Forever: game-rules API may report self-found directly
+    if C_GameRules and C_GameRules.IsSelfFoundAllowed then
+        local ok, sf = pcall(C_GameRules.IsSelfFoundAllowed)
+        if ok and sf == true then
+            return PASS, "Self-Found mode active"
+        end
+    end
+    if FCE.Compat.AurasMayBeSecret() then
+        return UNCHECKED, "Buffs are hidden in combat \226\128\148 rechecks afterwards"
+    end
+
     -- Strategy 1: check by spell ID (locale-independent)
     for i = 1, 40 do
         local name, _, _, _, _, _, _, _, _, spellID = UnitBuff("player", i)
@@ -760,7 +771,7 @@ end
 
 local eventFrame = CreateFrame("Frame")
 eventFrame:RegisterEvent("PLAYER_LOGIN")
-eventFrame:RegisterEvent("UNIT_AURA")
+eventFrame:RegisterUnitEvent("UNIT_AURA", "player")
 eventFrame:RegisterEvent("PLAYER_EQUIPMENT_CHANGED")
 eventFrame:RegisterEvent("PLAYER_LEVEL_UP")
 
@@ -769,13 +780,13 @@ local initialCheckDone = false
 eventFrame:SetScript("OnEvent", function(_, event, ...)
     if event == "PLAYER_LOGIN" then
         -- Defer so SavedVariables and CharacterData are ready
-        C_Timer.After(3.0, function()
+        FCE.After("SelfFoundCheck", 3.0, function()
             SF.RunCheck()
             initialCheckDone = true
             if FCE.RefreshPanel then FCE.RefreshPanel() end
         end)
         -- Second pass to fire warnings after everything settled
-        C_Timer.After(6.0, function()
+        FCE.After("SelfFoundCheck", 6.0, function()
             SF.CheckAndWarn()
         end)
 
@@ -783,22 +794,26 @@ eventFrame:SetScript("OnEvent", function(_, event, ...)
         local unit = ...
         if unit ~= "player" then return end
         if not initialCheckDone then return end
+        if FCE.Compat.AurasMayBeSecret() then return end
         -- Re-check self-found buff when auras change
-        C_Timer.After(0.3, function()
+        FCE.After("SelfFoundCheck", 0.3, function()
             SF.CheckAndWarn()
         end)
 
     elseif event == "PLAYER_EQUIPMENT_CHANGED" then
         if not initialCheckDone then return end
         -- Re-check self-made items when gear changes
-        C_Timer.After(0.5, function()
+        FCE.After("SelfFoundCheck", 0.5, function()
             SF.CheckAndWarn()
         end)
 
     elseif event == "PLAYER_LEVEL_UP" then
         if not initialCheckDone then return end
-        C_Timer.After(0.5, function()
+        FCE.After("SelfFoundCheck", 0.5, function()
             SF.CheckAndWarn()
         end)
     end
 end)
+
+-- Route event errors through the FCE error guard (ForeverCompat.lua)
+FCE.Compat.GuardScript(eventFrame, "OnEvent", "SelfFoundCheck")

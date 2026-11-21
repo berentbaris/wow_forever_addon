@@ -15,7 +15,8 @@
 -- works directly on English clients.  On non-English clients, a
 -- match failure returns UNCHECKED rather than a false FAIL.
 --
--- WoW Classic talent API (1.15.x):
+-- On Forever the Classic API is gone; talents come from C_Traits
+-- (see ScanTalents).  WoW Classic talent API (1.15.x):
 --   GetNumTalentTabs()                → 3
 --   GetTalentTabInfo(tabIndex)        → name, texture, pointsSpent, …
 --   GetNumTalents(tabIndex)           → count
@@ -91,41 +92,135 @@ local SPEC_TAB = {
 }
 
 ----------------------------------------------------------------------
--- Talent cache — populated by scanning GetTalentInfo at runtime
+-- Talent reading — two backends behind one cache
+--
+-- Classic API (GetTalentInfo) when present; otherwise Forever's
+-- C_Traits.  Forever puts all three specs in ONE trait tree laid out
+-- side by side, so tabs 1/2/3 are recovered from node x positions
+-- (split at the two widest gaps).  If a client ever returns three
+-- separate trees, tree order is used instead.
 ----------------------------------------------------------------------
 
-local talentCache = {}   -- [tab][lower_name] = { index, rank, maxRank, tier, col, name }
+local GetSpellInfo = FCE.Compat.GetSpellInfo  -- Forever API shims (ForeverCompat.lua)
+
+local talentCache = {}   -- [tab][lower_name] = { rank, maxRank, name }
+local talentPoints = { 0, 0, 0 }
+local talentTotal  = 0
+local usingTraits  = false
+
+local function HasClassicTalentAPI()
+    return (GetNumTalents and GetTalentInfo) and true or false
+end
+
+local function HasTraitsAPI()
+    return (C_ClassTalents and C_ClassTalents.GetActiveConfigID
+        and C_Traits and C_Traits.GetConfigInfo) and true or false
+end
+
+local function AssignTabsByX(nodes)
+    local xs = {}
+    for _, n in ipairs(nodes) do xs[#xs + 1] = n.x end
+    table.sort(xs)
+    if #xs < 3 then
+        for _, n in ipairs(nodes) do n.tab = 1 end
+        return
+    end
+    local g1, g2
+    local function gap(i) return xs[i + 1] - xs[i] end
+    for i = 1, #xs - 1 do
+        if not g1 or gap(i) > gap(g1) then
+            g2, g1 = g1, i
+        elseif not g2 or gap(i) > gap(g2) then
+            g2 = i
+        end
+    end
+    local lo, hi = math.min(g1, g2), math.max(g1, g2)
+    local cutA = (xs[lo] + xs[lo + 1]) / 2
+    local cutB = (xs[hi] + xs[hi + 1]) / 2
+    for _, n in ipairs(nodes) do
+        n.tab = (n.x < cutA) and 1 or ((n.x < cutB) and 2 or 3)
+    end
+end
+
+local function ReadTraitNodes()
+    local ok, res = pcall(function()
+        local out = {}
+        local configID = C_ClassTalents.GetActiveConfigID()
+        if not configID then return out end
+        local cfg = C_Traits.GetConfigInfo(configID)
+        local trees = (cfg and cfg.treeIDs) or {}
+        for ti, treeID in ipairs(trees) do
+            for _, nodeID in ipairs(C_Traits.GetTreeNodes(treeID) or {}) do
+                local node = C_Traits.GetNodeInfo(configID, nodeID)
+                if node and node.ID and node.ID ~= 0 then
+                    local entryID = (node.activeEntry and node.activeEntry.entryID)
+                        or (node.entryIDs and node.entryIDs[1])
+                    local name
+                    if entryID then
+                        local e = C_Traits.GetEntryInfo(configID, entryID)
+                        local d = e and e.definitionID and C_Traits.GetDefinitionInfo(e.definitionID)
+                        local spellID = d and (d.spellID or d.overriddenSpellID)
+                        if spellID then name = GetSpellInfo(spellID) end
+                        name = name or (d and d.overrideName)
+                    end
+                    if type(name) == "string" and name ~= "" then
+                        out[#out + 1] = {
+                            name      = name,
+                            rank      = tonumber(node.activeRank or node.currentRank) or 0,
+                            maxRank   = tonumber(node.maxRanks) or 0,
+                            x         = tonumber(node.posX) or 0,
+                            treeIndex = ti,
+                        }
+                    end
+                end
+            end
+        end
+        if #trees >= 3 then
+            for _, n in ipairs(out) do n.tab = math.min(n.treeIndex, 3) end
+        else
+            AssignTabsByX(out)
+        end
+        return out
+    end)
+    return ok and res or nil
+end
 
 local function ScanTalents()
-    talentCache = {}
-    if not GetNumTalents or not GetTalentInfo then return end
-    for tab = 1, 3 do
-        talentCache[tab] = {}
-        local n = GetNumTalents(tab) or 0
-        for i = 1, n do
-            local name, _, tier, col, rank, maxRank = GetTalentInfo(tab, i)
-            if name and name ~= "" then
-                talentCache[tab][name:lower()] = {
-                    index   = i,
-                    rank    = rank or 0,
-                    maxRank = maxRank or 0,
-                    tier    = tier or 0,
-                    col     = col or 0,
-                    name    = name,
-                }
+    talentCache  = { {}, {}, {} }
+    talentPoints = { 0, 0, 0 }
+    talentTotal  = 0
+    usingTraits  = false
+
+    if HasClassicTalentAPI() then
+        for tab = 1, 3 do
+            local n = GetNumTalents(tab) or 0
+            for i = 1, n do
+                local name, _, _, _, rank, maxRank = GetTalentInfo(tab, i)
+                rank = tonumber(rank) or 0
+                if name and name ~= "" then
+                    talentCache[tab][name:lower()] = { rank = rank, maxRank = maxRank or 0, name = name }
+                end
+                talentPoints[tab] = talentPoints[tab] + rank
             end
+            talentTotal = talentTotal + talentPoints[tab]
+        end
+    elseif HasTraitsAPI() then
+        usingTraits = true
+        for _, n in ipairs(ReadTraitNodes() or {}) do
+            local tab = n.tab or 1
+            talentCache[tab][n.name:lower()] = { rank = n.rank, maxRank = n.maxRank, name = n.name }
+            talentPoints[tab] = talentPoints[tab] + n.rank
+            talentTotal = talentTotal + n.rank
         end
     end
 end
 
 local function FindTalent(tab, englishName)
     local key = englishName:lower()
-    -- Try the specified tab first
     if talentCache[tab] and talentCache[tab][key] then
         return talentCache[tab][key]
     end
-    -- Fall back: search all tabs (handles cross-spec talents and
-    -- cases where SoD/Classic may have reshuffled talent trees)
+    -- Fall back to all tabs (Forever moved some talents between trees)
     for t = 1, 3 do
         if talentCache[t] and talentCache[t][key] then
             return talentCache[t][key]
@@ -134,28 +229,22 @@ local function FindTalent(tab, englishName)
     return nil
 end
 
+--- For /fce apitest: backend, talents read, points per tab.
+function TC.ScanSummary()
+    ScanTalents()
+    local n = 0
+    for t = 1, 3 do for _ in pairs(talentCache[t]) do n = n + 1 end end
+    return usingTraits and "C_Traits" or "Classic API", n,
+        { talentPoints[1], talentPoints[2], talentPoints[3] }
+end
+
 ----------------------------------------------------------------------
 -- Helpers
 ----------------------------------------------------------------------
 
 local function ReadTalentPoints()
-    local points = { 0, 0, 0 }
-    local total  = 0
-    -- Sum individual talent ranks instead of relying on
-    -- GetTalentTabInfo return order (which varies across
-    -- Classic Era / SoD / Cata Classic builds).
-    if not GetNumTalents or not GetTalentInfo then return points, total end
-    for tab = 1, 3 do
-        local spent = 0
-        local n = GetNumTalents(tab) or 0
-        for i = 1, n do
-            local _, _, _, _, rank = GetTalentInfo(tab, i)
-            spent = spent + (tonumber(rank) or 0)
-        end
-        points[tab] = spent
-        total = total + spent
-    end
-    return points, total
+    ScanTalents()
+    return { talentPoints[1], talentPoints[2], talentPoints[3] }, talentTotal
 end
 
 local function ExpectedPointsAtLevel(playerLevel)
@@ -266,12 +355,21 @@ local function CheckTalentReqs(charName, playerLevel)
             local talent = FindTalent(req.tab, req.name)
             if not talent then
                 entry.status = UNCHECKED
-                entry.detail = req.name .. " \226\128\148 talent not found (non-English locale?)"
+                entry.detail = req.name .. (usingTraits
+                    and " \226\128\148 not in this talent tree (renamed or removed on Forever?)"
+                    or  " \226\128\148 talent not found (non-English locale?)")
                 anyUnchecked = true
             else
-                entry.currentRank = talent.rank
-                entry.maxRank     = talent.maxRank
-                if talent.rank >= req.rank then
+                -- Forever lowered some max ranks (Flurry 5->3 etc.): "max it"
+                -- requirements cap at the tree's real maximum.
+                local need = req.rank
+                if talent.maxRank and talent.maxRank > 0 and need > talent.maxRank then
+                    need = talent.maxRank
+                end
+                entry.requiredRank = need
+                entry.currentRank  = talent.rank
+                entry.maxRank      = talent.maxRank
+                if talent.rank >= need then
                     entry.status = PASS
                     entry.detail = string.format(
                         "%s %d/%d", talent.name, talent.rank, talent.maxRank
@@ -281,7 +379,7 @@ local function CheckTalentReqs(charName, playerLevel)
                     entry.detail = string.format(
                         "%s %d/%d \226\128\148 need %d by lv %d",
                         talent.name, talent.rank, talent.maxRank,
-                        req.rank, req.level
+                        need, req.level
                     )
                     anyFail = true
                 end
@@ -521,36 +619,40 @@ eventFrame:RegisterEvent("PLAYER_LOGIN")
 eventFrame:RegisterEvent("CHARACTER_POINTS_CHANGED")
 eventFrame:RegisterEvent("PLAYER_LEVEL_UP")
 eventFrame:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED")
+pcall(eventFrame.RegisterEvent, eventFrame, "TRAIT_CONFIG_UPDATED")   -- Forever (C_Traits)
 
 local initialCheckDone = false
 
 eventFrame:SetScript("OnEvent", function(_, event, ...)
     if event == "PLAYER_LOGIN" then
-        C_Timer.After(3.0, function()
+        FCE.After("TalentCheck", 3.0, function()
             TC.RunCheck()
             initialCheckDone = true
             if FCE.RefreshPanel then FCE.RefreshPanel() end
         end)
-        C_Timer.After(6.0, function()
+        FCE.After("TalentCheck", 6.0, function()
             TC.CheckAndWarn()
         end)
 
     elseif event == "CHARACTER_POINTS_CHANGED" then
         if not initialCheckDone then return end
-        C_Timer.After(0.3, function()
+        FCE.After("TalentCheck", 0.3, function()
             TC.CheckAndWarn()
         end)
 
-    elseif event == "ACTIVE_TALENT_GROUP_CHANGED" then
+    elseif event == "ACTIVE_TALENT_GROUP_CHANGED" or event == "TRAIT_CONFIG_UPDATED" then
         if not initialCheckDone then return end
-        C_Timer.After(0.5, function()
+        FCE.After("TalentCheck", 0.5, function()
             TC.CheckAndWarn()
         end)
 
     elseif event == "PLAYER_LEVEL_UP" then
         if not initialCheckDone then return end
-        C_Timer.After(0.5, function()
+        FCE.After("TalentCheck", 0.5, function()
             TC.CheckAndWarn()
         end)
     end
 end)
+
+-- Route event errors through the FCE error guard (ForeverCompat.lua)
+FCE.Compat.GuardScript(eventFrame, "OnEvent", "TalentCheck")

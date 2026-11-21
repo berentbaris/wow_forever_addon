@@ -495,7 +495,7 @@ function Achieve.Init()
 
     -- Take initial requirement snapshot so we don't announce everything
     -- as "newly completed" on first login.
-    C_Timer.After(3.0, function()
+    FCE.After("AchievementSystem", 3.0, function()
         if FCE.Progress and FCE.Progress.Collect then
             local summary = FCE.Progress.Collect()
             if summary and summary.items then

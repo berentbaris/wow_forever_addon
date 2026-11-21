@@ -150,7 +150,9 @@ local function isPlayerSitting()
     -- We use IsMounted as a negative check and fall back to checking
     -- if the player is specifically seated via the standState.
     if IsMounted and IsMounted() then return false end
-    if GetUnitSpeed("player") > 0 then return false end
+    -- Forever: speed is a secret value in combat; treat unknown as "not sitting"
+    local speed = FCE.Compat.Plain(GetUnitSpeed("player"))
+    if speed == nil or speed > 0 then return false end
     -- There's no perfect "is sitting" API in Classic; approximate:
     -- if they have Cozy Fire buff and speed == 0, treat "sitting by fire"
     -- as a separate cleanse tier from "standing near fire".
@@ -266,7 +268,7 @@ local function HideTunnelLayer(intensity)
     local f = tunnelFrames[frameName]
     if f and f:IsShown() and f:GetAlpha() > 0 then
         UIFrameFadeOut(f, TUNNEL_FADE_DUR, f:GetAlpha(), 0)
-        C_Timer.After(TUNNEL_FADE_DUR + 0.1, function()
+        FCE.After("DoubtSystem", TUNNEL_FADE_DUR + 0.1, function()
             if f:GetAlpha() == 0 then f:Hide() end
         end)
     end
@@ -276,7 +278,7 @@ local function HideAllTunnelLayers()
     for _, f in pairs(tunnelFrames) do
         if f and f:IsShown() and f:GetAlpha() > 0 then
             UIFrameFadeOut(f, TUNNEL_FADE_DUR, f:GetAlpha(), 0)
-            C_Timer.After(TUNNEL_FADE_DUR + 0.1, function()
+            FCE.After("DoubtSystem", TUNNEL_FADE_DUR + 0.1, function()
                 if f:GetAlpha() == 0 then f:Hide() end
             end)
         end
@@ -516,7 +518,7 @@ function Doubt.Init()
 
     -- Start the 1-second ticker
     if not ticker then
-        ticker = C_Timer.NewTicker(TICK_INTERVAL, OnTick)
+        ticker = FCE.NewTicker("DoubtSystem", TICK_INTERVAL, OnTick)
     end
 end
 
@@ -528,8 +530,11 @@ local eventFrame = CreateFrame("Frame")
 eventFrame:RegisterEvent("PLAYER_LOGIN")
 eventFrame:SetScript("OnEvent", function(_, event)
     if event == "PLAYER_LOGIN" then
-        C_Timer.After(3.0, function()
+        FCE.After("DoubtSystem", 3.0, function()
             Doubt.Init()
         end)
     end
 end)
+
+-- Route event errors through the FCE error guard (ForeverCompat.lua)
+FCE.Compat.GuardScript(eventFrame, "OnEvent", "DoubtSystem")

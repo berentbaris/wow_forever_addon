@@ -176,7 +176,10 @@ local function OnTick()
         return
     end
 
-    if hasElixirBuff() then
+    if FCE.Compat.AurasMayBeSecret() then
+        -- Forever: auras are secret in combat — hold the timer, don't
+        -- read "can't see the buff" as "no elixir".
+    elseif hasElixirBuff() then
         graceRemaining = MAX_GRACE          -- buffed → reset grace timer
     elseif UnitOnTaxi("player") then
         -- Pause during flight path
@@ -190,7 +193,7 @@ local function OnTick()
         hasFailed = true
         print("|cffff4444[FCE] Elixir Frenzy expired! You went too long without an elixir.|r")
         print("|cffff4444Type |cffffcc00/fce elixir reset|cffff4444 to reset.|r")
-        if FCE.RefreshPanel then C_Timer.After(0.3, FCE.RefreshPanel) end
+        if FCE.RefreshPanel then FCE.After("ElixirSystem", 0.3, FCE.RefreshPanel) end
     end
 
     ElixirFrenzy.UpdateBar()
@@ -360,7 +363,7 @@ function ElixirFrenzy.Init()
     ElixirFrenzy.UpdateBar()
 
     if not ticker then
-        ticker = C_Timer.NewTicker(TICK_INTERVAL, OnTick)
+        ticker = FCE.NewTicker("ElixirSystem", TICK_INTERVAL, OnTick)
     end
 end
 
@@ -372,8 +375,11 @@ local ef = CreateFrame("Frame")
 ef:RegisterEvent("PLAYER_LOGIN")
 ef:SetScript("OnEvent", function(_, event)
     if event == "PLAYER_LOGIN" then
-        C_Timer.After(3.5, function()
+        FCE.After("ElixirSystem", 3.5, function()
             ElixirFrenzy.Init()
         end)
     end
 end)
+
+-- Route event errors through the FCE error guard (ForeverCompat.lua)
+FCE.Compat.GuardScript(ef, "OnEvent", "ElixirSystem")

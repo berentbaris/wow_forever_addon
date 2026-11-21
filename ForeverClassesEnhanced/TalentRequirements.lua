@@ -35,119 +35,90 @@ FCE.TalentRequirements = {
 
     ['WARRIOR_"Sword & Board"'] = {   -- Protection
         roles = "Tank/damage",
+        R("Shield Specilization",      3, 5, 14),
         R("Last Stand",      3, 1, 20),
-        R("Improved Shield Block",      3, 1, 21),
-        R("Concussion Blow", 3, 1, 30),
+        R("Master of Defense",      3, 2, 22),
+        R("Vanguard",      3, 1, 25),
+        R("Defiance",      3, 3, 26),
+        R("Bastion", 3, 5, 39),
         R("Shield Slam",     3, 1, 40),
-        R("Anger Management", 1, 1, 51),
+        R("Improved Tactical Mastery", 1, 3, 48),
     },
 
-    ["WARRIOR_Slam"] = {      -- Arms
-        roles = "Damage/tank",
-        R("Improved Cleave",        2, 3, 23),
-        R("Improved Slam",        2, 5, 35),
-        R("Flurry",        2, 5, 41),
+    ["WARRIOR_Arms"] = {      -- Arms
+        roles = "Damage",
+        R("Improved Overpower",        1, 2, 16),
+        R("Spearing Strike",        1, 1, 25),
+        R("Impale",        1, 2, 27),
+        R("Bloodthrill",        1, 2, 32),
+        R("Impale",        1, 2, 27),
+        R("Two-Handed Weapon Specialization",        1, 3, 33),
+        R("Improved Slam",        1, 2, 36),
+        R("Mortal Strike", 1, 1, 40),
+        R("Weaponmaster", 1, 5, 41),
+        R("Enrage", 2, 5, 56),
     },
 
     ["WARRIOR_Flurry"] = {    -- Fury
         roles = "Damage",
         R("Cruelty", 2, 5, 14),
-        R("Blood Craze", 2, 3, 23),
-        R("Enrage", 2, 5, 29),
-        R("Flurry", 2, 5, 39),
-        R("Bloodthirst", 2, 1, 40),
-        R("Dual Wield Specialization", 2, 5, 41),
+        R("Unbridled Wrath", 2, 5, 19),
+        R("Furious Precision", 2, 3, 22),
+        R("Reckless Swings", 2, 1, 25),
+        R("Dual Wield Specialization", 2, 5, 32),
+        R("Enrage", 2, 5, 35),
+        R("Flurry", 2, 3, 38),
+        R("Bloodthirst", 2, 1, 41),
     },
 
-    ["WARRIOR_Fury/Prot"] = {   
-        roles = "Damage/tank",
+    ["WARRIOR_Gore Drinker"] = {    -- Fury
+        roles = "Damage",
         R("Cruelty", 2, 5, 14),
-        R("Blood Craze", 2, 3, 23),
-        R("Enrage", 2, 5, 29),
-        R("Flurry", 2, 5, 39),
-        R("Bloodthirst", 2, 1, 40),
-        R("Anticipation", 3, 5, 45),
-        R("Last Stand", 3, 1, 52),
-        R("Defiance",     3, 5, 57),
-    },
-
-    ["WARRIOR_Arms/Prot"] = {   -- Protection
-        roles = "Damage/tank",
-        R("Improved Overpower",        1, 2, 21),
-        R("Impale",        1, 2, 26),
-        R("Sweeping Strikes",        1, 1, 30),
-        R("Mortal Strike", 1, 1, 40),
-        R("Anticipation", 3, 5, 45),
-        R("Last Stand", 3, 1, 52),
-        R("Defiance",     3, 5, 57),
-    },
-
-    ["WARRIOR_Sword"] = {      -- Arms
-        roles = "Damage/tank",
-        R("Improved Overpower",        1, 2, 21),
-        R("Impale",        1, 2, 26),
-        R("Sword Specialization",        1, 5, 35),
-        R("Mortal Strike", 1, 1, 40),
-    },
-
-    ["WARRIOR_Mace"] = {      -- Arms
-        roles = "Damage/tank",
-        R("Improved Overpower",        1, 2, 21),
-        R("Impale",        1, 2, 26),
-        R("Mace Specialization",        1, 5, 35),
-        R("Mortal Strike", 1, 1, 40),
-    },
-
-    ["WARRIOR_Axe"] = {      -- Arms
-        roles = "Damage/tank",
-        R("Improved Overpower",        1, 2, 21),
-        R("Impale",        1, 2, 26),
-        R("Axe Specialization",        1, 5, 35),
-        R("Mortal Strike", 1, 1, 40),
-    },
-
-    ["WARRIOR_Polearm"] = {      -- Slam
-        roles = "Damage/tank",
-        R("Improved Overpower",        1, 2, 21),
-        R("Impale",        1, 2, 26),
-        R("Polearm Specialization",        1, 5, 39),
-        R("Mortal Strike", 1, 1, 40),
+        R("Unbridled Wrath", 2, 5, 19),
+        R("Blood Craze", 2, 5, 22),
+        R("Reckless Swings", 2, 1, 25),
+        R("Furious Precision", 2, 3, 27),
+        R("Gore Drinker", 2, 2, 32),
+        R("Flurry", 2, 3, 37),
+        R("Enrage", 2, 5, 38),
+        R("Bloodthirst", 2, 1, 41),
+        R("Dual Wield Specialization", 2, 5, 44),
     },
 
     ---------- ROGUE ----------
 
-    ["ROGUE_Mace"] = {       -- Combat
-        roles = "Damage",
-        R("Riposte",             2, 1, 22),
-        R("Mace Specialization",2, 5, 37),
-        R("Aggression",2, 3, 40),
-        R("Dual Wield Specialization",2, 5, 41),
-        R("Improved Slice and Dice",1, 3, 47),
-    },
-
     ["ROGUE_Combat"] = {       -- Combat
         roles = "Damage",
+        R("Remorseless Attacks",  1, 2, 11),
+        R("Efficient Strikes",2, 2, 13),
+        R("Coup de Grace",2, 3, 16),
         R("Riposte",             2, 1, 22),
-        R("Dual Wield Specialization",2, 5, 33),
-        R("Weapon Expertise",2, 2, 38),
-        R("Aggression",2, 3, 41),
-        R("Improved Slice and Dice",1, 3, 47),
+        R("Flawless Execution",             2, 1, 27),  
+        R("Weapon Expertise",2, 2, 29), 
+        R("Dual Wield Specialization",2, 2, 34),
+        R("Aggression",2, 3, 35),
+        R("Flash of Steel",             2, 5, 41),  
+        R("Adrenaline Rush",             2, 1, 42),
+        R("Hack and Slash",             2, 5, 46),
+        R("Improved Slice and Dice",             1, 3, 52),
     },
 
-    ["ROGUE_Backstab/Riposte"] = {       -- Combat
+    ["ROGUE_Backstab"] = {       -- Combat
         roles = "Damage",
         R("Remorseless Attacks",  1, 2, 11),
-        R("Improved Gouge",  2, 3, 16),
-        R("Riposte",             2, 1, 22),
-        R("Improved Backstab",    2, 3, 25),  -- Combat tree (cross-spec)
-        R("Ruthlessness",            1, 3, 31),
-        R("Lethality",            1, 5, 39),
-        R("Improved Kidney Shot", 1, 3, 47),
-        R("Seal Fate", 1, 5, 53),
-        R("Dagger Specialization",          2, 5, 60),  -- Subtlety tree (cross-spec)
+        R("Improved Gouge",  1, 3, 14),
+        R("Puncturing Wounds",             2, 3, 22),
+        R("Opportunity",          3, 5, 27),  -- Subtlety tree (cross-spec)
+        R("Dirty Deeds",    3, 2, 29),  -- Combat tree (cross-spec)
+        R("Lethality",            1, 2, 36),
+        R("Ruthlessness",            1, 3, 39),
+        R("Improved Expose Armor",          1, 2, 44),  -- Subtlety tree (cross-spec)
+        R("Improved Kidney Shot", 1, 2, 47),
+        R("Seal Fate", 1, 3, 52),
+        R("Relentless Strikes", 1, 5, 56),        
     },
 
-    ["ROGUE_Backstab/Poison"] = {       -- Subtlety
+    ["ROGUE_Poison"] = {       -- Subtlety
         roles = "Damage",
         R("Remorseless Attacks",  1, 2, 11),
         R("Improved Gouge",  2, 3, 16),
@@ -161,58 +132,41 @@ FCE.TalentRequirements = {
         R("Vile Poisons",            1, 5, 58),
     },
 
-    ["ROGUE_Backstab"] = {       -- Subtlety
-        roles = "Damage",
-        R("Remorseless Attacks",  1, 2, 11),
-        R("Improved Gouge",  2, 3, 16),
-        R("Improved Backstab",    2, 3, 19),  -- Combat tree (cross-spec)
-        R("Ruthlessness",            1, 3, 27),
-        R("Lethality",            1, 5, 33),
-        R("Improved Kidney Shot", 1, 3, 41),
-        R("Seal Fate", 1, 5, 47),
-        R("Opportunity",          3, 5, 53),  -- Subtlety tree (cross-spec)
-    },
-
     ["ROGUE_Ambush"] = {       -- Assa
         roles = "Damage",
         R("Remorseless Attacks",  1, 2, 11),
-        R("Opportunity",    3, 5, 16),
-        R("Improved Ambush",   3, 3, 25),
-        R("Improved Sap",   3, 3, 34),
-        R("Premeditation", 3, 1, 42),
+        R("Opportunity",    3, 5, 18),
+        R("Improved Ambush",   3, 3, 21),
+        R("Premeditation", 3, 1, 24),
+        R("Camouflage", 3, 3, 25),
+        R("Initiative", 3, 3, 28),
+        R("Ghostly Strike", 3, 1, 29),
+        R("Improved Gouge",  2, 3, 32),
+        R("Hemorrhage",   3, 1, 36),
+        R("Quick Getaway",   3, 2, 39),
+        R("Boot Knife",   3, 5, 44),
+        R("Death Mark",   3, 1, 45),
     },
 
     ["ROGUE_Ghost"] = {       -- Assa
         roles = "Damage",
-        R("Improved Gouge",  2, 3, 14),
-        R("Riposte",             2, 1, 22),
-        R("Ghostly Strike",   3, 1, 31),
-        R("Setup",   3, 3, 38),
-        R("Endurance", 2, 2, 40),
-        R("Lightning Reflexes", 2, 5, 45),
-    },
-
-    ["ROGUE_Sword"] = {          -- Combat
-        roles = "Damage",
-        R("Remorseless Attacks",  1, 2, 11),
-        R("Riposte",             2, 1, 22),
-        R("Precision",             2, 5, 27),
-        R("Sword Specialization",2, 5, 37),
-        R("Weapon Expertise",2, 2, 39),
-        R("Dual Wield Specialization",2, 5, 40),
-        R("Adrenaline Rush",2, 1, 42),
-    },
-
-    ["ROGUE_Fist Combat"] = {          -- Combat
-        roles = "Damage",
+        R("Lightning Reflexes",  2, 5, 14),
         R("Riposte",             2, 1, 20),
-        R("Precision",             2, 5, 25),
-        R("Weapon Expertise",2, 2, 37),
-        R("Fist Weapon Specialization",2, 5, 37),
-        R("Dual Wield Specialization",2, 5, 38),
-        R("Adrenaline Rush",2, 1, 40),
-        R("Improved Eviscerate",1, 3, 45),
-        R("Adrenaline Slice and Dice",1, 3, 48),
+        R("Setup",   3, 3, 23),
+        R("Endurance",   2, 2, 25),
+        R("Improved Ambush",   3, 3, 30),
+        R("Remorseless Attacks",  1, 2, 32),
+        R("Premeditation", 3, 1, 35),
+        R("Camouflage", 3, 3, 36),
+        R("Ghostly Strike", 3, 1, 40),
+        R("Quick Getaway",   3, 2, 44)
+        R("Hemorrhage",   3, 1, 46),
+        R("Precision",   2, 3, 47),
+        R("Flawless Execution",             2, 1, 49),  
+        R("Weapon Expertise",2, 2, 51), 
+        R("Composure",             2, 2, 52), 
+        R("Blade Flurry",2, 1, 54),
+        R("Dual Wield Specialization",2, 2, 56),
     },
 
     ---------- WARLOCK ----------

@@ -373,7 +373,7 @@ end
 
 function Tips.StartReminder()
     if tipTimer then return end  -- already running
-    tipTimer = C_Timer.NewTicker(TIP_INTERVAL, fireTipReminder)
+    tipTimer = FCE.NewTicker("GameplayTips", TIP_INTERVAL, fireTipReminder)
 end
 
 function Tips.StopReminder()
@@ -432,7 +432,7 @@ end
 local initFrame = CreateFrame("Frame")
 initFrame:RegisterEvent("PLAYER_LOGIN")
 initFrame:SetScript("OnEvent", function()
-    C_Timer.After(10, function()
+    FCE.After("GameplayTips", 10, function()
         -- Only start if the player has tips and hasn't disabled them
         if FCE_GlobalDB and FCE_GlobalDB.gameplayTipsEnabled == false then return end
         local tips = Tips.GetCurrent()
@@ -441,3 +441,6 @@ initFrame:SetScript("OnEvent", function()
         end
     end)
 end)
+
+-- Route event errors through the FCE error guard (ForeverCompat.lua)
+FCE.Compat.GuardScript(initFrame, "OnEvent", "GameplayTips")

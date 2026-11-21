@@ -80,14 +80,14 @@ Item info for all equipment rules (`GetItemInfo` → `C_Item`), spell info (`Get
 
 ### Before launch (no game needed)
 
-- [ ] **Aura-secret pause:** make Elixir Frenzy, Happy Hour, Doubt campfire and Demonic Sacrifice skip their tick while `FCE.Compat.AurasMayBeSecret()` is true.
-- [ ] **MountCheck → C_MountJournal**, keyed on Classic mount spell IDs.
-- [ ] **CompanionCheck → C_PetJournal**.
+- [x] **Aura-secret pause:** make Elixir Frenzy, Happy Hour, Doubt campfire and Demonic Sacrifice skip their tick while `FCE.Compat.AurasMayBeSecret()` is true.
+- [x] **MountCheck → C_MountJournal**, keyed on Classic mount spell IDs.
+- [x] **CompanionCheck → C_PetJournal**.
 - [ ] **Kill events:** wire `PARTY_KILL` into Gnomish Justice and XXX.
 - [ ] **Disease Cleansing:** rewrite on `UNIT_AURA` diffs plus your own cure casts.
 - [ ] **Destroy-item challenges:** detect that the item is gone instead of deleting it.
 - [ ] **AddonComm → `C_ChatInfo.SendAddonMessage`.**
-- [ ] **TalentCheck:** draft a `C_Traits` version (name → rank map, points per tree), finalised with the day-one dump.
+- [x] **TalentCheck:** draft a `C_Traits` version (name → rank map, points per tree), finalised with the day-one dump.
 - [ ] **Re-check talent names** in TalentRequirements.lua against a Forever talent calculator (trees were reworked).
 - [ ] **Skyborne placeholders:** HOME_FACTION entries for High Order / Windshaper, native language, Catalog race lists.
 - [ ] **Diplomat:** decide the new rule (mounts are account-wide).

@@ -814,7 +814,7 @@ function Panel.Refresh()
         end
         -- Defer the bar update slightly so all check modules have
         -- had time to write their results this frame
-        C_Timer.After(0.05, function()
+        FCE.After("RequirementsPanel", 0.05, function()
             if FCE.Progress.UpdateBar then FCE.Progress.UpdateBar() end
         end)
     end
@@ -2178,7 +2178,18 @@ FCE.TogglePanel   = Panel.Toggle
 FCE.ShowPanel     = Panel.Show
 FCE.HidePanel     = Panel.Hide
 FCE.IsShownPanel  = Panel.IsShown
-FCE.RefreshPanel = Panel.Refresh
+-- Coalesced refresh: many modules ask for a refresh on every event;
+-- merge requests so the panel rebuilds at most once per short window.
+local refreshPending = false
+function Panel.RequestRefresh(delay)
+    if refreshPending then return end
+    refreshPending = true
+    FCE.After("RequirementsPanel", delay or 0.2, function()
+        refreshPending = false
+        Panel.Refresh()
+    end)
+end
+FCE.RefreshPanel = function() Panel.RequestRefresh(0.2) end
 
 ----------------------------------------------------------------------
 -- Minimap button backend selection
@@ -2303,7 +2314,8 @@ liveFrame:RegisterEvent("PLAYER_LEVEL_UP")
 liveFrame:RegisterEvent("PLAYER_EQUIPMENT_CHANGED")
 liveFrame:RegisterEvent("SKILL_LINES_CHANGED")
 liveFrame:RegisterEvent("CHARACTER_POINTS_CHANGED")
-liveFrame:RegisterEvent("UNIT_AURA")
+liveFrame:RegisterUnitEvent("UNIT_AURA", "player")
+liveFrame:RegisterEvent("PLAYER_REGEN_ENABLED")
 liveFrame:RegisterEvent("UNIT_PET")
 pcall(function() liveFrame:RegisterEvent("COMPANION_UPDATE") end)
 liveFrame:RegisterEvent("ZONE_CHANGED_NEW_AREA")
@@ -2313,7 +2325,7 @@ liveFrame:RegisterEvent("BAG_UPDATE")
 liveFrame:SetScript("OnEvent", function(_, event, ...)
     if event == "PLAYER_LOGIN" then
         -- Defer a tick so SavedVariables + CharacterData are ready
-        C_Timer.After(1.2, function()
+        FCE.After("RequirementsPanel", 1.2, function()
             BuildFrame()
             BuildMinimapButton()
             if db().shown then
@@ -2327,48 +2339,54 @@ liveFrame:SetScript("OnEvent", function(_, event, ...)
         end)
     elseif event == "PLAYER_LEVEL_UP" then
         -- Player level isn't updated until the next frame; defer.
-        C_Timer.After(0.1, Panel.Refresh)
+        Panel.RequestRefresh(0.1)
     elseif event == "PLAYER_EQUIPMENT_CHANGED" then
         -- EquipmentCheck.lua handles the actual check and calls
         -- RefreshPanel, but if it hasn't loaded yet we still refresh.
-        C_Timer.After(0.5, Panel.Refresh)
+        Panel.RequestRefresh(0.5)
     elseif event == "SKILL_LINES_CHANGED" then
         -- ProfessionCheck.lua handles the actual check and calls
         -- RefreshPanel, but we also refresh here as a fallback.
-        C_Timer.After(0.5, Panel.Refresh)
+        Panel.RequestRefresh(0.5)
     elseif event == "CHARACTER_POINTS_CHANGED" then
         -- TalentCheck.lua handles the actual check and calls
         -- RefreshPanel, but we also refresh here as a fallback.
-        C_Timer.After(0.5, Panel.Refresh)
+        Panel.RequestRefresh(0.5)
     elseif event == "UNIT_AURA" then
         local unit = ...
-        if unit == "player" then
+        if unit == "player" and not FCE.Compat.AurasMayBeSecret() then
+            -- (in combat auras are secret: PLAYER_REGEN_ENABLED catches up)
             -- SelfFoundCheck.lua handles the actual check and calls
             -- RefreshPanel, but we also refresh here as a fallback.
-            C_Timer.After(0.5, Panel.Refresh)
+            Panel.RequestRefresh(0.5)
         end
+    elseif event == "PLAYER_REGEN_ENABLED" then
+        Panel.RequestRefresh(0.5)
     elseif event == "UNIT_PET" then
         local unit = ...
         if unit == "player" then
             -- ChallengeCheck (Imp/No demon) reacts to pet changes.
-            C_Timer.After(0.5, Panel.Refresh)
+            Panel.RequestRefresh(0.5)
         end
     elseif event == "ZONE_CHANGED_NEW_AREA" then
         -- Homebound / zone-visit challenges react to zone changes.
-        C_Timer.After(0.7, Panel.Refresh)
+        Panel.RequestRefresh(0.7)
     elseif event == "ZONE_CHANGED" or event == "PLAYER_UPDATE_RESTING" then
         -- Nocturnal/Diurnal challenges react to entering/leaving rest areas.
-        C_Timer.After(0.3, Panel.Refresh)
+        Panel.RequestRefresh(0.3)
     elseif event == "BAG_UPDATE" then
         -- Bag contents changed -- refresh for herb pouch / consumable checks.
-        C_Timer.After(0.6, Panel.Refresh)
+        Panel.RequestRefresh(0.6)
     end
 end)
 
 -- Periodic timer for time-of-day challenges (Nocturnal/Diurnal).
 -- Checks every 60 seconds so the panel updates when server hour changes.
-C_Timer.NewTicker(60, function()
+FCE.NewTicker("RequirementsPanel", 60, function()
     if Panel.frame and Panel.frame:IsShown() then
         Panel.Refresh()
     end
 end)
+
+-- Route event errors through the FCE error guard (ForeverCompat.lua)
+FCE.Compat.GuardScript(liveFrame, "OnEvent", "RequirementsPanel")
