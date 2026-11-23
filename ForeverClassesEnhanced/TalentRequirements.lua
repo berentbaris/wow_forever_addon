@@ -35,7 +35,7 @@ FCE.TalentRequirements = {
 
     ['WARRIOR_"Sword & Board"'] = {   -- Protection
         roles = "Tank/damage",
-        R("Shield Specilization",      3, 5, 14),
+        R("Shield Specialization",      3, 5, 14),
         R("Last Stand",      3, 1, 20),
         R("Master of Defense",      3, 2, 22),
         R("Vanguard",      3, 1, 25),
@@ -52,7 +52,6 @@ FCE.TalentRequirements = {
         R("Impale",        1, 2, 27),
         R("Bloodthrill",        1, 2, 32),
         R("Impale",        1, 2, 27),
-        R("Two-Handed Weapon Specialization",        1, 3, 33),
         R("Improved Slam",        1, 2, 36),
         R("Mortal Strike", 1, 1, 40),
         R("Weaponmaster", 1, 5, 41),
@@ -121,15 +120,13 @@ FCE.TalentRequirements = {
     ["ROGUE_Poison"] = {       -- Subtlety
         roles = "Damage",
         R("Remorseless Attacks",  1, 2, 11),
-        R("Improved Gouge",  2, 3, 16),
-        R("Improved Backstab",    2, 3, 19),  -- Combat tree (cross-spec)
-        R("Ruthlessness",            1, 3, 27),
-        R("Lethality",            1, 5, 33),
-        R("Improved Poisons",            1, 5, 39),
-        R("Improved Kidney Shot", 1, 3, 42),
-        R("Seal Fate", 1, 5, 47),
-        R("Opportunity",          3, 5, 52),  -- Subtlety tree (cross-spec)
-        R("Vile Poisons",            1, 5, 58),
+        R("Efficient Strikes",2, 2, 13),
+        R("Ruthlessness",            1, 3, 19),
+        R("Lethality",            1, 2, 23),
+        R("Improved Poisons",          1, 5, 33),  -- Subtlety tree (cross-spec)
+        R("Seal Fate", 1, 3, 39),
+        R("Vile Poisons", 1, 5, 41),
+        R("Mutilate", 1, 1, 42),     
     },
 
     ["ROGUE_Ambush"] = {       -- Assa
@@ -149,7 +146,7 @@ FCE.TalentRequirements = {
     },
 
     ["ROGUE_Ghost"] = {       -- Assa
-        roles = "Damage",
+        roles = "Damage/tank",
         R("Lightning Reflexes",  2, 5, 14),
         R("Riposte",             2, 1, 20),
         R("Setup",   3, 3, 23),
@@ -159,7 +156,7 @@ FCE.TalentRequirements = {
         R("Premeditation", 3, 1, 35),
         R("Camouflage", 3, 3, 36),
         R("Ghostly Strike", 3, 1, 40),
-        R("Quick Getaway",   3, 2, 44)
+        R("Quick Getaway",   3, 2, 44),
         R("Hemorrhage",   3, 1, 46),
         R("Precision",   2, 3, 47),
         R("Flawless Execution",             2, 1, 49),  
@@ -282,70 +279,75 @@ FCE.TalentRequirements = {
 
     ["HUNTER_Lone Wolf"] = {       -- Survival
         roles = "Damage",
-        R("Savage Strikes", 3, 2, 16),
-        R("Entrapment", 3, 5, 21),
-        R("Clever Traps", 3, 2, 24),
-        R("Trap Mastery", 3, 2, 26),
-        R("Counterattack",  3, 1, 30),
-        R("Killer Instinct",   3, 3, 33),
-        R("Wyvern Sting",  3, 1, 40),
+        R("Lone Wolf", 2, 1, 20),
+        R("Entrapment",3, 5, 30),
+        R("Surefooted", 3, 3, 34),
+        R("Clever Traps", 3, 2, 37),
+        R("Survival Tactics", 3, 2, 39),
+        R("Resourcefulness", 3, 2, 45),
+        R("Lightning Reflexes", 3, 5, 50),
+        R("Lacerating Strikes",            3, 1, 51),        
+    }, 
+
+    ["HUNTER_Stinger"] = {       -- Survival
+        roles = "Damage",
+        R("Improved Stings",   2, 3, 17),
+        R("Efficiency", 2, 5, 24),
+        R("Rapid Recuperation", 2, 2, 32),
+        R("Improved Serpent Sting", 2, 5, 33),
+        R("Improved Arcane Shot", 2, 5, 38),
+        R("Sniper Shot",2, 1, 40),
     }, 
 
     ["HUNTER_Beast Mastery"] = {     -- Beast Mastery
         roles = "Damage/tank",
         R("Endurance Training", 1, 5, 14),
-        R("Ferocity",          1, 5, 31),
-        R("Spirit Bond",       1, 2, 33),
-        R("Frenzy",            1, 5, 41),
-        R("Monster Slaying",            3, 3, 44),
+        R("Summon Hawk",          1, 1, 25),
+        R("Spirit Bond",       1, 2, 32),
+        R("Unleashed Fury",          1, 5, 34),
+        R("Frenzy",            1, 5, 39),
+        R("Bestial Wrath",            1, 1, 40),
+        R("Improved Mend Pet",            1, 2, 42),
+        R("Bestial Discipline",            1, 2, 44),
     },
 
     ["HUNTER_Melee"] = {     -- Beast Mastery
         roles = "Damage/tank",
+        R("Deflection",          3, 5, 14),
         R("Savage Strikes", 3, 2, 16),
-        R("Thick Hide", 1, 3, 24),
-        R("Ferocity",          1, 5, 36),
-        R("Frenzy",            1, 5, 46),
+        R("Surefooted",          3, 3, 23),
+        R("Counterattack",          3, 1, 25),
+        R("Strider Kick",          3, 1, 30),
+        R("Deadly Aspects",          1, 5, 35),
+        R("Predator's Edge", 3, 5, 38),
+        R("Resourcefulness", 3, 2, 40),
+        R("Lacerating Strikes",            3, 1, 45),
     },
 
-    ["HUNTER_Spell Power"] = {     -- Marksmanship
+    ["HUNTER_Sniper"] = {     -- Marksmanship
         roles = "Damage",
-        R("Efficiency", 2, 5, 14),
-        R("Improved Arcane Shot",                  2, 5, 25),
-        R("Improved Serpent Sting",                2, 5, 31),
-        R("Mortal Shots",                          2, 5, 39),
-        R("Trueshot Aura", 1, 1, 40),  -- BM tree (cross-spec)
+        R("Hawk Eye", 2, 3, 12),
+        R("Lone Wolf", 2, 1, 20),
+        R("Rapid Recuperation", 2, 2, 32),
+        R("Mortal Shots", 2, 5, 33),
+        R("Efficiency", 2, 5, 36),
+        R("Sniper Shot",2, 1, 40),
+        R("Ranged Weapon Specialization",2, 5, 42),
+        R("Deadly Aspects",          1, 5, 47),
     },
 
-    ["HUNTER_Marksmanship"] = {     -- Marksmanship
+    ["HUNTER_Melee Lone Wolf"] = {
         roles = "Damage",
-        R("Lethal Shots", 2, 5, 19),
-        R("Aimed Shot",                  2, 1, 20),
-        R("Mortal Shots",                2, 5, 29),
-        R("Ranged Weapon Specialization",2, 5, 39),
-        R("Improved Aspect of the Hawk", 1, 5, 45),  -- BM tree (cross-spec)
-    },
-
-    ["HUNTER_Melee Survival"] = {
-        roles = "Damage",
-        R("Savage Strikes", 3, 2, 16),
-        R("Monster Slaying", 3, 3, 17),
-        R("Humanoid Slaying", 3, 3, 17),
-        R("Clever Traps", 3, 2, 22),
-        R("Counterattack",  3, 1, 30),
-        R("Survivalist",  3, 5, 34),
-        R("Lightning Reflexes",  3, 5, 39),
-    },
-
-    ["HUNTER_Survival"] = {
-        roles = "Damage",
-        R("Savage Strikes", 3, 2, 16),
-        R("Clever Traps", 3, 2, 22),
-        R("Improved Wing Clip", 3, 5, 24),
-        R("Surefooted",  3, 3, 27),
-        R("Counterattack",  3, 1, 30),
-        R("Killer Instinct",   3, 3, 33),
-        R("Wyvern Sting",  3, 1, 40),
+        R("Lone Wolf", 2, 1, 20),
+        R("Deflection",          3, 5, 25),
+        R("Savage Strikes", 3, 2, 27),
+        R("Surefooted",          3, 3, 34),
+        R("Counterattack",          3, 1, 36),
+        R("Strider Kick",          3, 1, 41),
+        R("Predator's Edge", 3, 5, 44),
+        R("Resourcefulness", 3, 2, 46),
+        R("Lacerating Strikes",            3, 1, 51),
+        R("Deadly Aspects",          1, 5, 56),
     },
 
     ---------- SHAMAN ----------
@@ -395,7 +397,6 @@ FCE.TalentRequirements = {
 
     ["SHAMAN_2-handed Stormstrike"] = { -- Enhancement
         roles = "Damage",
-        R("Two-Handed Axes and Maces", 2, 1, 20),
         R("Thundering Strikes", 2, 5, 22),
         R("Enhancing Totems",                 2, 2, 24),
         R("Flurry",                 2, 5, 29),
@@ -407,149 +408,165 @@ FCE.TalentRequirements = {
 
     ---------- PALADIN ----------
 
-    ["PALADIN_Holy/Prot"] = {        -- Holy
-        roles = "Healer/tank",
-        R("Divine Intellect", 1, 5, 14),
-        R("Improved Seal of Righteousness", 1, 5, 19),
-        R("Consecration", 1, 1, 20),
-        R("Healing Light",    1, 3, 23),
-        R("Divine Favor",     1, 1, 30),
-        R("Redoubt",       2, 5, 35),
-        R("Improved Righteous Fury",       2, 3, 43),
-        R("Shield Specialization",       2, 3, 46),
-        R("Holy Shock",       1, 1, 56),
+    ["PALADIN_Shockadin"] = {        -- Holy
+        roles = "Healer/damage",
+        R("Reverence",       1, 2, 16),
+        R("Divine Favor",     1, 1, 20),
+        R("Holy Conduit",       1, 2, 22),
+        R("Improved Seals",       1, 5, 24),
+        R("Oath of Light",       1, 1, 25),
+        R("Divine Precision",       1, 2, 27),
+        R("Infusion of Light",       1, 2, 29),
+        R("Consecrated Ground",       1, 2, 32),
+        R("Purifying Power",       1, 2, 34),
+        R("Holy Power",       1, 5, 39),
+        R("Holy Shock",       1, 1, 40), 
+    },
+
+    ["PALADIN_Holy"] = {        -- Holy
+        roles = "Healer",
+        R("Healing Light",    1, 3, 19),
+        R("Divine Favor",     1, 1, 20),
+        R("Holy Conduit",       1, 2, 22),
+        R("Oath of Light",       1, 1, 25),
+        R("Infusion of Light",       1, 2, 27),
+        R("Illumination",       1, 5, 31),
+        R("Holy Power",       1, 5, 39),
+        R("Holy Shock",       1, 1, 40),
     },
 
     ['PALADIN_"Sword & Board"'] = {         -- Protection
         roles = "Tank",
-        R("Consecration",           1, 1, 20),
-        R("Redoubt",                 2, 5, 25),
-        R("Improved Righteous Fury", 2, 3, 33),
-        R("Shield Specialization",  2, 3, 37),
-        R("Blessing of Sanctuary",  2, 1, 41),
-        R("Reckoning",  2, 5, 46),
-        R("Holy Shield",            2, 1, 51),
+        R("Redoubt",                 2, 5, 14),
+        R("Shield Specialization",  2, 2, 22),
+        R("Swift Judgement",  2, 1, 25),
+        R("Improved Righteous Fury", 2, 3, 28),
+        R("Iron Creed",  2, 3, 37),
+        R("Reckoning",  2, 5, 38),
+        R("Holy Shield",            2, 1, 40),
     },
 
     ["PALADIN_Retribution"] = { -- Retribution
         roles = "Damage",
+        R("Conviction",                         3, 3, 17),
         R("Seal of Command",                    3, 1, 20),
-        R("Conviction",                         3, 5, 27),
-        R("Deflection",                              3, 5, 29),
-        R("Vengeance",                          3, 5, 39),
-        R("Precision",                          2, 3, 48),
-        R("Divine Strength",                    1, 5, 56),
+        R("Sacred Arbiter",                              3, 1, 25),
+        R("Vengeance",                          3, 3, 33),
+        R("Champion of the Light",                          3, 5, 39),
+        R("Unsealed Wrath",                    3, 1, 40),
     },
 
     ---------- PRIEST ----------
 
-    ["PRIEST_Spirit"] = {  -- Holy
+    ["PRIEST_Holy"] = {  -- Holy
         roles = "Damage/healer",
-        R("Spirit Tap",          3, 5, 14),  -- Shadow tree (cross-spec)
-        R("Divine Fury",         2, 5, 24),
-        R("Holy Specialization", 2, 5, 27),
-        R("Searing Light",       2, 2, 31),
-        R("Spiritual Guidance",  2, 5, 39),
-        R("Meditation",1, 3, 53),
-        R("Divine Spirit",1, 1, 60),
+        R("Wand Specialization",         1, 2, 11),
+        R("Twilight Focus",          2, 3, 14),
+        R("Divine Fury",         2, 5, 21),
+        R("Holy Specialization", 2, 5, 25),
+        R("Searing Light",       2, 2, 29),
+        R("Holy Reach",  2, 2, 31),
+        R("Power in Light",1, 5, 39),
+        R("Holy Precision",1, 3, 40),
+        R("Meditation",1, 3, 44),
+        R("Penance",1, 1, 51),
+    },
+
+    ["PRIEST_Hybrid"] = {  -- Holy
+        roles = "Healer/damage",
+        R("Wand Specialization",         1, 2, 11),
+        R("Twilight Focus",          2, 3, 14),
+        R("Spirit Tap",          3, 5, 19),
+        R("Improved Mind Flay",        3, 2, 27),
+        R("Vampiric Embrace",        3, 1, 30),
+        R("Divine Fury",         2, 5, 37),
+        R("Inspiration", 2, 3, 41),
+        R("Improved Healing",       2, 3, 46),
+        R("Spiritual Guidance",  2, 5, 53),
+        R("Spiritual Healing",2, 3, 56),
+        R("Prayer of Mending",2, 1, 58),
     },
 
     ["PRIEST_Discipline"] = {      -- Discipline
         roles = "Healer/damage",
-        R("Wand Specialization", 1, 5, 14),
-        R("Inner Focus",         1, 1, 25),
-        R("Divine Spirit",       1, 1, 35),
-        R("Power Infusion",      1, 1, 46),
+        R("Wand Specialization",         1, 2, 11),
+        R("Twilight Focus",          2, 3, 14),
+        R("Meditation",1, 3, 26),
+        R("Renewed Hope",          1, 5, 38),
+        R("Divine Aegis",         1, 3, 41),
+        R("Power Infusion",          1, 1, 43),
     },
 
     ["PRIEST_Melee-weaving Mind Flayer"] = {   -- Shadow
         roles = "Damage/healer",
-        R("Mind Flay",        3, 1, 20),
-        R("Vampiric Embrace", 3, 1, 30),
-        R("Shadowform",       3, 1, 40),
-        R("Improved Power Word: Shield", 1, 3, 48),
-        R("Martyrdom",       1, 2, 50),
-        R("Meditation",       1, 3, 54),
-        R("Blackout",       3, 5, 59),
-    },
-
-    ["PRIEST_Hybrid"] = {   -- Shadow
-        roles = "Damage/healer",
-        R("Healing Focus",        2, 2, 11),
-        R("Mind Flay",        3, 1, 22),
-        R("Improved Mind Blast",        3, 4, 26),
-        R("Shadow Reach",        3, 3, 29),
-        R("Divine Fury", 2, 5, 37),
-        R("Inspiration",       2, 3, 41),
-        R("Meditation",       1, 3, 55),
+        R("Spirit Tap",          3, 5, 16),
+        R("Improved Mind Flay",        3, 2, 24),
+        R("Shadow Weaving", 3, 3, 30),
+        R("Shadowform",       3, 1, 42),
+        R("Darkness",       3, 5, 44),
     },
 
     ["PRIEST_Shadow Ascendant"] = {   -- Shadow
         roles = "Damage",
-        R("Mind Flay",        3, 1, 20),
-        R("Vampiric Embrace", 3, 1, 30),
-        R("Shadowform",       3, 1, 40),
-        R("Shadow Weaving",       3, 5, 45),
-        R("Improved Mind Blast",       3, 4, 49),
-        R("Shadow Affinity",       3, 3, 54),
+        R("Spirit Tap",          3, 5, 16),
+        R("Improved Mind Flay",        3, 2, 24),
+        R("Shadow Weaving", 3, 3, 30),
+        R("Shadowform",       3, 1, 42),
+        R("Darkness",       3, 5, 44),
     },
 
     ["PRIEST_Shadow"] = {   -- Shadow
         roles = "Damage/healer",
-        R("Mind Flay",        3, 1, 20),
-        R("Vampiric Embrace", 3, 1, 30),
-        R("Shadowform",       3, 1, 40),
+        R("Spirit Tap",          3, 5, 16),
+        R("Improved Mind Flay",        3, 2, 24),
+        R("Shadow Weaving", 3, 3, 30),
+        R("Shadowform",       3, 1, 42),
+        R("Darkness",       3, 5, 44),
     },
 
     ---------- MAGE ----------
 
     ["MAGE_Pyromancer"] = {       -- Fire
         roles = "Damage",
-        R("Improved Fireball", 2, 5, 17),
+        R("Accelerant", 2, 5, 17),
+        R("Incineration", 2, 5, 22),
+        R("Burning Soul", 2, 3, 26),
+        R("Heating Up", 2, 1, 28),
+        R("Improved Fire Blast", 2, 2, 29),
+        R("Ignite", 2, 1, 30),
         R("Blast Wave", 2, 1, 33),
-        R("Critical Mass",    2, 3, 36),
-        R("Fire Power",       2, 5, 42),
+        R("Fire Power",       2, 3, 40),
+        R("Combustion",    2, 1, 43),
     },
 
-    ["MAGE_Presence of Mind"] = {    -- Arcane
+    ["MAGE_Arcane"] = {    -- Arcane
         roles = "Damage",
-        R("Improved Arcane Missiles", 1, 5, 14),
-        R("Arcane Resilience",        1, 1, 20),
-        R("Impact",                   2, 5, 27),  -- Fire tree (cross-spec)
-        R("Pyroblast",                2, 1, 33),  -- Fire tree (cross-spec)
-        R("Presence of Mind",         1, 1, 41),
-        R("Arcane Power",             1, 1, 51),
+        R("Improved Channeling", 1, 5, 17),
+        R("Missile Barrage",        1, 2, 19),
+        R("Arcane Wrath",        1, 1, 28),
+        R("Arcane Meditation",        1, 3, 31),
+        R("Arcane Instability",        1, 3, 40),
+        R("Arcane Mind",        1, 5, 41),
+        R("Arcane Power",                   1, 1, 43),  -- Fire tree (cross-spec)
     },
 
     ["MAGE_Aoe-grinder"] = {         -- Frost
         roles = "Damage",
+        R("Improved Frost Nova",        3, 2, 16),
         R("Permafrost",        3, 3, 19),
         R("Improved Blizzard", 3, 3, 23),
-        R("Ice Block",         3, 1, 30),
+        R("Arctic Reach",        3, 2, 33),
+        R("Improved Cone of Cold",        3, 3, 36),
         R("Ice Barrier",       3, 1, 40),
     },
 
-    ["MAGE_Frostfire"] = {       -- Frostfire
+    ["MAGE_Frost"] = {         -- Frost
         roles = "Damage",
-        R("Improved Fireball", 2, 5, 14),
-        R("Elemental Precision", 3, 3, 17),
-        R("Ignite", 2, 5, 22),
-        R("Blast Wave", 2, 1, 33),
-        R("Frostbite", 3, 3, 38),
-        R("Shatter", 3, 5, 50),
-        R("Critical Mass",    2, 3, 53),
-        R("Combustion",       2, 1, 60),
-    },
-
-    ["MAGE_Scorch"] = {       -- Fire
-        roles = "Damage",
-        R("Impact", 2, 5, 14),
-        R("Elemental Precision", 3, 3, 17),
-        R("Ignite", 2, 5, 22),
-        R("Incinerate", 2, 2, 24),
-        R("Improved Scorch", 2, 3, 30),
-        R("Blast Wave", 2, 1, 33),
-        R("Master of Elements", 2, 3, 37),
-        R("Combustion",       2, 1, 43),
+        R("Frostbite",        3, 3, 17),
+        R("Improved Frostbolt",        3, 5, 21),
+        R("Shatter",        3, 3, 28),
+        R("Fingers of Frost",        3, 2, 32),
+        R("Ice Shards",        3, 5, 33),
+        R("Ice Barrier",       3, 1, 40),
     },
 }

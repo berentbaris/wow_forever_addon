@@ -187,11 +187,14 @@ COMPLETE.scarlet_priest_helm = true
 
 fill(C.scarlet_priest_shoulders, {
     { 3560,  "Mantle of Honor - Duskwood quest reward" },
-    { 22405,  "Mantle of the scarlet crusade - Strat drop" },
+    { 282704,  "Shadow Council Apprentice's Mantle - Arathi rare drop" },
+    { 22405,  "Mantle of the Scarlet Crusade - Strat drop" },
 })
 COMPLETE.scarlet_priest_shoulders = true
 
 fill(C.scarlet_priest_robe, {
+    { 253905,  "Filigreed Flame Gown - Tailoring" },
+    { 253965,  "Flame Gown - Tailoring" },
     { 3260,  "Scarlet Initiate Robes - rare SM drop" },
     { 7054,  "Robe of Power - Tailoring" },
 })
@@ -202,6 +205,8 @@ fill(C.templar_robes, {
     { 3216,  "Warm Winter Robe - Dun Morogh quest" },
     { 2114,  "Snowy Robe - Dun Morogh rare drop" },
     { 6241,  "White Linen Robe - Tailoring" },
+    { 253901,  "Filigreed Pristine Gown - Tailoring" },
+    { 253961,  "Pristine Gown - Tailoring" },
     { 2616,  "Shimmering Silk Robes - Vendor" },
     { 2618,  "Silver Dress Robes - Vendor" },
     { 13858,  "Runecloth Robe - Tailoring" },
@@ -214,10 +219,14 @@ fill(C.templar_mantle, {
     { 3560,  "Mantle of Honor - Duskwood quest reward" },
     { 2913,  "Silk Mantle of Gamn - Wetlands quest reward" },
     { 17047,  "Luminescent Amice - Ashenvale quest reward" },
+    { 281275,  "Mantle of Scaleslaying - Tanaris quest reward" },
+    { 254059,  "Netherlight Shoulders - Tailoring" },
+    { 260169,  "Amice of Sorrow - Azshara quest reward" },
 })
 COMPLETE.templar_mantle = true
 
 fill(C.templar_helm, {
+    { 270099,  "Magister Cowl - ZF quest reward" },
     { 13216,  "Crown of the Penitent - Strat quest reward" },
     { 14140,  "Mooncloth Circlet - Tailoring" },
 })
@@ -290,12 +299,15 @@ fill(C.reflector_belt, {
 COMPLETE.reflector_belt = true
 
 fill(C.imperial_shoulders, {
+    { 10374,  "Imbued Plate Pauldrons - World drop" },
     { 12428,  "Imperial Plate Shoulders - Blacksmithing" },
 })
 COMPLETE.imperial_shoulders = true
 
 fill(C.imperial_helm, {
+    { 8161,  "Jouster's Visor - World drop" },
     { 12427,  "Imperial Plate Helm - Blacksmithing" },
+    { 250597,  "Enriched Thorium Helm - Blacksmithing" },
     { 10763,  "Icemetal Barbute - RFD drop" },
     { 11729,  "Savage Gladiator Helm - BRD drop" },
 })
@@ -384,17 +396,28 @@ COMPLETE.reflector_armor = true
 
 fill(C.wizard_hat, {
     { 3556,  "Dread Mage Hat - Warlock Quest Reward" },
+    { 277211,  "Dudd's Thinkin' Cap - STV quest reward" },
     { 14246,  "Darkmist Wizard Hat - World drop" },
     { 6429,  "Mistscape Wizard Hat - World drop" },
     { 7470,  "Regal Wizard Hat - World drop" },
     { 9878,  "Sorcerer Hat - World drop" },
+    { 276877,  "Brewmancer Nightcap - BRD drop" },
     { 3345,  "Silk Wizard Hat - Syndicate Magus Drop" },
 })
 COMPLETE.wizard_hat = true
 
 fill(C.dark_robes, {
     { 2612,  "Plain Robe - Vendor" },
-    { 1561,  "Harvester's Robe - Westfall Quest Reward" },
+    { 253967,  "Shadow Gown - Tailoring" },
+    { 253907,  "Filigreed Shadow Gown - Tailoring" },
+    { 271206,  "Leftover Abomination Skin - RoL drop" },
+    { 276745,  "Beastbond Robe - AP drop" },
+    { 277074,  "Al'Aketh Vestments - Rare drop" },
+    { 2612,  "Plain - Vendor" },
+    { 2612,  "Plain - Vendor" },
+    { 2612,  "Plain - Vendor" },
+    { 2612,  "Plain - Vendor" },
+    { 280057,  "Robes of Dark Summons - BMH drop" },
     { 14150,  "Robe of Evocation - RFC Drop" },
     { 3461,  "High Robe of the Adjudicator - Silverpine Quest Reward" },
     { 7512,  "Nether-lace Robe - Mage Quest" },
@@ -435,6 +458,7 @@ COMPLETE.plagueshifter_shoulders = true
 
 fill(C.plagueshifter_robes, {
     { 6503,  "Harlequin Robes - Barrens quest reward" },
+    { 285088,  "Ooze Dripping Robes - Dustwallow rare drop" },
 })
 COMPLETE.plagueshifter_robes = true
 
@@ -493,6 +517,8 @@ COMPLETE.blue_shirt = true
 
 fill(C.blue_robe, {
     { 6272, "Blue Linen Robe - Tailoring" },
+    { 253903, "Filigreed Silky Gown - Tailoring" },
+    { 253963, "Silky Gown - Tailoring" },
 })
 COMPLETE.blue_robe = true
 
@@ -523,6 +549,12 @@ fill(C.brushwood, {
     { 18957, "Brushwood Blade - Teldrassil quest" },
 })
 COMPLETE.brushwood = true
+
+fill(C.spellblade_blade, {
+    { 276631, "Coldflame Saber - Imbued" },
+    { 276632, "Wit's Edge - Imbued" },
+})
+COMPLETE.spellblade_blade = true
 
 fill(C.green_dragon_blades, {
     { 10803, "Blade of the Wretched - ST drop" },
@@ -555,24 +587,41 @@ fill(C.dk_blade, {
 COMPLETE.dk_blade = true
 
 fill(C.pala_blade, {
+    { 268484, "Moonsilver Blade - Paladin quest (Horde)" },
+    { 271217, "Corpse Chopper - RoL drop" },
+    { 273817, "Graverobber's Shovel - Stockades drop" },
+    { 267369, "Wolfsbane - Paladin quest (Horde)" },
+    { 6953, "Verigan's Fist - Paladin quest (Alliance)" },
+    { 10758, "X'caliboar - RFD rare drop" },
     { 10805, "Eater of the Dead - ST drop" },
+    { 11920, "Wraith Scythe - BRD drop" },
     { 754, "Shortsword of Vengeance - World drop" },
     { 7960, "Truesilver Champion - Blacksmithing" },
+    { 276419, "Lightcrest Hammer - Strat drop" },
     { 13246, "Argent Avenger - Strat quest" },
 })
 COMPLETE.pala_blade = true
 
 fill(C.cultist_cowl, {
+    { 280072, "Cowl of Dark Ambition - BMH drop" },
     { 20408, "Twilight Cultist Cowl - Silithus drop" },
 })
 COMPLETE.cultist_cowl = true
 
 fill(C.cultist_shoulder, {
+    { 287008, "Ogre Magi's Mantle - Riverglades rare drop" },
     { 20406, "Twilight Cultist Mantle - Silithus drop" },
 })
 COMPLETE.cultist_shoulder = true
 
+fill(C.dh_sights, {
+    { 273645, "Blindwatcher's Sight - SFK drop" },
+})
+COMPLETE.dh_sights = true
+
 fill(C.cultist_robe, {
+    { 281666, "Robes of the Blind Cultist - Riverglades rare drop" },
+    { 282633, "Mastrogonde's Sinister Gown - Searing Gorge rare drop" },
     { 20407, "Twilight Cultist Robe - Silithus drop" },
 })
 COMPLETE.cultist_robe = true
@@ -737,6 +786,18 @@ fill(C.wildhammer_helm, {
     { 15363,   "Trickster's Headdress - World drop" },
 })
 COMPLETE.wildhammer_helm = true
+
+fill(C.horned_helm2, {
+    { 284065,   "Crown of Maldazzar - WPL rare drop" },
+    { 5753,   "Ruffled Chaplet - Ashenvale rare drop" },
+    { 6204,   "Tribal Worg Helm - Duskwood rare drop" },
+    { 3011, "Feathered Headdress - Alterac rare drop" },
+    { 17740,   "Soothsayer's Headdress - Maraudon drop" },
+    { 15384,   "Rageclaw Helm - World drop" },
+    { 9921,   "Tracker's Headband - World drop" },
+    { 15363,   "Trickster's Headdress - World drop" },
+})
+COMPLETE.horned_helm2 = true
 
 fill(C.skull_shield, {
     { 3761,   "Deadskull Shield - Hillsbrad quest reward" },
@@ -1181,6 +1242,7 @@ fill(C.staff_like_offhand, {
     { 7559, "Runic Cane - Barrens rare 'Brokespear' drop" },
     { 6803, "Prophetic Cane - Horde RFD quest reward" },
     { 12471, "Desertwalker Cane - ZF rare boss drop" },
+    { 270112, "Gryphon Rider's Crop - Hinterlands quest reward" },
 })
 COMPLETE.staff_like_offhand = true
 
@@ -1191,6 +1253,8 @@ COMPLETE.awkward_merch = true
 
 fill(C.archmage_shoulders, {
     { 7712, "Mantle of Doan - SM drop" },
+    { 15812, "Orchid Amice - WPL quest reward" },
+    { 273051, "Violet Sorcerer's Mantle - CoD drop" },
     { 15812, "Orchid Amice - WPL quest reward" },
     { 11624, "Kentic Amice - BRD drop" },
     { 18757, "Diabolic Mantle - Dire Maul drop" },
@@ -1327,6 +1391,7 @@ fill(C.pickaxe, {
     { 1893, "Miner's Revenge - DM quest reward" },
     { 756, "Tunnel Pick - Wetlands rare drop" },
     { 1959, "Cold Iron Pick - DM rare drop" },
+    { 273817, "Graverobber's Shovel - Stockades drop" },
     { 7687, "Ironspine's Fist - SM rare drop" },
     { 9465, "Digmaster 5000 - World drop" },
     { 4128, "Silver Spade - STV quest reward" },
@@ -1458,7 +1523,13 @@ COMPLETE.witch_doctor_staff = true
 
 fill(C.vial_offhand, {
     { 3451,  "Nightglow Concoction - Silverpine quest reward" },
+    { 281294,  "Expended Apothecary Vial - Hillsbrad quest reward" },
+    { 284668,  "Apothecary's Concoction - Ashenvale rare drop" },
+    { 276904,  "Shimmerwine Spirits - CoD quest reward" },
     { 19115, "Flask of Forest Mojo - Hinterlands quest reward" },
+    { 277259,  "Fermented Restoration Potion - Unknown" },
+    { 284228,  "Vial of Vile Liquid - Felwood rare drop" },
+    { 275671,  "Field Agent Beverage - Hyjal quest reward" },
 })
 COMPLETE.vial_offhand = true
 

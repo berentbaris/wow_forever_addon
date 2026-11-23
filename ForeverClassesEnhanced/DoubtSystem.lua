@@ -150,9 +150,17 @@ local function isPlayerSitting()
     -- We use IsMounted as a negative check and fall back to checking
     -- if the player is specifically seated via the standState.
     if IsMounted and IsMounted() then return false end
-    -- Forever: speed is a secret value in combat; treat unknown as "not sitting"
+    -- Forever: speed is a secret value in combat (e.g. while charging).
+    -- You can't sit in combat, so don't even read it there; outside
+    -- combat, compare under pcall so a hidden value can never throw.
+    if (InCombatLockdown and InCombatLockdown())
+        or (UnitAffectingCombat and UnitAffectingCombat("player")) then
+        return false
+    end
     local speed = FCE.Compat.Plain(GetUnitSpeed("player"))
-    if speed == nil or speed > 0 then return false end
+    if speed == nil then return false end
+    local ok, moving = pcall(function() return speed > 0 end)
+    if not ok or moving then return false end
     -- There's no perfect "is sitting" API in Classic; approximate:
     -- if they have Cozy Fire buff and speed == 0, treat "sitting by fire"
     -- as a separate cleanse tier from "standing near fire".

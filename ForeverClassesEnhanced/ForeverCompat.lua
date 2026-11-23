@@ -63,7 +63,11 @@ Compat.HAS_COMBAT_LOG = false  -- set by EventChallenges after it tries to regis
 ----------------------------------------------------------------------
 
 function Compat.IsSecret(v)
-    return type(issecretvalue) == "function" and issecretvalue(v) or false
+    if type(issecretvalue) == "function" and issecretvalue(v) then return true end
+    -- Some values are only secret to addon (tainted) code: issecretvalue
+    -- misses them (GetUnitSpeed while charging), canaccessvalue doesn't.
+    if type(canaccessvalue) == "function" and not canaccessvalue(v) then return true end
+    return false
 end
 
 --- Returns v if it is a plain (non-secret) value, otherwise fallback.
@@ -465,6 +469,48 @@ Compat.SendChatMessage = native("SendChatMessage") or function(msg, chatType, la
     if C_ChatInfo and C_ChatInfo.SendChatMessage then
         return C_ChatInfo.SendChatMessage(msg, chatType, language, target)
     end
+end
+
+-- Addon-initiated chat is blocked in instances (dungeons, battlegrounds)
+-- and in combat on Forever (ADDON_ACTION_BLOCKED).  While restricted:
+-- guild/officer/whisper messages wait and are sent once allowed; party,
+-- raid, say, yell and channel messages are dropped (only relevant now;
+-- AddonComm keeps its own queue for the channel).
+local rawSendChat = Compat.SendChatMessage
+local QUEUED_CHAT = { GUILD = true, OFFICER = true, WHISPER = true }
+local chatQueue = {}
+
+function Compat.CanAddonChat()
+    if IsInInstance and IsInInstance() then return false end
+    if InCombatLockdown and InCombatLockdown() then return false end
+    return true
+end
+
+local function flushChatQueue()
+    while #chatQueue > 0 and Compat.CanAddonChat() do
+        local m = table.remove(chatQueue, 1)
+        rawSendChat(m[1], m[2], m[3], m[4])
+    end
+end
+
+Compat.SendChatMessage = function(msg, chatType, language, target)
+    if Compat.CanAddonChat() then
+        return rawSendChat(msg, chatType, language, target)
+    end
+    local t = type(chatType) == "string" and chatType:upper() or ""
+    if QUEUED_CHAT[t] and #chatQueue < 10 then
+        chatQueue[#chatQueue + 1] = { msg, chatType, language, target }
+    end
+end
+
+do
+    local f = CreateFrame("Frame")
+    f:RegisterEvent("PLAYER_REGEN_ENABLED")
+    f:RegisterEvent("PLAYER_ENTERING_WORLD")
+    f:RegisterEvent("ZONE_CHANGED_NEW_AREA")
+    f:SetScript("OnEvent", function()
+        if #chatQueue > 0 then C_Timer.After(2, flushChatQueue) end
+    end)
 end
 
 Compat.ChatFrame_AddMessageEventFilter = native("ChatFrame_AddMessageEventFilter")

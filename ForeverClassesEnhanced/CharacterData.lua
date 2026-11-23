@@ -355,7 +355,7 @@ FCE.Characters = {
         mount       = nil,
         gameplay    = "darkmoon special, dragonbreath",
     },
-
+    --[[
     ["Barbarian_WARRIOR"] = {
         class       = "WARRIOR",
         spec        = "Arms",
@@ -418,7 +418,7 @@ FCE.Characters = {
         mount       = nil,
         gameplay    = nil,
     },
-
+    --]]
     ["Demon Hunter_WARRIOR"] = {
         class       = "WARRIOR",
         spec        = "Flurry",
@@ -436,6 +436,7 @@ FCE.Characters = {
         equipment   = {
             E("No chest", 1),
             E("Dual swords", 20),
+            E("Demon Hunter's sights", 24),
             E("Kilt", 25),
         },
         questsByHomebound = { 
@@ -804,7 +805,7 @@ FCE.Characters = {
         mount       = nil,
         gameplay    = "argent war",
     },
-
+    --[[
     ["Exemplar_WARRIOR"] = {
         class       = "WARRIOR",
         spec        = '"Sword & Board"',
@@ -889,7 +890,8 @@ FCE.Characters = {
             Horde    = "uc hearthstone, uc tabard",
         },
     },
-
+    ]]--
+    --[[
     ["Deathguard_WARRIOR"] = {
         class       = "WARRIOR",
         spec        = '"Sword & Board"',
@@ -936,7 +938,7 @@ FCE.Characters = {
         mount       = nil,
         gameplay    = "uc hearthstone, uc tabard",
     },
-
+    --]]
     ---------- ROGUE ----------
 
     ["Mountain King_ROGUE"] = {
@@ -986,10 +988,9 @@ FCE.Characters = {
         selfFound   = true,
         professions = { "Mining" },
         equipment   = {
-            E("Dagger", 10),
             E("Crossbow", 10),
+            E("Prospector's pickaxe", 20),
             E("Prospector headgear", 32),
-            E("Prospector's pick", 35),
         },
         challenges  = {
             E("Explorer", 1),
@@ -1208,9 +1209,7 @@ FCE.Characters = {
         gender      = "Female",
         selfFound   = true,
         professions = {},
-        challenges  = {
-            E("Lockdown", 1),
-        },
+        challenges  = {},
         optionalChallenges = {
             E("Exotic", 1),
             E("Partisan", 1),
@@ -1540,7 +1539,7 @@ FCE.Characters = {
 
     ["Templar_PALADIN"] = {
         class       = "PALADIN",
-        spec        = "Holy/Prot",
+        spec        = "Retribution",
         name        = "Templar",
         races       = { "Dwarf", "Human" },
         gender      = "Any gender",
@@ -1555,12 +1554,12 @@ FCE.Characters = {
             E("Self-made", 1),
         },
         equipment   = {
-            E("Sword or mace", 5, 49),
+            E("Sword or mace", 5),
             E("Guild tabard", 20),
+            E("Templar blade", 25),
             E("Argent shoulders", 35),
             E("Argent helm", 45),
             E("Argent Dawn trinket", 50),
-            E("Templar blade", 50),
         },
         questsByHomebound = { 
             default = {
@@ -1680,7 +1679,7 @@ FCE.Characters = {
 
     ["Exemplar_PALADIN"] = {
         class       = "PALADIN",
-        spec        = "Retribution",
+        spec        = "Holy",
         name        = "Exemplar",
         races       = { "Human" },
         gender      = "Any gender",
@@ -1783,12 +1782,12 @@ FCE.Characters = {
     },
 
     ---------- PRIEST ----------
-
+    --[[
     ["Templar_PRIEST"] = {
         class       = "PRIEST",
         spec        = "Discipline",
         name        = "Templar",
-        races       = { "Dwarf", "Human", "Night Elf" },
+        races       = { "Dwarf", "Human", "Night Elf", "Gnome", "Undead" },
         gender      = "Any gender",
         selfFound   = true,
         professions = {},
@@ -1834,21 +1833,21 @@ FCE.Characters = {
         mount       = nil,
         gameplay    = "Anti-undead, argent tabard",
     },
-
+    --]]
     ["Twilight Cultist_PRIEST"] = {
         class       = "PRIEST",
         spec        = "Shadow",
         name        = "Twilight Cultist",
-        races       = { "Dwarf", "Night Elf", "Undead", "Troll" },
+        races       = { "Dwarf", "Night Elf", "Undead", "Troll", "Gnome" },
         gender      = "Any gender",
         selfFound   = true,
         professions = {},
         equipment   = {
             E("Dark robe", 8),
             E("Shadow wand", 15),
-            E("Cultist shoulders", 60),
-            E("Cultist cowl", 60),
-            E("Cultist robe", 60),
+            E("Cultist shoulders", 45),
+            E("Cultist cowl", 45),
+            E("Cultist robe", 45),
         },
         challenges  = {
             E("Drifter", 1),
@@ -1884,7 +1883,7 @@ FCE.Characters = {
 
     ["Scarlet Champion_PRIEST"] = {
         class       = "PRIEST",
-        spec        = "Spirit",
+        spec        = "Discipline",
         name        = "Scarlet Champion",
         races       = { "Human" },
         gender      = "Any gender",
@@ -2040,7 +2039,7 @@ FCE.Characters = {
         mount       = nil,
         gameplay    = nil,
     },
-
+    --[[
     ["Witch Doctor_PRIEST"] = {
         class       = "PRIEST",
         spec        = "Melee-weaving Mind Flayer",
@@ -2086,10 +2085,10 @@ FCE.Characters = {
         mount       = nil,
         gameplay    = "Melee weaving caster 1, pole weaving",
     },
-
+    --]]
     ["Shadow Hunter_PRIEST"] = {
         class       = "PRIEST",
-        spec        = "Hybrid",
+        spec        = "Shadow",
         name        = "Shadow Hunter",
         races       = { "Troll" },
         gender      = "Any gender",
@@ -2126,7 +2125,7 @@ FCE.Characters = {
 
     ["Priestess of the Moon_PRIEST"] = {
         class       = "PRIEST",
-        spec        = "Spirit",
+        spec        = "Holy",
         name        = "Priestess of the Moon",
         races       = { "Night Elf" },
         gender      = "Female",
@@ -2135,8 +2134,6 @@ FCE.Characters = {
         equipment   = {
             E("Robe", 1),
             E("Arcane wand", 13),
-            E("180 spirit", 40),
-            E("250 spirit", 50),
         },
         questsByHomebound = { 
             default = {
@@ -2170,11 +2167,11 @@ FCE.Characters = {
         companion   = nil,
         pet         = nil,
         mount       = E("Frostsaber", 44),
-        gameplay    = "Spirit tap + starshards",
+        gameplay    = nil,
     },
 
     ---------- HUNTER ----------
-
+    --[[
     ["Shadow Hunter_HUNTER"] = {
         class       = "HUNTER",
         spec        = "Spell Power",
@@ -2220,7 +2217,7 @@ FCE.Characters = {
         mount       = nil,
         gameplay    = nil,
     },
-
+    --]]
     ["Wilderness Stalker_HUNTER"] = {
         class       = "HUNTER",
         spec        = "Melee",
@@ -2263,9 +2260,9 @@ FCE.Characters = {
         companion   = nil,
         pet         = E("Wolf", 11),
         mount       = nil,
-        gameplay    = "wing clip axe",
+        gameplay    = nil,
     },
-
+    --[[
     ["Priestess of the Moon_HUNTER"] = {
         class       = "HUNTER",
         spec        = "Spell Power",
@@ -2319,7 +2316,7 @@ FCE.Characters = {
         mount       = E("Frostsaber", 44),
         gameplay    = nil,
     },
-
+    --]]
     ["Elven Ranger_HUNTER"] = {
         class       = "HUNTER",
         spec        = "Lone Wolf",
@@ -2365,7 +2362,7 @@ FCE.Characters = {
 
     ["Mountaineer_HUNTER"] = {
         class       = "HUNTER",
-        spec        = "Marksmanship",
+        spec        = "Sniper",
         name        = "Mountaineer",
         races       = { "Dwarf" },
         gender      = "Any gender",
@@ -2397,14 +2394,14 @@ FCE.Characters = {
         },
         questTheme  = "Ironforge Loyalist",
         companion   = nil,
-        pet         = E("Bear", 11),
+        pet         = E("Bear", 11, 20),
         mount       = nil,
         gameplay    = nil,
     },
 
     ["Brave_HUNTER"] = {
         class       = "HUNTER",
-        spec        = "Melee",
+        spec        = "Melee Lone Wolf",
         name        = "Brave",
         races       = { "Tauren" },
         gender      = "Any gender",
@@ -2444,14 +2441,14 @@ FCE.Characters = {
         },
         questTheme  = "Thunderbluff Loyalist",
         companion   = nil,
-        pet         = E("Tallstrider", 11),
+        pet         = E("Tallstrider", 11, 20),
         mount       = nil,
-        gameplay    = "wing clip polearm",
+        gameplay    = nil,
     },
 
     ["Buccaneer_HUNTER"] = {
         class       = "HUNTER",
-        spec        = "Survival",
+        spec        = "Melee",
         name        = "Buccaneer",
         races       = { "Tauren", "Orc", "Dwarf" },
         gender      = "Any gender",
@@ -2505,7 +2502,7 @@ FCE.Characters = {
         },
         questTheme  = "Treasure Hunter",
         companion   = E("Parrot", 16),
-        pet         = E("Aquatic", 14),
+        pet         = E("Aquatic", 12),
         mount       = nil,
         gameplay    = "Rum",
     },
@@ -2573,7 +2570,7 @@ FCE.Characters = {
 
     ["Techno-mage_MAGE"] = {
         class       = "MAGE",
-        spec        = "Presence of Mind",
+        spec        = "Pyromancer",
         name        = "Techno-mage",
         races       = { "Gnome" },
         gender      = "Any gender",
@@ -2615,12 +2612,12 @@ FCE.Characters = {
         companion   = E("Mechanical", 45),
         pet         = nil,
         mount       = nil,
-        gameplay    = "Pyroblast + arcane missile",
+        gameplay    = nil,
     },
 
     ["Kirin Tor Mage_MAGE"] = {
         class       = "MAGE",
-        spec        = "Frostfire",
+        spec        = "Frost",
         name        = "Kirin Tor Mage",
         races       = { "Gnome", "Human" },
         gender      = "Any gender",
@@ -2656,7 +2653,7 @@ FCE.Characters = {
 
     ["Hedge Wizard_MAGE"] = {
         class       = "MAGE",
-        spec        = "Scorch",
+        spec        = "Pyromancer",
         name        = "Hedge Wizard",
         races       = { "Troll" },
         gender      = "Any gender",
@@ -2688,7 +2685,7 @@ FCE.Characters = {
 
     ["Ley Walker_MAGE"] = {
         class       = "MAGE",
-        spec        = "Presence of Mind",
+        spec        = "Arcane",
         name        = "Ley Walker",
         races       = { "Human" },
         gender      = "Any gender",
@@ -2741,7 +2738,7 @@ FCE.Characters = {
         companion   = nil,
         pet         = nil,
         mount       = nil,
-        gameplay    = "Self-made enchants, scrolls, pro-nature, Pyroblast + arcane missile",
+        gameplay    = "Self-made enchants, scrolls, pro-nature",
     },
 
     ["Spellblade_MAGE"] = {
@@ -2755,14 +2752,14 @@ FCE.Characters = {
         equipmentByFaction = {
             Alliance = {
                 E("No robes", 1),
-                E("Warmage blade", 10),
-                E("Armored off-hand", 20),
+                E("Warmage blade", 25),
                 E("Frost wand", 35),
                 E("Armored ring", 45),
+                E("Staff-like off-hand", 48),
             },
             Horde = {
                 E("No robes", 1),
-                E("Sword", 10),
+                E("Warmage blade", 25),
                 E("Staff-like off-hand", 35),
                 E("Frost wand", 35),
                 E("Armored ring", 45),             
@@ -2794,7 +2791,6 @@ FCE.Characters = {
                 Q("Melding of Influences", 55, 4642),
             },
         },
-        questTheme  = "Crowd Control",
         companion   = nil,
         pet         = nil,
         mount       = nil,
@@ -2955,9 +2951,9 @@ FCE.Characters = {
         equipment   = {
             E("Dark robe", 8),
             E("Shadow wand", 15),
-            E("Cultist shoulders", 60),
+            E("Cultist robe", 45),
+            E("Cultist shoulders", 45),
             E("Cultist cowl", 60),
-            E("Cultist robe", 60),
         },
         challenges  = {
             E("Drifter", 1),
@@ -3248,7 +3244,7 @@ FCE.Characters = {
         mount       = nil,
         gameplay    = "/roar, pro-nature, tank tour",
     },
-
+    --[[
     ["Druid of the Talon_DRUID"] = {
         class       = "DRUID",
         spec        = "Melee Moonkin",
@@ -3326,7 +3322,7 @@ FCE.Characters = {
         mount       = nil,
         gameplay    = "Pro-nature",
     },
-
+    --]]
     ["Druid of the Wild_DRUID"] = {
         class       = "DRUID",
         spec        = "Powershifting Hybrid",
@@ -3566,7 +3562,7 @@ FCE.Characters = {
         mount       = nil,
         gameplay    = "tank tour",
     },
-
+    --[[
     ["Farseer_SHAMAN"] = {
         class       = "SHAMAN",
         spec        = 'Elemental',
@@ -3605,7 +3601,7 @@ FCE.Characters = {
         mount       = E("Wolf", 44),
         gameplay    = nil,
     },
-
+    ]]--
     ["Witch Doctor_SHAMAN"] = {
         class       = "SHAMAN",
         spec        = "Ward",

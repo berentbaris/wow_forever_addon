@@ -1483,6 +1483,7 @@ local CURATED = {
     hw_staff = {},
     hw_staff1 = {},
     hw_robe = {},
+    dh_sights = {},
 }
 
 -- Expose the curated tables so other files can populate them
@@ -1625,6 +1626,7 @@ FCE.CuratedKeyForDesc = {
     ["Exemplar mantle"]            = "exemplar_mantle",
     ["Exemplar circlet"]            = "archmage_circlet",
     ["Exemplar robe"]            = "blue_robe",
+    ["Demon Hunter's sights"]   = "dh_sights",
     ["Wildhammer helm"]            = "wildhammer_helm",
     ["Forsaken shield"]            = "skull_shield",
     ["Voodoo shoulders"]            = "voodoo_shoulders",
@@ -1633,7 +1635,7 @@ FCE.CuratedKeyForDesc = {
     ["Dual dragon blades"]            = "green_dragon_blades",
     ["Dual Fletcher blades"]            = "green_dragon_blades",
     ["Shadow Hunter knife"]         = "sh_knife",
-    ["Warmage blade"]               = "brushwood",
+    ["Warmage blade"]               = "spellblade_blade",
     ["Beastslaying chest"]          = "anti_beast_chest",
     ["Totem weapon"]          = "totem_weapon",
     ["Primitive weapon"]          = "primitive_weapon",
@@ -1767,7 +1769,7 @@ R("Warmage blade", function(state)
     if allWeaponsAre(state, fish) then
         return PASS, "Fishing break"
     end
-    return anySlotInCurated(state, { SLOT.MAINHAND, SLOT.OFFHAND }, "brushwood")
+    return anySlotInCurated(state, { SLOT.MAINHAND, SLOT.OFFHAND }, "spellblade_blade")
 end)
 
 R("Dual dragon blades", function(state)
@@ -2088,6 +2090,10 @@ end)
 
 R("Wolf helm", function(state)
     return slotInCurated(state, SLOT.HEAD, "wolf_helm")
+end)
+
+R("Demon Hunter's sights", function(state)
+    return slotInCurated(state, SLOT.HEAD, "dh_sights")
 end)
 
 R("Book of necromancy", function(state)
