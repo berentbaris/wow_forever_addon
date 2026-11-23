@@ -315,6 +315,7 @@ COMPLETE.imperial_helm = true
 
 fill(C.argent_shoulders, {
     { 4123,  "Frost Metal Pauldrons - STV quest reward" },
+    { 274959,  "Farholde Horns - Riverglades quest reward" },
     { 9411,  "Rockshard Pauldrons - Uldaman drop" },
     { 17779,  "Hulkstone Pauldrons - Maraudon quest reward" },
     { 11632,  "Earthslag Shoulders - BRD drop" },
@@ -475,6 +476,8 @@ COMPLETE.spellstone = true
 
 fill(C.wolf_helm, {
     { 30037, "Embrace of the Lycan - ZF boss drop" },
+    { 282049, "Deathmaw's Guise - Burning Steppes rare drop" },
+    
 })
 COMPLETE.wolf_helm = true
 -- Only the Wolfshead Helm has a literal wolf-head model in Classic.
@@ -533,6 +536,8 @@ COMPLETE.exemplar_mantle = true
 ----------------------------------------------------------------------
 
 fill(C.captains_hat, {
+    { 276105, "Scoutmaster's Eyepatch - Riverglades quest reward (Horde)" },
+    { 270123, "Ragnar's Favorite Hat - BRD quest reward" },
     { 10030, "Admiral's Hat - Tailoring 240" },
     { 12185, "Bloodsail Admiral's Hat - Bloodsail rep" },
     { 2955, "First Mate Hat - World drop" },
@@ -776,14 +781,20 @@ fill(C.horned_helm, {
 COMPLETE.horned_helm = true
 
 fill(C.wildhammer_helm, {
-    { 6688,   "Whisperwind Headdress - RFK rare drop" },
     { 5753,   "Ruffled Chaplet - Ashenvale rare drop" },
     { 6204,   "Tribal Worg Helm - Duskwood rare drop" },
+    { 274155,   "Geomancer Headdress - RFK drop" },
+    { 6688,   "Whisperwind Headdress - RFK rare drop" },
+    { 274609,   "Serpentbane Crown - DC drop" },
     { 3011, "Feathered Headdress - Alterac rare drop" },
-    { 17740,   "Soothsayer's Headdress - Maraudon drop" },
+    { 274644,   "Undying Headdress - ZF drop" },
+    { 17740,   "Soothsayer's Headdress - Maraudon drop" },   
+    { 283545,   "Moonchaser's Headdress - Hinterlands rare drop" },
+    { 280058,   "Impish Chain Hood - BMH drop" }, 
     { 15384,   "Rageclaw Helm - World drop" },
     { 9921,   "Tracker's Headband - World drop" },
     { 15363,   "Trickster's Headdress - World drop" },
+    { 260195,   "Headdress of the Damned - Blasted Lands quest reward" },
 })
 COMPLETE.wildhammer_helm = true
 
@@ -793,6 +804,7 @@ fill(C.horned_helm2, {
     { 6204,   "Tribal Worg Helm - Duskwood rare drop" },
     { 3011, "Feathered Headdress - Alterac rare drop" },
     { 17740,   "Soothsayer's Headdress - Maraudon drop" },
+    { 280076,   "Horns of Varrox - BMH drop" },
     { 15384,   "Rageclaw Helm - World drop" },
     { 9921,   "Tracker's Headband - World drop" },
     { 15363,   "Trickster's Headdress - World drop" },
@@ -1410,6 +1422,7 @@ COMPLETE.discombobulator = true
 fill(C.prospector_headgear, {
     { 3890, "Studded Hat - Vendor" },
     { 19972, "Lucky Fishing Hat - Fishing" },
+    { 284400, "Foreman's Helm - Stonetalon rare drop" },
     { 4048, "Emblazoned Hat - World drop" },
     { 8174, "Comfortable Leather Hat - Leatherworking 200" },
     { 9534, "Engineer's Guild Headpiece - ZF quest reward" },

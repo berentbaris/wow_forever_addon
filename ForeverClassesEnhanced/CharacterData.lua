@@ -1290,7 +1290,7 @@ FCE.Characters = {
         professions = { "Fishing" },
         recommendedProfession = {
             name = "Tailoring",
-            reason = "Needed to craft Captain's Hat, which requires 240 Tailoring.",
+            reason = "You can craft a suitable headgear with 240 Tailoring.",
         },
         weaponProficiency = { E("Guns", 15) },
         equipment   = {
@@ -1299,7 +1299,7 @@ FCE.Characters = {
             E("Pirate blade", 20),
             E("Pirate shirt", 20),
             E("Pirate belt", 40),
-            E("Captain's hat", 45),
+            E("Captain's headgear", 45),
         },
         challenges  = {
             E("Explorer", 1),
@@ -2456,7 +2456,7 @@ FCE.Characters = {
         professions = { "Fishing" },
         recommendedProfession = {
             name = "Tailoring",
-            reason = "Needed to craft Captain's Hat, which requires 240 Tailoring.",
+            reason = "You can craft a suitable headgear with 240 Tailoring.",
         },
         equipment   = {
             E("Gun", 10),
@@ -2464,7 +2464,7 @@ FCE.Characters = {
             E("Torch", 24),
             E("Rapier", 32),
             E("Pirate belt", 40),
-            E("Captain's hat", 45),
+            E("Captain's headgear", 45),
         },
         challenges  = {
             E("Explorer", 1),
@@ -2944,7 +2944,7 @@ FCE.Characters = {
         class       = "WARLOCK",
         spec        = "DS/Ruin",
         name        = "Twilight Cultist",
-        races       = { "Gnome", "Human", "Undead", "Orc" },
+        races       = { "Gnome", "Human", "Undead", "Orc", "Troll" },
         gender      = "Any gender",
         selfFound   = true,
         professions = {},
@@ -2990,7 +2990,7 @@ FCE.Characters = {
 
     ["Pyremaster_WARLOCK"] = {
         class       = "WARLOCK",
-        spec        = "Melee-weaving Fire",
+        spec        = "Fire Destruction",
         name        = "Pyremaster",
         races       = { "Orc" },
         gender      = "Any gender",
@@ -3129,7 +3129,6 @@ FCE.Characters = {
         mount       = nil,
         gameplay    = "Self-made enchants",
     },
-
 
     ---------- DRUID ----------
 

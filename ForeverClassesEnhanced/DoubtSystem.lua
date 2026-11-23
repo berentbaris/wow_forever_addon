@@ -133,12 +133,22 @@ local function anyFailing()
     return getFailPct() > 0
 end
 
---- Is the player near a campfire? (has "Cozy Fire" buff)
+--- Campfire buffs: Cozy Fire (Basic Campfire) and Forever's Welcoming Campfire.
+--- Spell IDs work on any client language; names are the English fallback.
+local CAMPFIRE_SPELL_IDS = {
+    [1229739] = true,   -- Welcoming Campfire (Forever)
+}
+local CAMPFIRE_BUFF_NAMES = {
+    ["Cozy Fire"]          = true,
+    ["Welcoming Campfire"] = true,
+}
+
+--- Is the player near a campfire? (Cozy Fire / Welcoming Campfire buff)
 local function hasCampfireBuff()
     for i = 1, 40 do
-        local name = UnitBuff("player", i)
+        local name, _, _, _, _, _, _, _, _, spellID = UnitBuff("player", i)
         if not name then break end
-        if name == "Cozy Fire" then return true end
+        if CAMPFIRE_SPELL_IDS[spellID] or CAMPFIRE_BUFF_NAMES[name] then return true end
     end
     return false
 end

@@ -1501,7 +1501,7 @@ FCE.CuratedKeyForDesc = {
     ["Spellstone"]                  = "spellstone",
     ["Cowl"]                        = "cowl",
     ["Fast dagger"]                 = "fast_daggers",
-    ["Captain's hat"]               = "captains_hat",
+    ["Captain's headgear"]               = "captains_hat",
     ["Pirate blade"] = "pirate_blade",
     ["Wolf helm"]                   = "wolf_helm",
     ["Fletcher gloves"]             = "brown_gloves",
@@ -2084,7 +2084,7 @@ R("Cowl", function(state)
     return slotInCurated(state, SLOT.HEAD, "cowl")
 end)
 
-R("Captain's hat", function(state)
+R("Captain's headgear", function(state)
     return slotInCurated(state, SLOT.HEAD, "captains_hat")
 end)
 
