@@ -148,6 +148,7 @@ FCE.BROWSE_ICONS = {
     ["Huntress"]           = 132279,
     ["Gladiator"]          = 135358,
     ["Deathguard"]         = 306622,
+    ["Druid of the Fang"]         = 132160,
     ["Spirit Champion"]    = 136075,
     ["Farseer"]            = 237577,
     ["Barbarian"]          = 132352,
@@ -2067,6 +2068,14 @@ function Catalog.ShowScreen3(charKey)
                 questIdx = questIdx + 1
                 index, yOff = emitCatRow(index, yOff, "lv " .. quest.level, COLOR_INACTIVE, quest.name)
             end
+        end
+    end
+
+    -- APPEARANCE
+    if char.appearance and #char.appearance > 0 then
+        index, yOff = emitCatSectionHeader(index, yOff, "APPEARANCE")
+        for _, req in ipairs(char.appearance) do
+            index, yOff = emitCatRow(index, yOff, "lv " .. req.level, COLOR_INACTIVE, req.desc)
         end
     end
 

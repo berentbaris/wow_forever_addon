@@ -62,6 +62,7 @@ FCE.ClassBackgrounds = {
     ["Death Knight"]    = BG .. "Death_Knight",
     ["Necromancer"]     = BG .. "Necromancer",
     -- DRUID
+    ["Druid of the Fang"] = BG .. "Fang",
     ["Druid of the Claw"] = BG .. "Claw",
     ["Plagueshifter"]   = BG .. "Plagueshifter",
     ["Savagekin"]       = BG .. "Savagekin",

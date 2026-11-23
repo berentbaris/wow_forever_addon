@@ -1484,6 +1484,11 @@ local CURATED = {
     hw_staff1 = {},
     hw_robe = {},
     dh_sights = {},
+    fang1 = {},
+    fang2 = {},
+    fang3 = {},
+    fang4 = {},
+    fang5 = {},
 }
 
 -- Expose the curated tables so other files can populate them
@@ -1503,6 +1508,11 @@ FCE.CuratedKeyForDesc = {
     ["Fast dagger"]                 = "fast_daggers",
     ["Captain's headgear"]               = "captains_hat",
     ["Pirate blade"] = "pirate_blade",
+    ["Armor of the Fang"] = "fang1",
+    ["Gloves of the Fang"] = "fang3",
+    ["Footpads of the Fang"] = "fang2",
+    ["Belt of the Fang"] = "fang5",
+    ["Leggings of the Fang"] = "fang4",
     ["Wolf helm"]                   = "wolf_helm",
     ["Fletcher gloves"]             = "brown_gloves",
     ["Powershifting helm"]          = "powershifting_helm",
@@ -1860,8 +1870,24 @@ R("Argent circlet", function(state)
     return slotInCurated(state, SLOT.CHEST, "templar_helm")
 end)
 
-R("Dragonsworn shoulders", function(state)
-    return slotInCurated(state, SLOT.SHOULDER, "dragonsworn_shoulders")
+R("Armor of the Fang", function(state)
+    return slotInCurated(state, SLOT.CHEST, "fang1")
+end)
+
+R("Gloves of the Fang", function(state)
+    return slotInCurated(state, SLOT.HANDS, "fang3")
+end)
+
+R("Footpads of the Fang", function(state)
+    return slotInCurated(state, SLOT.FEET, "fang2")
+end)
+
+R("Belt of the Fang", function(state)
+    return slotInCurated(state, SLOT.WAIST, "fang5")
+end)
+
+R("Leggings of the Fang", function(state)
+    return slotInCurated(state, SLOT.LEGS, "fang4")
 end)
 
 R("Dark Ranger shoulders", function(state)

@@ -46,6 +46,31 @@ fill(C.flying_tiger_goggles, {
 })
 COMPLETE.flying_tiger_goggles = true
 
+fill(C.fang1, {
+    { 6473, "Armor of the Fang - WC drop" },
+})
+COMPLETE.fang1 = true
+
+fill(C.fang2, {
+    { 10411, "Footpads of the Fang - WC drop" },
+})
+COMPLETE.fang2 = true
+
+fill(C.fang3, {
+    { 10413, "Gloves of the Fang - WC drop" },
+})
+COMPLETE.fang3 = true
+
+fill(C.fang4, {
+    { 10410, "Leggings of the Fang - WC drop" },
+})
+COMPLETE.fang4 = true
+
+fill(C.fang5, {
+    { 10412, "Belt of the Fang - WC drop" },
+})
+COMPLETE.fang5 = true
+
 -- Green-tinted goggles - green-lens / tinted eyewear
 fill(C.green_tinted_goggles, {
     { 4385,  "Green Tinted Goggles - Engineering 150" },

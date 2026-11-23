@@ -41,6 +41,7 @@ QuestJournal.lua
 CompanionCheck.lua
 HunterPetCheck.lua
 MountCheck.lua
+AppearanceCheck.lua
 SettingsPanel.lua
 ProgressSummary.lua
 DoubtSystem.lua

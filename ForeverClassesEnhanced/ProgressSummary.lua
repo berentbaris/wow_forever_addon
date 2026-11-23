@@ -305,6 +305,23 @@ function Progress.Collect()
         end
     end
 
+    -- 9) Appearance (barber shop)
+    if char.appearance and FCE.AppearanceCheck then
+        local apResults = FCE.AppearanceCheck.RunCheck()
+        for i, req in ipairs(char.appearance) do
+            local r = apResults[i]
+            if req.endLevel and playerLevel > req.endLevel then
+                add(req.desc, "Appearance", S_PASS, "Outleveled")
+            elseif playerLevel < req.level then
+                add(req.desc, "Appearance", S_INACTIVE, "Unlocks at level " .. req.level)
+            elseif r and r.status then
+                add(req.desc, "Appearance", r.status, r.detail)
+            else
+                add(req.desc, "Appearance", S_UNCHECKED, "Not checked")
+            end
+        end
+    end
+
     return { items = items, counts = counts }
 end
 

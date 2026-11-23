@@ -1311,6 +1311,25 @@ function Panel.Refresh()
     end
 
     
+    -- APPEARANCE section (barber shop look; AppearanceCheck.lua)
+    if char.appearance and #char.appearance > 0 then
+        index, yOff = emitSectionHeader(index, yOff, "APPEARANCE")
+        local apResults = (FCE.AppearanceCheck and FCE.AppearanceCheck.RunCheck()) or {}
+        for i, req in ipairs(char.appearance) do
+            local res = apResults[i]
+            local tag, col, txtCol = reqTag(req.level, req.endLevel, playerLevel,
+                res and res.status or nil)
+            index, yOff = emitRow(index, yOff, tag, col, req.desc, txtCol)
+            local apRow = rowPool[index - 1]
+            if apRow then
+                apRow.equipDetail = (res and res.detail) or ("Unlocks at level " .. req.level)
+                apRow.equipStatus = (res and res.status) or "unchecked"
+                apRow:SetScript("OnEnter", onEquipRowEnter)
+                apRow:SetScript("OnLeave", onEquipRowLeave)
+            end
+        end
+    end
+
     -- Talents section (spec tracking + per-talent requirements)
     -- Run a fresh check so results are always current (the API calls
     -- are cheap and this avoids stale-cache / timing-race issues).

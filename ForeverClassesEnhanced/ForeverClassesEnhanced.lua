@@ -455,6 +455,9 @@ SlashCmdList["FCE"] = function(msg)
     elseif cmd == "compat" then
         if FCE.Compat and FCE.Compat.Report then FCE.Compat.Report() end
 
+    elseif cmd == "barber" then
+        if FCE.AppearanceCheck then FCE.AppearanceCheck.ShowDump() end
+
     elseif cmd == "errors" then
         local log = FCE_GlobalDB and FCE_GlobalDB.errorLog
         local n = 0
