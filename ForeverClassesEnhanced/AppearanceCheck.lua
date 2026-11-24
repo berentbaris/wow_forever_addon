@@ -23,6 +23,22 @@ local function swatchHex(c)
     return ok and hex or nil
 end
 
+--- Character model mode: "sd" (Standard Definition) or "hd".
+--- Forever-only account rule (C_GameRules.AccountHasSDEnabled); nil if unknown.
+function AC.ModelMode()
+    if C_GameRules and C_GameRules.AccountHasSDEnabled then
+        local ok, sd = pcall(C_GameRules.AccountHasSDEnabled)
+        if ok and sd ~= nil then return sd and "sd" or "hd" end
+    end
+    return nil
+end
+
+--- "Dwarf_F" style key for per-race rules.
+local function raceSexKey(raceToken, sex)
+    return tostring(raceToken) .. "_" .. ((sex == 3) and "F" or "M")
+end
+AC.RaceSexKey = raceSexKey
+
 --- Read the current customization.  Returns look table + dump text, or nil.
 local function ReadLook()
     if not (C_BarberShop and C_BarberShop.GetAvailableCustomizations) then return nil end
@@ -34,11 +50,13 @@ local function ReadLook()
         time    = date("%Y-%m-%d %H:%M"),
         race    = raceToken,
         sex     = UnitSex("player"),
+        models  = AC.ModelMode(),
         options = {},      -- [optionID] = { name, category, formID, choiceID, choiceName, choiceIndex }
     }
     local L = {
         "Forever Classes Enhanced - barber shop dump",
-        "Captured: " .. look.time .. "   Race: " .. s(raceToken) .. "   Sex: " .. s(look.sex),
+        "Captured: " .. look.time .. "   Race: " .. s(raceToken) .. "   Sex: " .. s(look.sex)
+            .. "   Models: " .. string.upper(look.models or "?"),
         "Format: option [optionID] = current choice;  choices: index:choiceID name (#swatch)",
     }
     local anyCurrent = false
@@ -129,7 +147,13 @@ end
 --   genders     set of UnitSex values the rule applies to (2 male,
 --               3 female); other genders pass as "not applicable"
 --   hint        shown when failing
--- A choice passes if it matches choiceIDs OR names OR maxSaturation.
+--   positions   qualifying choice positions (the number before the colon
+--               in /fce barber) per race/gender and model mode:
+--                 positions = { Dwarf_F = { sd = { 3, 5 }, hd = { 6 } },
+--                               Orc_M   = { 2, 4 } }   -- same in SD and HD
+-- If positions exist for the player's race/gender they decide alone
+-- (by the current SD/HD setting).  Otherwise a choice passes if it
+-- matches choiceIDs OR names OR maxSaturation.
 ----------------------------------------------------------------------
 
 local PASS, FAIL, UNCHECKED = "pass", "fail", "unchecked"
@@ -189,6 +213,23 @@ function AC.CheckRule(desc)
     end
     local label = (o.choiceName and o.choiceName ~= "") and o.choiceName
         or ("choice " .. tostring(o.choiceIndex or "?"))
+    local mode = AC.ModelMode()
+    local modeTag = mode and (" (" .. mode:upper() .. ")") or ""
+
+    -- Exact positions for this race/gender (and SD/HD mode) decide alone
+    local pos = rule.positions and rule.positions[raceSexKey(look.race, look.sex)]
+    if pos then
+        local list = pos
+        if pos.sd or pos.hd then list = (mode and pos[mode]) or pos.hd or pos.sd end
+        for _, p in ipairs(list or {}) do
+            if p == o.choiceIndex then
+                return PASS, string.format("%s: %s%s", o.name, label, modeTag)
+            end
+        end
+        return FAIL, string.format("%s: %s%s \226\128\148 %s", o.name, label, modeTag,
+            rule.hint or "change it at the barber shop")
+    end
+
     local ok = false
     if rule.choiceIDs and o.choiceID and rule.choiceIDs[o.choiceID] then ok = true end
     if not ok and rule.names and type(o.choiceName) == "string" then
@@ -245,7 +286,8 @@ end
 local ef = CreateFrame("Frame")
 ef:RegisterEvent("PLAYER_LOGIN")
 ef:RegisterEvent("PLAYER_LEVEL_UP")
-for _, ev in ipairs({ "BARBER_SHOP_OPEN", "BARBER_SHOP_APPEARANCE_APPLIED", "BARBER_SHOP_RESULT" }) do
+for _, ev in ipairs({ "BARBER_SHOP_OPEN", "BARBER_SHOP_APPEARANCE_APPLIED", "BARBER_SHOP_RESULT",
+                      "GAME_RULES_CHANGED" }) do
     pcall(ef.RegisterEvent, ef, ev)
 end
 
@@ -259,6 +301,12 @@ ef:SetScript("OnEvent", function(_, event, arg1)
         end)
     elseif event == "PLAYER_LEVEL_UP" then
         FCE.After("AppearanceCheck", 1, AC.RunCheck)
+    elseif event == "GAME_RULES_CHANGED" then
+        -- SD/HD model setting may have changed
+        FCE.After("AppearanceCheck", 0.5, function()
+            AC.RunCheck()
+            if FCE.RefreshPanel then FCE.RefreshPanel() end
+        end)
     elseif event == "BARBER_SHOP_OPEN" then
         -- Nothing previewed yet: this is the real current look
         FCE.After("AppearanceCheck", 0.5, function()

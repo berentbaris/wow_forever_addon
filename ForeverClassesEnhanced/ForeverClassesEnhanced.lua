@@ -455,6 +455,127 @@ SlashCmdList["FCE"] = function(msg)
     elseif cmd == "compat" then
         if FCE.Compat and FCE.Compat.Report then FCE.Compat.Report() end
 
+    elseif cmd == "apis" or cmd:find("^apis ") then
+        -- Search global functions and C_* namespace functions by name
+        -- (default words: definition, hdmodel, legacy, classicmodel, charactermodel)
+        local words = {}
+        for w in (cmd:match("^apis%s+(.+)") or "definition hdmodel legacy classicmodel charactermodel modelset"):gmatch("%S+") do
+            words[#words + 1] = w:lower()
+        end
+        local function hit(name)
+            local low = name:lower()
+            for _, w in ipairs(words) do
+                if low:find(w, 1, true) then return true end
+            end
+        end
+        local L = { "API names matching: " .. table.concat(words, ", ") }
+        local found = {}
+        for k, v in pairs(_G) do
+            if type(k) == "string" then
+                if type(v) == "function" and hit(k) then
+                    found[#found + 1] = k .. "()"
+                elseif type(v) == "table" and k:sub(1, 2) == "C_" then
+                    for fk, fv in pairs(v) do
+                        if type(fk) == "string" and type(fv) == "function"
+                           and (hit(fk) or hit(k .. "." .. fk)) then
+                            found[#found + 1] = k .. "." .. fk .. "()"
+                        end
+                    end
+                end
+            end
+        end
+        table.sort(found)
+        for _, f in ipairs(found) do L[#L + 1] = f end
+        L[#L + 1] = #found .. " match(es)"
+        if FCE.APIProbe and FCE.APIProbe.ShowWindow then
+            FCE.APIProbe.ShowWindow(table.concat(L, "\n"))
+        else
+            for _, line in ipairs(L) do FCE.Print(line) end
+        end
+
+    elseif cmd == "cvars snapshot" or cmd == "cvars diff" then
+        -- Snapshot every CVar, change a game setting, then diff.
+        -- The snapshot is saved, so it survives the UI reload a setting may cause.
+        local getAll = _G.ConsoleGetAllCommands or (C_Console and C_Console.GetAllCommands)
+        local getCVar = (C_CVar and C_CVar.GetCVar) or GetCVar
+        if not getAll then FCE.Print("No CVar list API on this client.") return end
+        local now = {}
+        local ok, list = pcall(getAll)
+        for _, c in ipairs(ok and list or {}) do
+            local name = c.command
+            if name then
+                local okV, v = pcall(getCVar, name)
+                if okV and v ~= nil then now[name] = tostring(v) end
+            end
+        end
+        if cmd == "cvars snapshot" then
+            local n = 0
+            for _ in pairs(now) do n = n + 1 end
+            FCE_GlobalDB.cvarSnapshot = now
+            FCE.Print("Saved " .. n .. " CVars. Change the setting, then run /fce cvars diff.")
+        else
+            local old = FCE_GlobalDB.cvarSnapshot
+            if not old then FCE.Print("Run /fce cvars snapshot first.") return end
+            local L = { "CVars changed since the snapshot:" }
+            for name, v in pairs(now) do
+                if old[name] ~= v then L[#L + 1] = name .. ": " .. tostring(old[name]) .. " -> " .. v end
+            end
+            for name, v in pairs(old) do
+                if now[name] == nil then L[#L + 1] = name .. ": " .. v .. " -> (gone)" end
+            end
+            if #L == 1 then L[#L + 1] = "(none: this setting is not a CVar)" end
+            if FCE.APIProbe and FCE.APIProbe.ShowWindow then
+                FCE.APIProbe.ShowWindow(table.concat(L, "\n"))
+            else
+                for _, line in ipairs(L) do FCE.Print(line) end
+            end
+        end
+
+    elseif cmd == "cvars" or cmd:find("^cvars ") then
+        -- List console variables whose names match the given words
+        -- (default: model / hd / defin / classic).  For finding Forever's
+        -- "Character Models" (SD / HD) setting.
+        local words = {}
+        for w in (cmd:match("^cvars%s+(.+)") or "model hd defin classic"):gmatch("%S+") do
+            words[#words + 1] = w:lower()
+        end
+        local getAll = _G.ConsoleGetAllCommands or (C_Console and C_Console.GetAllCommands)
+        local getCVar = (C_CVar and C_CVar.GetCVar) or GetCVar
+        local L, n = { "CVars matching: " .. table.concat(words, ", ") }, 0
+        if getAll then
+            local ok, list = pcall(getAll)
+            for _, c in ipairs(ok and list or {}) do
+                local name = c.command or ""
+                local low = name:lower()
+                for _, w in ipairs(words) do
+                    if low:find(w, 1, true) then
+                        local v = getCVar(name)
+                        if v ~= nil then
+                            L[#L + 1] = name .. " = " .. tostring(v)
+                            n = n + 1
+                        end
+                        break
+                    end
+                end
+            end
+        else
+            -- No command list on this client: probe likely names
+            L[#L + 1] = "(no CVar list API; probing likely names)"
+            for _, name in ipairs({ "useHDModels", "hdModels", "hdPlayerModels", "useClassicModels",
+                "classicModels", "characterModels", "charModels", "useHighDefinitionModels",
+                "highDefinitionModels", "playerModelQuality", "useClassicCharacterModels",
+                "classicCharacterModels", "modelSD", "useSDModels", "sdModels" }) do
+                local ok, v = pcall(getCVar, name)
+                if ok and v ~= nil then L[#L + 1] = name .. " = " .. tostring(v); n = n + 1 end
+            end
+        end
+        L[#L + 1] = n .. " match(es)"
+        if FCE.APIProbe and FCE.APIProbe.ShowWindow then
+            FCE.APIProbe.ShowWindow(table.concat(L, "\n"))
+        else
+            for _, line in ipairs(L) do FCE.Print(line) end
+        end
+
     elseif cmd == "barber" then
         if FCE.AppearanceCheck then FCE.AppearanceCheck.ShowDump() end
 
