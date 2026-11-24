@@ -1319,7 +1319,8 @@ function Panel.Refresh()
             local res = apResults[i]
             local tag, col, txtCol = reqTag(req.level, req.endLevel, playerLevel,
                 res and res.status or nil)
-            index, yOff = emitRow(index, yOff, tag, col, req.desc, txtCol)
+            local apName = FCE.AppearanceCheck and FCE.AppearanceCheck.DisplayName(req.desc) or req.desc
+            index, yOff = emitRow(index, yOff, tag, col, apName, txtCol)
             local apRow = rowPool[index - 1]
             if apRow then
                 apRow.equipDetail = (res and res.detail) or ("Unlocks at level " .. req.level)

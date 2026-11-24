@@ -137,60 +137,91 @@ end
 -- Appearance rules
 --
 -- Keyed by the requirement description used in CharacterData
--- (appearance = { E("Braided beard", 1) }).  Fields:
---   options     lowercase substrings matched against the option name
---               ("facial hair", "beard").  First matching option is used.
---   choiceIDs   set of accepted choice IDs (exact; from /fce barber)
---   names       lowercase substrings matched against the choice name
---   maxSaturation  accept colour swatches at or below this saturation
---               (0 = pure grey, 1 = vivid) — for "grey skin" style rules
---   genders     set of UnitSex values the rule applies to (2 male,
---               3 female); other genders pass as "not applicable"
---   hint        shown when failing
---   positions   qualifying choice positions (the number before the colon
---               in /fce barber) per race/gender and model mode:
---                 positions = { Dwarf_F = { sd = { 3, 5 }, hd = { 6 } },
---                               Orc_M   = { 2, 4 } }   -- same in SD and HD
--- If positions exist for the player's race/gender they decide alone
--- (by the current SD/HD setting).  Otherwise a choice passes if it
--- matches choiceIDs OR names OR maxSaturation.
+-- (appearance = { E("Braids", 1) }).  Per gender (M / F) a list of
+-- conditions that must ALL hold; a gender without a list is "not
+-- applicable" (passes).  Condition fields:
+--   option     exact option name as shown by /fce barber ("Facial Hair")
+--   positions  qualifying positions (the number before the colon in
+--              /fce barber); or { sd = {...}, hd = {...} } if they differ
+--   sdOnly     only checked with Standard Definition models
+-- Optional: label = { M = "...", F = "..." } — panel text per gender.
+--           races = { Human = true } — only these race tokens (others: not applicable)
 ----------------------------------------------------------------------
 
 local PASS, FAIL, UNCHECKED = "pass", "fail", "unchecked"
 
+local function C(option, positions, extra)
+    local c = { option = option, positions = positions }
+    if extra then for k, v in pairs(extra) do c[k] = v end end
+    return c
+end
+local SD_ONLY = { sdOnly = true }
+
 AC.Rules = {
-    ["Braided beard"] = {
-        options = { "facial hair", "beard" },
-        names   = { "braid" },
-        genders = { [2] = true },
-        hint    = "pick a braided facial hair style at the barber shop",
+    ["Braids"] = {                                   -- Blademaster (Orc)
+        M = { C("Facial Hair", { 6, 7, 8, 9 }) },
+        F = { C("Hair Style", { 15, 1, 2 }) },
     },
-    ["Grey skin"] = {
-        options = { "skin color", "skin colour", "skin" },
-        maxSaturation = 0.15,
-        hint    = "pick a grey skin colour at the barber shop",
+    ["Blind/Demon Hunter Markings"] = {              -- Demon Hunter (Night Elf)
+        label = { M = "Blind", F = "Demon Hunter Markings" },
+        M = { C("Face", { 6 }) },
+        F = { C("Markings", { 2, 6 }) },
+    },
+    ["Metallic skin"] = {                            -- Sister of Steel (Dwarf)
+        F = { C("Skin Color", { 9 }) },
+    },
+    ["Withered"] = {                                 -- Apothecary (Undead)
+        M = { C("Jaw Features", { 2, 3, 4, 5, 6, 7, 8, 9, 10 }), C("Face Features", { 2, 3, 4, 5 }) },
+        F = { C("Jaw Features", { 2, 3, 4, 5 }), C("Face Features", { 2, 3, 4 }) },
+    },
+    ["White fur & blue eyes"] = {                    -- Spiritwalker (Tauren)
+        M = { C("Skin Color", { 19 }), C("Face", { 5 }, SD_ONLY) },
+        F = { C("Skin Color", { 11 }), C("Face", { 1 }, SD_ONLY) },
+    },
+    ["Wildhammer Dwarf (ginger)"] = {                -- Mountain King rogue (Dwarf)
+        M = { C("Hair Color", { 1, 2, 3 }) },
+        F = { C("Hair Color", { 1, 2, 3 }) },
+    },
+    ["Face Paint"] = {                               -- Berserker, Shadow Hunter (Troll)
+        M = { C("Face Paint", { 2, 3, 4, 5, 6, 7 }) },
+    },
+    ["Jungle Troll (green skin)"] = {                -- Witch Doctor (Troll)
+        M = { C("Skin Color", { 3 }) },
+        F = { C("Skin Color", { 3 }) },
+    },
+    ["Hairless"] = {                                 -- Templar (human males only)
+        races = { Human = true },
+        M = { C("Hair Style", { 1 }), C("Facial Hair", { 9 }) },
+    },
+    ["Fallen Elf (blonde, face intact)"] = {         -- Bloodmage (Undead)
+        M = { C("Hair Color", { 4, 5, 7 }), C("Face Features", { 1 }), C("Jaw Features", { 1 }),
+              C("Face", { 1, 2, 5, 9 }) },
+        F = { C("Hair Color", { 4, 5, 7 }), C("Face Features", { 1 }), C("Jaw Features", { 1 }),
+              C("Face", { 1, 4, 7, 8, 9 }) },
+    },
+    ["Light hair"] = {                               -- Death Knight (Undead)
+        M = { C("Hair Color", { 4, 5, 7 }) },
+        F = { C("Hair Color", { 4, 5, 7 }) },
     },
 }
 
-local function saturationOf(hex)
-    -- swatch hex is AARRGGBB
-    if type(hex) ~= "string" or #hex < 8 then return nil end
-    local r = tonumber(hex:sub(3, 4), 16)
-    local g = tonumber(hex:sub(5, 6), 16)
-    local b = tonumber(hex:sub(7, 8), 16)
-    if not (r and g and b) then return nil end
-    local mx, mn = math.max(r, g, b), math.min(r, g, b)
-    if mx == 0 then return 0 end
-    return (mx - mn) / mx
+local function genderKey()
+    return (UnitSex("player") == 3) and "F" or "M"
 end
-AC.SaturationOf = saturationOf
 
-local function findOption(look, patterns)
-    for _, p in ipairs(patterns or {}) do
-        for _, o in pairs(look.options) do
-            if o.formID == nil and type(o.name) == "string" and o.name:lower():find(p, 1, true) then
-                return o
-            end
+--- Panel text for a requirement (gender-specific label if the rule has one).
+function AC.DisplayName(desc)
+    local rule = AC.Rules[desc]
+    local g = genderKey()
+    if rule and rule.label and rule.label[g] then return rule.label[g] end
+    return desc
+end
+
+local function findOption(look, name)
+    local want = name:lower()
+    for _, o in pairs(look.options) do
+        if o.formID == nil and type(o.name) == "string" and o.name:lower() == want then
+            return o
         end
     end
     return nil
@@ -200,52 +231,52 @@ end
 function AC.CheckRule(desc)
     local rule = AC.Rules[desc]
     if not rule then return UNCHECKED, "No rule defined for this requirement" end
-    if rule.genders and not rule.genders[UnitSex("player") or 0] then
+    if rule.races then
+        local _, raceToken = UnitRace("player")
+        if not rule.races[raceToken] then
+            return PASS, "Not applicable to this character's race"
+        end
+    end
+    local conds = rule[genderKey()]
+    if not conds then
         return PASS, "Not applicable to this character's gender"
     end
     local look = AC.GetLook()
     if not look then
         return UNCHECKED, "Sit in a barber chair once so FCE can read your appearance"
     end
-    local o = findOption(look, rule.options)
-    if not o then
-        return UNCHECKED, "Option not found for your race \226\128\148 send the /fce barber dump"
-    end
-    local label = (o.choiceName and o.choiceName ~= "") and o.choiceName
-        or ("choice " .. tostring(o.choiceIndex or "?"))
     local mode = AC.ModelMode()
-    local modeTag = mode and (" (" .. mode:upper() .. ")") or ""
-
-    -- Exact positions for this race/gender (and SD/HD mode) decide alone
-    local pos = rule.positions and rule.positions[raceSexKey(look.race, look.sex)]
-    if pos then
-        local list = pos
-        if pos.sd or pos.hd then list = (mode and pos[mode]) or pos.hd or pos.sd end
-        for _, p in ipairs(list or {}) do
-            if p == o.choiceIndex then
-                return PASS, string.format("%s: %s%s", o.name, label, modeTag)
+    local parts, failed, missing = {}, false, false
+    for _, c in ipairs(conds) do
+        if not (c.sdOnly and mode == "hd") then
+            local o = findOption(look, c.option)
+            if not o then
+                missing = true
+                parts[#parts + 1] = c.option .. ": not found"
+            else
+                local list = c.positions
+                if list.sd or list.hd then list = (mode and list[mode]) or list.hd or list.sd end
+                local ok = false
+                for _, p in ipairs(list or {}) do
+                    if p == o.choiceIndex then ok = true break end
+                end
+                local cur = (o.choiceName and o.choiceName ~= "") and o.choiceName
+                    or tostring(o.choiceIndex or "?")
+                if ok then
+                    parts[#parts + 1] = c.option .. " " .. cur .. " \226\156\147"
+                else
+                    failed = true
+                    local need = {}
+                    for _, p in ipairs(list or {}) do need[#need + 1] = tostring(p) end
+                    parts[#parts + 1] = c.option .. " " .. cur .. " (needs " .. table.concat(need, "/") .. ")"
+                end
             end
         end
-        return FAIL, string.format("%s: %s%s \226\128\148 %s", o.name, label, modeTag,
-            rule.hint or "change it at the barber shop")
     end
-
-    local ok = false
-    if rule.choiceIDs and o.choiceID and rule.choiceIDs[o.choiceID] then ok = true end
-    if not ok and rule.names and type(o.choiceName) == "string" then
-        local n = o.choiceName:lower()
-        for _, p in ipairs(rule.names) do
-            if n:find(p, 1, true) then ok = true break end
-        end
-    end
-    if not ok and rule.maxSaturation then
-        local sat = saturationOf(o.swatch)
-        if sat and sat <= rule.maxSaturation then ok = true end
-    end
-    if ok then
-        return PASS, string.format("%s: %s", o.name, label)
-    end
-    return FAIL, string.format("%s: %s \226\128\148 %s", o.name, label, rule.hint or "change it at the barber shop")
+    local detail = table.concat(parts, ", ") .. (mode and (" [" .. mode:upper() .. "]") or "")
+    if failed then return FAIL, detail .. " \226\128\148 change it at the barber shop" end
+    if missing then return UNCHECKED, detail .. " \226\128\148 send the /fce barber dump" end
+    return PASS, detail
 end
 
 --- Check all appearance requirements of the selected character.

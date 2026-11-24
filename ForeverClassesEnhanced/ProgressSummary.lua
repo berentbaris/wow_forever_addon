@@ -310,14 +310,15 @@ function Progress.Collect()
         local apResults = FCE.AppearanceCheck.RunCheck()
         for i, req in ipairs(char.appearance) do
             local r = apResults[i]
+            local apName = FCE.AppearanceCheck.DisplayName(req.desc)
             if req.endLevel and playerLevel > req.endLevel then
-                add(req.desc, "Appearance", S_PASS, "Outleveled")
+                add(apName, "Appearance", S_PASS, "Outleveled")
             elseif playerLevel < req.level then
-                add(req.desc, "Appearance", S_INACTIVE, "Unlocks at level " .. req.level)
+                add(apName, "Appearance", S_INACTIVE, "Unlocks at level " .. req.level)
             elseif r and r.status then
-                add(req.desc, "Appearance", r.status, r.detail)
+                add(apName, "Appearance", r.status, r.detail)
             else
-                add(req.desc, "Appearance", S_UNCHECKED, "Not checked")
+                add(apName, "Appearance", S_UNCHECKED, "Not checked")
             end
         end
     end

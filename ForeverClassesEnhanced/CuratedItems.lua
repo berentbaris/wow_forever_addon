@@ -604,13 +604,21 @@ fill(C.dark_ranger_blade, {
 COMPLETE.dark_ranger_blade = true
 
 fill(C.dk_blade, {
+    { 5182, "Shiver Blade - Barrens rare drop" },
     { 11121, "Darkwater Talwar - BFD drop" },
+    { 1387, "Ghoulfang - Westfall rare drop" },
     { 3822, "Runic Darkblade - Hillsbrad quest" },
     { 3854, "Frost Tiger Blade - Blacksmithing" },
-    { 10823, "Vanquisher's Sword - RFD quest reward" },
+    { 2205, "Duskbringer - SFK zone drop" },
+    { 274603, "Dreadfrost Saber - DC drop" },
+    { 260186, "Darkblade - Blasted Lands quest reward" },
+    { 13051, "Witchfury - World drop" },
     { 9372, "Sul'thraze the Lasher - ZF drops" },
+    { 1982, "Nightblade - World drop" },
+    { 13053, "Doombringer - World drop" },
     { 14541, "Barovian Family Sword - Scholomance drop" },
     { 13982, "Warblade of Caer Darrow - Scholomance quest" },
+    { 13348, "Demonshear - Strat zone drop" },
     { 13361, "Skullforge Reaver - Strat drop" },
     { 13505, "Runeblade of Baron Rivendare - Strat drop" },
 })
