@@ -81,6 +81,8 @@ local FROST_SPELLS = {
     ["Frost Armor"]     = true,
     ["Frost Ward"]      = true,
     ["Frostbite"]       = true,
+    ["Ice Lance"]       = true,
+    ["Frostfire Bolt"]       = true,
 }
 
 local FIRE_SPELLS = {
@@ -89,6 +91,7 @@ local FIRE_SPELLS = {
     ["Flamestrike"]        = true,
     ["Scorch"]    = true,
     ["Fire Ward"]      = true,
+    ["Frostfire Bolt"]       = true,
 }
 
 -- Shadow priest spells forbidden by "Light of Elune"
@@ -106,9 +109,14 @@ local SHADOW_SPELLS = {
     ["Silence"]              = true,
     ["Mind Control"]         = true,
     ["Shadow Protection"]    = true,
-    ["Shadow Guard"]         = true,
+    ["Shadowguard"]         = true,
     ["Hex of Weakness"]      = true,
     ["Fade"]      = true,
+    ["Dark Sacrifice"]      = true,
+    ["Devouring Plague"]      = true,
+    ["Touch of Weakness"]      = true,
+    ["Feedback"]      = true,
+    ["Mana Burn"]      = true,
 }
 
 -- Subtlety rogue spells forbidden by "Crude"
@@ -125,6 +133,7 @@ local SUBTLETY_SPELLS = {
     ["Pick Pocket"]         = true,
     ["Detect Traps"]        = true,
     ["Disarm Trap"]         = true,
+    ["Death Mark"]         = true,
 }
 
 local HOLY_SPELLS = {
@@ -142,6 +151,13 @@ local HOLY_SPELLS = {
     ["Abolish Disease"]         = true,
     ["Prayer of Healing"]         = true,
     ["Lightwell"]         = true,
+    ["Confounding Flash"]      = true,
+    ["Prayer of Mending"]         = true,
+    ["Chastise"]         = true,
+    ["Contingency Plan"]         = true,
+    ["Penance"]         = true,
+    ["Divine Grace"]         = true,
+
 }
 
 local ARCANE_SPELLS = {
@@ -170,6 +186,7 @@ local ARCANE_SPELLS = {
     ["Teleport: Ironforge"]         = true,
     ["Teleport: Darnassus"]         = true,
     ["Teleport: Theramore"]         = true,
+    ["Teleport: Dalaran"]         = true,
     ["Counterspell"]         = true,
     ["Conjure Mana Agate"]         = true,
     ["Conjure Food"]         = true,
@@ -188,6 +205,8 @@ local ARCANE_SPELLS = {
     ["Arcane Brilliance"]         = true,
     ["Remove Curse"]         = true,
     ["Remove Lesser Curse"]         = true,
+    ["Arcane Blast"]         = true,
+    ["Arcane Wrath"]         = true,
 }
 
 local DEFENSIVE_STANCE = {
@@ -226,6 +245,8 @@ local HOLY_PALADIN = {
     ["Blessing of Light"]              = true,
     ["Greater Blessing of Wisdom"]              = true,
     ["Greater Blessing of Light"]              = true,
+    ["Voice of Truth"]              = true,
+    ["Light's Vigil"]              = true,
 }
 
 local DEMON = {

@@ -3570,7 +3570,7 @@ FCE.Characters = {
 
     ["Spirit Champion_SHAMAN"] = {
         class       = "SHAMAN",
-        spec        = "2-handed Stormstrike",
+        spec        = "Enhancement",
         name        = "Spirit Champion",
         races       = { "Orc", "Tauren" },
         gender      = "Any gender",
@@ -3640,7 +3640,7 @@ FCE.Characters = {
         mount       = nil,
         gameplay    = "tank tour",
     },
-    --[[
+    
     ["Farseer_SHAMAN"] = {
         class       = "SHAMAN",
         spec        = 'Elemental',
@@ -3679,7 +3679,7 @@ FCE.Characters = {
         mount       = E("Wolf", 44),
         gameplay    = nil,
     },
-    ]]--
+    
     ["Witch Doctor_SHAMAN"] = {
         class       = "SHAMAN",
         spec        = "Ward",

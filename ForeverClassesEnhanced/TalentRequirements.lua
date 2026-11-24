@@ -452,13 +452,14 @@ FCE.TalentRequirements = {
 
     ["SHAMAN_Fire Elemental"] = {    -- Elemental
         roles = "Damage/healer",
-        R("Elemental Alacrity",       1, 3, 17),
-        R("Mindfulness", 3, 3, 25),
-        R("Call of Flame",       1, 3, 29),
-        R("Eye of the Storm",        1, 3, 36),
+        R("Convection",       1, 5, 14),
+        R("Call of Flame",       1, 3, 17),
+        R("Elemental Alacrity",       1, 3, 21),
+        R("Mindfulness", 3, 3, 29),
+        R("Trial by Fire",        1, 2, 35),
+        R("Eye of the Storm",        1, 3, 42),
         R("Elemental Fury",        1, 5, 47),
-        R("Lightning Mastery",        1, 1, 48),
-        R("Elemental Reach",        1, 2, 52),
+        R("Elemental Reach",        1, 2, 49),
     },
 
     ["SHAMAN_Enhancement"] = { -- Enhancement
