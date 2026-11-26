@@ -46,6 +46,11 @@ fill(C.flying_tiger_goggles, {
 })
 COMPLETE.flying_tiger_goggles = true
 
+fill(C.anti_undead_relic, {
+    { 249397, "Tenets of the Silver Hand - Enchanting 125" },
+})
+COMPLETE.anti_undead_relic = true
+
 fill(C.fang1, {
     { 6473, "Armor of the Fang - WC drop" },
 })
@@ -174,6 +179,13 @@ fill(C.reflector_belt, {
     { 11861,  "Girdle of Reprisal - Searing Gorge quest reward" },
 })
 COMPLETE.reflector_belt = true
+
+fill(C.reflector_ring, {
+    { 273839,  "Spiked Shell Band - BFD drop" },
+    { 274078,  "Boar Signet - RFK quest reward" },
+    { 282080,  "Flame Seared Signet - Burning Steppes rare drop" },
+})
+COMPLETE.reflector_ring = true
 
 fill(C.red_shirt, {
     { 2575,  "Red Linen Shirt - Tailoring 40" },
@@ -501,6 +513,8 @@ COMPLETE.spellstone = true
 
 fill(C.wolf_helm, {
     { 30037, "Embrace of the Lycan - ZF boss drop" },
+    { 8345, "Wolfshead Helm - Tribal Leatherworking" },
+    { 284199, "Death Howl's Guise - Felwood rare drop" },
     { 282049, "Deathmaw's Guise - Burning Steppes rare drop" },
     
 })
@@ -616,6 +630,7 @@ fill(C.dk_blade, {
     { 9372, "Sul'thraze the Lasher - ZF drops" },
     { 1982, "Nightblade - World drop" },
     { 13053, "Doombringer - World drop" },
+    { 260186, "Darkblade - Blasted Lands quest reward" },
     { 14541, "Barovian Family Sword - Scholomance drop" },
     { 13982, "Warblade of Caer Darrow - Scholomance quest" },
     { 13348, "Demonshear - Strat zone drop" },
@@ -625,20 +640,35 @@ fill(C.dk_blade, {
 COMPLETE.dk_blade = true
 
 fill(C.pala_blade, {
+    { 279864, "Monstrous Cleaver - RoL quest reward" },
     { 268484, "Moonsilver Blade - Paladin quest (Horde)" },
     { 271217, "Corpse Chopper - RoL drop" },
     { 273817, "Graverobber's Shovel - Stockades drop" },
     { 267369, "Wolfsbane - Paladin quest (Horde)" },
     { 6953, "Verigan's Fist - Paladin quest (Alliance)" },
     { 10758, "X'caliboar - RFD rare drop" },
+    { 279885, "Ceremonial Mallet - STV quest" },
     { 10805, "Eater of the Dead - ST drop" },
     { 11920, "Wraith Scythe - BRD drop" },
     { 754, "Shortsword of Vengeance - World drop" },
+    { 20504, "Lightforged Blade - Paladin quest reward" },
+    { 18420, "Bonecrusher - Dire Maul quest reward" },
+    { 18481, "Skullcracking Mace - Dire Maul drop" },
     { 7960, "Truesilver Champion - Blacksmithing" },
+    { 18737, "Bone Slicing Hatchet - Strat drop" },
+    { 13017, "Hellslayer Battle Axe - World drop" },
+    { 276403, "Scarlet Bonebreaker - Strat drop" },
     { 276419, "Lightcrest Hammer - Strat drop" },
     { 13246, "Argent Avenger - Strat quest" },
 })
 COMPLETE.pala_blade = true
+
+fill(C.throwing_star, {
+    { 281660, "Iron Star - Unknown" },
+    { 3463, "Silver Star - Stonetalon/Desolace quest reward" },
+    { 284587, "Ankle Slicers - BRS rare drop" },
+})
+COMPLETE.throwing_star = true
 
 fill(C.cultist_cowl, {
     { 280072, "Cowl of Dark Ambition - BMH drop" },
@@ -860,6 +890,21 @@ fill(C.voodoo_shoulders, {
 })
 COMPLETE.voodoo_shoulders = true
 
+fill(C.voodoo_trinket, {
+    { 274641, "Theka's Last Breath - ZF drop" },
+})
+COMPLETE.voodoo_trinket = true
+
+fill(C.spellbreaker_trinket, {
+    { 277559, "Shen'dralar Relic - Unknown" },
+})
+COMPLETE.spellbreaker_trinket = true
+
+fill(C.dragonsworn_trinket, {
+    { 276744, "Zarla's Snack Pouch - Alcaz Prison drop" },
+})
+COMPLETE.dragonsworn_trinket = true
+
 ----------------------------------------------------------------------
 -- INSIGNIA (Exemplar)
 -- PvP Insignia trinkets - one per class per faction
@@ -867,6 +912,8 @@ COMPLETE.voodoo_shoulders = true
 
 fill(C.insignia, {
     -- Alliance Insignia (one per class)
+    { 274444, "Greater Insignia of the Horde" },
+    { 274445, "Greater Insignia of the Alliance" },
     { 209616, "Insignia of the Alliance - Warrior" },
     { 209614, "Insignia of the Alliance - Paladin" },
     { 209615, "Insignia of the Alliance - Rogue" },
@@ -875,7 +922,6 @@ fill(C.insignia, {
     { 18862, "Insignia of the Alliance - Priest" },
     { 18863, "Insignia of the Alliance - Warlock" },
     { 18864, "Insignia of the Alliance - Druid" },
-
     -- Horde Insignia (one per class)
     { 18834, "Insignia of the Horde - Warrior" },
     { 18845, "Insignia of the Horde - Shaman" },
@@ -1097,13 +1143,16 @@ fill(C.cursed_amulet, {
 COMPLETE.cursed_amulet = true
 
 fill(C.cursed_items, {
-    { 9243, "Shriveled Heart - ZF zone drop" },
-    { 2621, "Cowl of Necromancy - Shadowforge Darkweaver drop" },
-    { 4746,  "Doomsayer's Robe - Badlands Quest Reward" },
+    { 5611, "Tear of Grief - Darkshore quest" },
     { 3235, "Ring of Scorn - Silverpine quest" },
     { 4462, "Cloak of Rot - Wetlands rare drop" },
     { 6751, "Mourning Shawl - RFK quest (Alliance)" },
-    { 5611, "Tear of Grief - Darkshore quest" },
+    { 284668,  "Apothecary's Concoction - Ashenvale rare drop" },
+    { 9243, "Shriveled Heart - ZF zone drop" },
+    { 2621, "Cowl of Necromancy - Shadowforge Darkweaver drop" },
+    { 4746,  "Doomsayer's Robe - Badlands Quest Reward" },
+    { 284228,  "Vial of Vile Liquid - Felwood rare drop" },
+    { 287034, "Grove Subjugator's Blade - BMH zone drop" },
     { 2944, "Cursed Eye of Paleth - Wetlands quest" },
     { 18425, "Kreeg's Mug - Dire Maul drop" },
 })
@@ -1161,6 +1210,9 @@ COMPLETE.hw_staff1 = true
 
 fill(C.lantern, {
     { 5323, "Everglow Lantern - Barrens Quest Rewards" },
+    { 6341, "Eerie Stable Lantern - SFK drop" },
+    { 9393, "Beacon of Hope - World drop" },
+    { 9627, "Explorer's League Lodestar - Uldaman quest reward" },
 })
 COMPLETE.lantern = true
 -- Also populate the 'torch' key used by R("Torch") in EquipmentCheck.lua
@@ -1168,6 +1220,11 @@ COMPLETE.lantern = true
 fill(C.torch, {
     { 1172, "Grayson's Torch - Westfall Quest Rewards" },
     { 5323, "Everglow Lantern - Barrens Quest Rewards" },
+    { 6341, "Eerie Stable Lantern - SFK drop" },
+    { 9393, "Beacon of Hope - World drop" },
+    { 9627, "Explorer's League Lodestar - Uldaman quest reward" },
+    { 285192, "Kobold Firestarter - Thousand Needles rare drop" },
+    { 277260, "Researcher's Night Light - Special quest reward" },
 })
 COMPLETE.torch = true
 -- Beacon of Hope is the only torch/lantern-model equippable off-hand in
@@ -1182,23 +1239,88 @@ fill(C.anti_beast_chest, {
 })
 COMPLETE.anti_beast_chest = true
 
+fill(C.anti_beast_ring, {
+    { 287043, "Predaceous Band - Shaper's Terrace drop" },
+})
+COMPLETE.anti_beast_ring = true
+
+fill(C.anti_beast_neck, {
+    { 286568, "Blisterpaw Bones - Unknown" },
+})
+COMPLETE.anti_beast_neck = true
+
+fill(C.block_value_neck, {
+    { 267090, "Semblance of Twilight - Riverglades quest reward" },
+})
+COMPLETE.block_value_neck = true
+
+fill(C.block_value_ring, {
+    { 276333, "Sawyer Family Seal - Hyjal quest reward" },
+})
+COMPLETE.block_value_ring = true
+
+fill(C.block_value_trinket, {
+    { 23040, "Glyph of Deflection - Naxx drop" },
+})
+COMPLETE.block_value_trinket = true
+
+fill(C.dog_whistle, {
+    { 3456, "Dog Whistle - SM drop" },
+})
+COMPLETE.dog_whistle = true
+
+fill(C.necromancer_blade, {
+    { 22332, "Blade of Necromancy - Scholomance drop" },
+})
+COMPLETE.necromancer_blade = true
+
+fill(C.satchel_of_potions, {
+    { 280766, "Satchel of Potions - ES:W quest reward" },
+})
+COMPLETE.satchel_of_potions = true
+
+fill(C.dh_trinket, {
+    { 260205, "Highborne Research Tablet - Azshara quest reward" },
+    { 10659, "Shard of the Splithooves - Blasted Lands quest reward" },
+    { 276337, "Thaelemaches' Talisman - Hyjal quest reward" },
+    { 23206, "Mark of the Champion - Naxx quest reward" },
+})
+COMPLETE.dh_trinket = true
+
+fill(C.dh_neck, {
+    { 284708, "Demonstrike Emblem - Desolace rare drop" },
+})
+COMPLETE.dh_neck = true
+
+fill(C.scarlet_banner, {
+    { 278030, "Scarlet Banner - SM drop" },
+})
+COMPLETE.scarlet_banner = true
+
 -- Anti-beast cloak (back slot)
 fill(C.anti_beast_cloak, {
     { 16658, "Wildhunter Cloak - Ashenvale Quest Reward" },
+    { 6314, "Wolfmaster Cape - SFK drop" },
 })
 
 -- Anti-beast gloves (hands slot)
 fill(C.anti_beast_gloves, {
+    { 284573, "Ursol'lok's Paws - Unknown" },
     { 7756, "Dog Training Gloves - SM Drop" },
 })
 
 -- Anti-beast melee weapon (main/off-hand)
 fill(C.anti_beast_melee, {
+    { 272998, "Bone Knuckles - RFC Drop" },
     { 7710, "Loksey's Training Stick - SM Drop" },
-    { 11907, "Beastslayer - Quest Reward" },
+    { 274292, "Houndmaster Boomerang - SM Drop" },
     { 1465, "Tigerbane - World drop" },
+    { 11907, "Beastslayer - Un'Goro quest reward" },
     { 15782, "Beaststalker Blade - Winterspring quest reward" },
     { 15783, "Beasthunter Dagger - Winterspring quest reward" },
+    { 286613, "King Mosh's Tooth - Un'Goro rare drop" },
+    { 279910, "Beastslayer's Trident - Shaper's Terrace quest reward" },
+    { 276338, "Claw of Shalla'kal - Hyjal quest reward" },
     { 12709, "Finkle's Skinner - UBRS drop" },
     { 19946, "Tigule's Harpoon - ZG drop" },
 })
@@ -1215,10 +1337,12 @@ fill(C.anti_beast_ranged, {
 
 fill(C.armored_weapon, {
     { 11855, "Tork Wrench - Barrens quest reward" },
-    { 1172, "Grayson's Torch - Westfall quest reward" },
+    { 273297, "Goblin Hammer - DM drop" },
     { 1131, "Totem of Infliction - Duskwood quest reward" },
     { 3360, "Stitches' Femur - Duskwood drop" },
+    { 284459,   "Dendweller's Hammer - Stonetalon rare drop" },
     { 12252, "Staff of Protection - Vendor" },
+    { 271766, "Heavehammer - ES:W quest reward" },
     { 868, "Ardent Custodian - Epic World drop" },
     { 943,   "Warden Staff - Epic World drop" },
     { 20580,   "Hammer of Bestial Fury - World boss drop" },
@@ -1226,6 +1350,7 @@ fill(C.armored_weapon, {
     { 18376,   "Timeworn Mace - Dire Maul drop" },
     { 11805,   "Rubidium Hammer - BRD drop" },
     { 11921,   "Impervious Giant - BRD drop" },
+    { 281588,   "Nature's Cull - Mount Hyjal quest reward" },
     { 18531,   "Unyielding Maul - Stratholme drop" },
 })
 
@@ -1250,8 +1375,11 @@ fill(C.armored_offhand, {
 ----------------------------------------------------------------------
 
 fill(C.armored_rings, {
+    { 276899, "Knucklebound Thimble - SM quest reward" },
+    { 273032, "Bonebinder's Signet - CoD drop" },
     { 11118, "Archaedic Stone - Uldaman boss drop" },
     { 9642, "Band of the Great Tortoise - Tanaris quest reward" },
+    { 260216, "Ouroboros Ring - BMH quest reward" },
     { 12544, "Thrall's Resolve - BRD quest reward" },
     { 15855, "Ring of Protection - Eastern Plaguelands quest reward" },
     { 11669, "Naglering - BRD drop" },
@@ -1378,6 +1506,16 @@ fill(C.jungle_remedy, {
 })
 COMPLETE.jungle_remedy = true
 
+fill(C.drain_weapon, {
+    { 274647, "Farraki Kris - ZF drop" },
+})
+COMPLETE.drain_weapon = true
+
+fill(C.spellbreaker_ranged, {
+    { 274293, "Spellsever Crossbow - SM drop" },
+})
+COMPLETE.spellbreaker_ranged = true
+
 fill(C.thistle_tea, {
     { 7676, "Thisle Tea - consumable, cooking 60" },
 })
@@ -1410,6 +1548,7 @@ fill(C.primitive_weapon, {
     { 5815, "Glacial Stone - Ashenvale quest reward (Alliance)" },
     { 6692, "Pronged Reaver - RFK drop" },
     { 6975, "Whirlwind Axe - Warrior quest reward" },
+    { 276732, "Alcaz Willcrusher - Alcaz drop" },
     { 12000, "Limb Cleaver - BRD quest reward" },
     { 18420, "Bonecrusher - Dire Maul quest reward" },
     { 18481, "Skullcracking Mace - Dire Maul drop" },
@@ -1518,9 +1657,18 @@ fill(C.tinker_mace, {
     { 9449, "Manual Crowd Pummeler - Gnomeregan drop" },
     { 4548, "Servomechanic Sledgehammer - Arathi Highlands quest reward" },
     { 10804, "Fist of the Damned - ST drop" },
+    { 275698, "Yaely's Mending Tool - Hyjal quest reward" },
     { 18803, "Hyperthermically Insulated Lava Dredger - MC drop" },
 })
 COMPLETE.tinker_mace = true
+
+fill(C.tinker_ranged, {
+    { 285275, "Satchel of Copper Bombs - Engineering 85" },
+    { 285276, "Satchel of Bronze Bombs - Engineering 165" },
+    { 285277, "Satchel of Iron Bombs - Engineering 230" },
+    { 285278, "Satchel of Dark Iron Bombs - Engineering 285" },
+})
+COMPLETE.tinker_ranged = true
 
 ----------------------------------------------------------------------
 -- MECHANICAL COMPANION (Mechano-Mage)
@@ -1578,6 +1726,11 @@ fill(C.vial_offhand, {
     { 275671,  "Field Agent Beverage - Hyjal quest reward" },
 })
 COMPLETE.vial_offhand = true
+
+fill(C.nature_dagger, {
+    { 279876,  "Plaguefang - RoL quest reward" },
+})
+COMPLETE.nature_dagger = true
 
 -- Mark all remaining curated lists as complete
 COMPLETE.anti_beast_cloak = true

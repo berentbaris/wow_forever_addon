@@ -965,7 +965,7 @@ FCE.Characters = {
             E("Explorer", 1),
         },
         equipment   = {
-            E("Maces", 10),
+            E("Axe & mace", 10),
             E("Wildhammer helm", 34),
             E("Flask trinket", 44),
             E("Wildhammer mace", 50),
@@ -1555,6 +1555,10 @@ FCE.Characters = {
         appearance  = { E("Hairless", 1) },
         selfFound   = true,
         professions = {},
+        recommendedProfession = {
+            name = "Enchanting, Blacksmithing",
+            reason = "125 Enchanting is required to craft the Relic of the Silver Hand. Forge the Silver Enchanting Rod with Blacksmithing.",
+        },
         challenges  = {
             E("Purifier", 60),
         },
@@ -1566,7 +1570,8 @@ FCE.Characters = {
         equipment   = {
             E("Sword or mace", 5),
             E("Guild tabard", 20),
-            E("Templar blade", 25),
+            E("Relic of the Silver Hand", 25),
+            E("Templar's arms", 25),
             E("Argent shoulders", 35),
             E("Argent helm", 45),
             E("Argent Dawn trinket", 50),
@@ -1887,7 +1892,7 @@ FCE.Characters = {
             },
         },
         questTheme  = "Nihilist",
-        companion   = nil,
+        companion   = E("Silithid", 35),
         pet         = nil,
         mount       = nil,
         gameplay    = "cenarion war",
@@ -2902,6 +2907,7 @@ FCE.Characters = {
             },
             Horde = {
                 Q("The Book of Ur", 26, 1013),
+                Q("Bone Raising", 40, 92894),
                 Q("The Star, the Hand and the Heart", 44, 736),
                 Q("Twisted Evils", 47, 7028),
                 Q("The God Hakkar", 53, 3528),
@@ -3354,6 +3360,7 @@ FCE.Characters = {
             E("Gloves of the Fang", 22),
             E("Leggings of the Fang", 22),
             E("Footpads of the Fang", 22),
+            E("Powershifting helm", 44),
         },
         challenges  = {},
         optionalChallenges = {
@@ -3410,28 +3417,23 @@ FCE.Characters = {
             },
         },
         questTheme  = "Naturalist",
-        companion   = E("Bird", 10),
+        companion   = nil,
         pet         = nil,
         mount       = nil,
-        gameplay    = "Pro-nature",
+        gameplay    = "Pro-nature, powershifting",
     },
 
     ["Druid of the Wild_DRUID"] = {
         class       = "DRUID",
-        spec        = "Powershifter Hybrid",
+        spec        = "Hybrid",
         name        = "Druid of the Wild",
         races       = { "Night Elf", "Tauren" },
         gender      = "Any gender",
         selfFound   = true,
         professions = {},
-        recommendedProfession = {
-            name = "Leatherworking",
-            reason = "Needed to craft Powershifting helm (Wolfshead Helm), which requires 225 Leatherworking.",
-        },
         equipment   = {
             E("75 strength & intellect", 30),
             E("100 strength & intellect", 40),
-            E("Powershifting helm", 45),
             E("150 strength & intellect", 50),
         },
         challenges = {
@@ -3492,7 +3494,7 @@ FCE.Characters = {
         companion   = nil,
         pet         = nil,
         mount       = nil,
-        gameplay    = "pro-nature, powershifting",
+        gameplay    = "pro-nature",
     },
 
     ["Plagueshifter_DRUID"] = {

@@ -193,6 +193,16 @@ CC.CompanionDB = {
         notes = "Prairie Dog Whistle — sold by Halpa in Thunder Bluff",
     },
 
+    ["Silithid"] = {
+        creatureNames = {
+            ["Weevil K. Neevil"]            = true,
+        },
+        itemIDs = {
+            280456,  -- Undercity Cockroach (vendor, Jeremiah Payson in Undercity)
+        },
+        notes = "Weevil K. Neevil — quest in Swamp of Sorrows",
+    },
+
     ["Cockroach"] = {
         creatureNames = {
             ["Cockroach"]            = true,

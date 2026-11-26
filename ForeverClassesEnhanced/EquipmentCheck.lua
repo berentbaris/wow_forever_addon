@@ -1384,6 +1384,7 @@ local CURATED = {
     dragonbreath_chili   = {},
     horned_helm          = {},
     armored_trinket      = {},
+    anti_undead_relic    = {},
     katana               = {},
     brewmaster_robe      = {},
     war_harness          = {},
@@ -1508,6 +1509,7 @@ FCE.CuratedKeyForDesc = {
     ["Fast dagger"]                 = "fast_daggers",
     ["Captain's headgear"]               = "captains_hat",
     ["Pirate blade"] = "pirate_blade",
+    ["Relic of the Silver Hand"] = "anti_undead_relic",
     ["Armor of the Fang"] = "fang1",
     ["Gloves of the Fang"] = "fang3",
     ["Footpads of the Fang"] = "fang2",
@@ -1623,7 +1625,7 @@ FCE.CuratedKeyForDesc = {
     ["Cultist robe"]            = "cultist_robe",
     ["Cultist shoulders"]            = "cultist_shoulder",
     ["Cultist cowl"]            = "cultist_cowl",
-    ["Templar blade"]           = "pala_blade",
+    ["Templar's arms"]           = "pala_blade",
     ["Runeblade"]      = "dk_blade",
     ["Scarlet chapeau"]           = "scarlet_priest_helm",
     ["Scarlet mantle"]           = "scarlet_priest_shoulders",
@@ -1864,6 +1866,10 @@ end)
 
 R("Argent robe", function(state)
     return slotInCurated(state, SLOT.CHEST, "templar_robes")
+end)
+
+R("Relic of the Silver Hand", function(state)
+    return slotInCurated(state, SLOT.RANGED, "anti_undead_relic")
 end)
 
 R("Argent circlet", function(state)
