@@ -1473,13 +1473,13 @@ local CURATED = {
     brown_shoulders     = {},
     red_shoulders     = {},
     blue_shoulders     = {},
-    dark_cowl       = {},
+    dark_ranger_cowl       = {},
     dark_shoulders       = {},
     dark_cape    = {},
     anti_beast_chest   = {},
     totem_weapon   = {},
     primitive_weapon   = {},
-    wildhammer_mace     = {},
+    wildhammer_weapon     = {},
     farseer_shield = {},
     hw_staff = {},
     hw_staff1 = {},
@@ -1490,6 +1490,7 @@ local CURATED = {
     fang3 = {},
     fang4 = {},
     fang5 = {},
+    dark_cowl_cloth = {},
 }
 
 -- Expose the curated tables so other files can populate them
@@ -1560,7 +1561,8 @@ FCE.CuratedKeyForDesc = {
     ["Necromancer robe"]                 = "necromancer_robe",
     ["Mountaineer cape"]                 = "mountaineer_cape",
     ["Mountaineer hood"]                 = "mountaineer_hood",
-    ["Dark Ranger hood"]                 = "dark_cowl",
+    ["Dark Ranger hood"]                 = "dark_ranger_cowl",
+    ["Dark cowl"]                 = "dark_cowl_cloth",
     ["Dark Ranger cape"]                 = "dark_cape",
     ["Dark Ranger shoulders"]                 = "dark_shoulders",
     ["Fletcher hood"]                 = "brown_cowl",
@@ -1651,7 +1653,7 @@ FCE.CuratedKeyForDesc = {
     ["Beastslaying chest"]          = "anti_beast_chest",
     ["Totem weapon"]          = "totem_weapon",
     ["Primitive weapon"]          = "primitive_weapon",
-    ["Wildhammer mace"]         = "wildhammer_mace",
+    ["Wildhammer weapon"]         = "wildhammer_weapon",
     ["Farseer shield"]         = "farseer_shield",
 }
 
@@ -1846,6 +1848,14 @@ R("Totem weapon", function(state)
         return PASS, "Fishing break"
     end
     return anySlotInCurated(state, { SLOT.MAINHAND, SLOT.OFFHAND }, "totem_weapon")
+end)
+
+R("Wildhammer weapon", function(state)
+    local fish = { [WEAPON_SUB.FISHING_POLE] = true }
+    if allWeaponsAre(state, fish) then
+        return PASS, "Fishing break"
+    end
+    return anySlotInCurated(state, { SLOT.MAINHAND, SLOT.OFFHAND }, "wildhammer_weapon")
 end)
 
 R("Holy flame", function(state)

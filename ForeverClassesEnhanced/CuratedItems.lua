@@ -143,6 +143,7 @@ COMPLETE.pirate_belt = true
 fill(C.rapier, {
     { 9446,  "Electrocutioner Leg - Gnomeregan drop" },
     { 12777,  "Blazing Rapier - World drop" },
+    { 8225,  "Tainted Pierce - SM rare drop" },
     { 7944,  "Dazzling Mithril Rapier - Blacksmithing" },
     { 13034,  "Speedsteel Rapier - World drop" },
 })
@@ -179,6 +180,11 @@ fill(C.reflector_belt, {
     { 11861,  "Girdle of Reprisal - Searing Gorge quest reward" },
 })
 COMPLETE.reflector_belt = true
+
+fill(C.reflector_trinket, {
+    { 21488,  "Fetish of Chitinous Spikes - AQ drop" },
+})
+COMPLETE.reflector_trinket = true
 
 fill(C.reflector_ring, {
     { 273839,  "Spiked Shell Band - BFD drop" },
@@ -330,14 +336,11 @@ fill(C.scarlet_boots, {
 })
 COMPLETE.scarlet_boots = true
 
-fill(C.reflector_belt, {
-    { 11861,  "Girdle of Reprisal - Searing Gorge quest reward" },
-})
-COMPLETE.reflector_belt = true
-
 fill(C.imperial_shoulders, {
     { 10374,  "Imbued Plate Pauldrons - World drop" },
     { 12428,  "Imperial Plate Shoulders - Blacksmithing" },
+    { 277117,  "Savage Gladiator Shoulders - BRD drop" },
+    { 15049,  "Blue Dragonscale Shoulders - Leatherworking" },   
 })
 COMPLETE.imperial_shoulders = true
 
@@ -376,6 +379,8 @@ fill(C.dreamweave_gloves, {
 COMPLETE.dreamweave_gloves = true
 
 fill(C.dreamweave_circlet, {
+    { 271812,  "Discarded Circlet - Shen'dralas quest" },
+    { 17715,  "Eye of Theradras - Maraudon drop" },
     { 10041,  "Dreamweave Circlet - Tailoring" },
 })
 COMPLETE.dreamweave_circlet = true
@@ -396,19 +401,70 @@ fill(C.green_shirt, {
 COMPLETE.green_shirt = true
 
 fill(C.reflector_shield, {
+    { 274290,  "Painwalker Buckler - SM drop" },
+    { 274608,  "Maw of Min'loth - DC drop" },
     { 7787,  "Resplendent Guardian - World drop" },
+    { 286982,  "Unearthed Barrier - ES:W rare drop" },
     { 9458,  "Thermaplugg's Central Core - Gnomeregan drop" },
     { 4975,  "Vigilant Buckler - Arathi quest reward" },
+    { 7726,  "Aegis of the Scarlet Commander - SM drop" },
     { 9643,  "Optomatic Deflector - Tanaris quest reward" },
     { 1204,  "The Green Tower - World drop" },
     { 2040,  "Troll Protector - ZF zone drop" },
+    { 280063,  "Bloodfur Bulwark - BMH drop" },
     { 1979,  "Wall of the Dead - World drop" },
     { 1168,  "Skullflame Shield - World drop" },
+    { 275649,  "Bramblebark Barrier - Hyjal quest reward" },
     { 13243,  "Argent Defender - Stratholme quest reward" },
+    { 13375,  "Crest of Retribution - Stratholme drop" },
+    { 22198,  "Jagged Obsidian Shield - Blacksmithing" },
     { 17066,  "Drillborer Disk - Molten Core drop" },    
     { 18499,  "Barrier Shield - Dire Maul rare drop" },
+    { 18168,  "Force Reactive Disk - Engineering" },
 })
 COMPLETE.reflector_shield = true
+
+fill(C.voodoo_shield, {
+    { 15494,  "Bloodspattered Shield - World drop" },
+    { 276889,  "Thornwoven Shield - Barrens quest reward" },
+    { 16660, "Driftmire Shield - Ashenvale quest reward" },
+    { 15352, "Headhunter's Buckler - World drop" },
+    { 15367, "Trickster's Protector - World drop" },
+    { 2040,  "Troll Protector - ZF zone drop" },
+    { 274652, "Wall of Water - ZF drop" },
+    { 10268, "Rhombeard Protector - LBRS drop" },
+    { 274418, "Burrow Barricade - Hyjal rep reward" },
+})
+COMPLETE.voodoo_shield = true
+
+fill(C.huntress_shield, {
+    { 263305,  "Windshaped Shield - Zephras Isle quest reward" },
+    { 257255,  "Highlands Defender's Shield - Zephras Isle quest reward" },
+    { 275290, "Stormforged Protector - Zephras Isle quest reward" },
+    { 263431,  "Defender's Aegis - Unknown" },
+    { 14902, "Saltstone Shield - World drop" },
+    { 280063,  "Bloodfur Bulwark - BMH drop" },
+    { 9661, "Earthclasp Barrier - Feralas quest reward" },
+    { 275864, "Putridus Wall - Maraudon drop" },
+    { 18535, "Milli's Shield - Dire Maul quest reward" },
+    { 18485, "Observer's Shield - Dire Maul drop" },
+    { 276754, "Sunderbark Vigil - Hyjal quest reward" },
+})
+COMPLETE.huntress_shield = true
+
+fill(C.block_value_shield, {
+    { 273055,  "Bonepile Gaze - CoD rare drop" },
+    { 18673,  "Avalanchion's Stony Hide - Azshara rare drop" },
+    { 279831,  "Fatebound Buckler - Alcaz Prison quest reward" },
+    { 280063,  "Bloodfur Bulwark - BMH drop" },
+    { 18499,  "Barrier Shield - Dire Maul rare drop" },
+    { 17066,  "Drillborer Disk - Molten Core drop" }, 
+    { 19321,  "The Immovable Object - PvP reward" },
+    { 18696,  "Intricately Runed Shield - Scholomance drop" },
+    { 18352,  "Petrified Bark Shield - Dire Maul drop" },
+    { 21269,   "Blessed Qiraji Bulwark - AQ drop" },
+})
+COMPLETE.block_value_shield = true
 
 fill(C.dragonsworn_helm, {
     { 21317,  "Helm of the Pathfinder - Felwood quest reward" },
@@ -431,6 +487,17 @@ fill(C.reflector_armor, {
     { 12641,  "Invulnerable Mail - Blacksmithing" },
 })
 COMPLETE.reflector_armor = true
+
+fill(C.reflector_cape, {
+    { 6629,  "Sporid Cape - WC drop" },
+    { 275833,  "Bristlecone Cloak - Hyjal quest reward" },
+})
+COMPLETE.reflector_cape = true
+
+fill(C.reflector_hands, {
+    { 18326,  "Razor Gauntlets - Dire Maul drop" },
+})
+COMPLETE.reflector_hands = true
 
 fill(C.wizard_hat, {
     { 3556,  "Dread Mage Hat - Warlock Quest Reward" },
@@ -516,11 +583,10 @@ fill(C.wolf_helm, {
     { 8345, "Wolfshead Helm - Tribal Leatherworking" },
     { 284199, "Death Howl's Guise - Felwood rare drop" },
     { 282049, "Deathmaw's Guise - Burning Steppes rare drop" },
-    
+    { 16677, "Beaststalker's Cap - Scholomance drop" },
+    { 16667, "Coif of Elements - Scholomance drop" },
 })
 COMPLETE.wolf_helm = true
--- Only the Wolfshead Helm has a literal wolf-head model in Classic.
--- No random-suffix items share this unique wolf-head visual.
 
 fill(C.powershifting_helm, {
     { 8345, "Wolfshead Helm - Tribal Leatherworking" },
@@ -576,18 +642,13 @@ COMPLETE.exemplar_mantle = true
 
 fill(C.captains_hat, {
     { 276105, "Scoutmaster's Eyepatch - Riverglades quest reward (Horde)" },
-    { 270123, "Ragnar's Favorite Hat - BRD quest reward" },
     { 10030, "Admiral's Hat - Tailoring 240" },
+    { 270123, "Ragnar's Favorite Hat - BRD quest reward" },
+    { 11735, "Ragefury Eyepatch - BRD drop" },
     { 12185, "Bloodsail Admiral's Hat - Bloodsail rep" },
     { 2955, "First Mate Hat - World drop" },
 })
 COMPLETE.captains_hat = true
-
-fill(C.ranger_blade, {
-    { 18957, "Brushwood Blade - Teldrassil quest" },
-    { 2263, "Phytoblade - Wetlands quest" },
-})
-COMPLETE.ranger_blade = true
 
 fill(C.brushwood, {
     { 18957, "Brushwood Blade - Teldrassil quest" },
@@ -600,7 +661,7 @@ fill(C.spellblade_blade, {
 })
 COMPLETE.spellblade_blade = true
 
-fill(C.green_dragon_blades, {
+fill(C.green_dragon_blades, { 
     { 10803, "Blade of the Wretched - ST drop" },
     { 15814, "Hameya's Slayer - EPL quest" },
 })
@@ -702,13 +763,18 @@ COMPLETE.cultist_robe = true
 fill(C.pirate_blade, {
     -- Cutlasses (pirate-named swords)
     { 1951,  "Blackwater Cutlass - Defias Pirate drop" },
+    { 1469, "Scimitar of Atun - Redridge rare drop" },
     { 5192, "Thief's Blade - Deadmines drop" },
     { 5191,  "Cruel Barb - Deadmines drop" },
+    { 284702, "Slimy Sword - Ashenvale rare drop" },
     { 3850, "Jade Serpentblade - Blacksmithing" },
+    { 283255, "Syndicate Executioner's Slicer - Alterac rare drop" },
+    { 15215, "Furious Falchion - World drop" },
     { 19040, "Zorbin's Mega-Slicer - Feralas quest reward" },
+    { 3935, "Smotts' Cutlass - STV quest item" },
+    { 2528, "Blackwater Scimitar - STV quest reward" },
     { 2528, "Falchion - Vendor" },
     { 9401, "Nordic Longshank - Uldaman drop" },
-    { 15782, "Beaststalker Blade - Winterspring quest reward" },
     { 4560, "Fine Scimitar - World drop" },
     { 15215, "Furious Falchion - World drop" },
     { 8196, "Ebon Scimitar - World drop" },   
@@ -816,7 +882,15 @@ fill(C.horned_helm, {
     { 7719, "Raging Berserker's Helm - SM drop" },
     { 3836,   "Green Iron Helm - Blacksmithing" },
     { 6686,   "Tusken Helm - RFK drop" },
+    { 274959,  "Farholde Horns - Riverglades quest reward" },
+    { 7937,   "Ornate Mithril Helm - Blacksmithing" },
     { 11124,   "Helm of Exile - ST quest reward" },
+    { 22411,   "Helm of the Executioner - Stratholme drop" },
+    { 12612,   "Runic Plate Helm - Blacksmithing" },
+    { 14907,   "Darkrune Helm - Blacksmithing" },
+    { 13073,   "Heavy Mithril Helm - Blacksmithing" },
+    { 12410,   "Thorium Helm - Blacksmithing" },
+    { 12640,   "Lionheart Helm - Blacksmithing" },
     { 14753,   "Slayer's Skullcap - World drop" },
     { 10198,   "Crusader's Helm - World drop" },
     { 10235,   "Engraved Helm - World drop" },
@@ -824,26 +898,19 @@ fill(C.horned_helm, {
     { 15645,   "Ironhide Helmet - World drop" },
     { 14804,   "Bloodlust Helm - World drop" },
     { 13073,   "Mugthol's Helm - World drop" },
-    { 7937,   "Ornate Mithril Helm - Blacksmithing" },
-    { 22411,   "Helm of the Executioner - Stratholme drop" },
     { 14849,   "Sunscale Helmet - World drop" },
-    { 12612,   "Runic Plate Helm - Blacksmithing" },
-    { 13073,   "Heavy Mithril Helm - Blacksmithing" },
     { 10132,   "Revenant Helmet - World drop" },
     { 10090,   "Gothic Plate Helmet - World drop" },
     { 14907,   "Brutish Helmet - World drop" },
     { 14935,   "Heroic Skullcap - World drop" },
-    { 14907,   "Darkrune Helm - Blacksmithing" },
     { 10379,   "Commander's Helm - World drop" },
-    { 12410,   "Thorium Helm - Blacksmithing" },
     { 10279,   "Emerald Helm - World drop" },
     { 10372,   "Imbued Plate Helmet - World drop" },
     { 8142,   "Chromite Barbute - World drop" },
-    { 12640,   "Lionheart Helm - Blacksmithing" },
 })
 COMPLETE.horned_helm = true
 
-fill(C.wildhammer_helm, {
+fill(C.feathered_helm, {
     { 5753,   "Ruffled Chaplet - Ashenvale rare drop" },
     { 6204,   "Tribal Worg Helm - Duskwood rare drop" },
     { 274155,   "Geomancer Headdress - RFK drop" },
@@ -859,20 +926,47 @@ fill(C.wildhammer_helm, {
     { 15363,   "Trickster's Headdress - World drop" },
     { 260195,   "Headdress of the Damned - Blasted Lands quest reward" },
 })
-COMPLETE.wildhammer_helm = true
+COMPLETE.feathered_helm = true
 
-fill(C.horned_helm2, {
-    { 284065,   "Crown of Maldazzar - WPL rare drop" },
-    { 5753,   "Ruffled Chaplet - Ashenvale rare drop" },
-    { 6204,   "Tribal Worg Helm - Duskwood rare drop" },
-    { 3011, "Feathered Headdress - Alterac rare drop" },
-    { 17740,   "Soothsayer's Headdress - Maraudon drop" },
-    { 280076,   "Horns of Varrox - BMH drop" },
-    { 15384,   "Rageclaw Helm - World drop" },
-    { 9921,   "Tracker's Headband - World drop" },
-    { 15363,   "Trickster's Headdress - World drop" },
+fill(C.bird_helm, {
+    { 274609,   "Serpentbane Crown - DC drop" },
+    { 274644,   "Undying Headdress - ZF drop" },
+    { 280058,   "Impish Chain Hood - BMH drop" },
+    { 17767,   "Bloomsprout Headpiece - Maraudon rare drop" },
+    { 16720,   "Wildheart Cowl - Scholomance drop" }, 
+    { 18807,   "Helm of Latent Power - Shaman quest reward" }, 
+    { 18421,   "Backwood Helm - Dire Maul quest reward" }, 
 })
-COMPLETE.horned_helm2 = true
+COMPLETE.bird_helm = true
+
+fill(C.bird_shoulders, {
+    { 15513,   "Grunt's Pauldrons - World drop" },
+    { 15628,   "Gryphon Mail Pauldrons - World drop" },
+    { 15553,   "Thick Scale Shoulder Pads - World drop" },
+    { 15067,   "Ironfeather Shoulders - Leatherworking" },
+    { 16718,   "Wildheart Spaulders - BRS drop" },
+    { 226778,   "Feralheart Spaulders - Vendor" },
+    { 22112,   "Feralheart Spaulders - Druid quest" },
+    { 226790,   "Feralheart Epaulets - Vendor" },
+    { 226785,   "Feralheart Mantle - Vendor" },
+    { 226798,   "Feralheart Pauldrons - Vendor" },
+    { 226817,   "Feralheart Shoulders - Vendor" },
+})
+COMPLETE.bird_shoulders = true
+
+fill(C.horned_helm_spiky, {
+    { 284065,   "Crown of Maldazzar - WPL rare drop" },
+    { 280076,   "Horns of Varrox - BMH drop" },
+})
+
+fill(C.one_sided_shoulders, {
+    { 273804,  "Executioner Mantle - Stockades drop" },
+    { 7718,  "Herod's Shoulder - SM drop" },
+    { 274996,  "Resistance Breaker Spaulder - Riverglades elite drop" },
+    { 275036,  "Pauldron of Order - Riverglades quest reward" },
+    { 275737,  "Hermit's Pauldron - Hyjal quest reward" },
+})
+COMPLETE.one_sided_shoulders = true
 
 fill(C.skull_shield, {
     { 3761,   "Deadskull Shield - Hillsbrad quest reward" },
@@ -902,6 +996,7 @@ COMPLETE.spellbreaker_trinket = true
 
 fill(C.dragonsworn_trinket, {
     { 276744, "Zarla's Snack Pouch - Alcaz Prison drop" },
+    { 10455, "Chained Essence of Eranikus - ST quest reward" },
 })
 COMPLETE.dragonsworn_trinket = true
 
@@ -971,26 +1066,68 @@ fill(C.kilt, {
 -- Head items with cowl / hooded / executioner hood visual
 ----------------------------------------------------------------------
 
-fill(C.cowl, {
+fill(C.dark_ranger_cowl, {
+    { 4039, "Nightsky Cowl - World drop" },
+    { 1280, "Cloaked Hood - Syndicate Assassin drop" },
+    { 2621, "Cowl of Necromancy - Shadowforge Darkweaver drop" },
+    { 252447, "Defender's Leather Hood - Leatherworking" },
+    { 19984, "Ebon Mask - Rogue quest" },
+    { 16707, "Shadowcraft Cap - Scholomance drop" },
+})
+COMPLETE.dark_ranger_cowl = true
+
+fill(C.dark_cowl_cloth, {
     { 3732, "Hooded Cowl - Quest rewards from Hillsbrad" },
+    { 4039, "Nightsky Cowl - World drop" },
+    { 284401, "Sorrow's Shroud - Stonetalon rare drop" },
+    { 2621, "Cowl of Necromancy - Shadowforge Darkweaver drop" },
+    { 278567, "Stromgarde Hood - Arathi quest reward" },
+    { 7432, "Twilight Cowl - World drop" },
+    { 4323, "Shadow Hood - Tailoring" },
+    { 14111, "Felcloth Hood - Tailoring" },
+    { 282558, "Firebird's Cowl - Badlands rare drop" },
+    { 22302, "Ironweave Cowl - Blackrock Spire drop" },
+    { 22225, "Dragonskin Cowl - BRS drop" },
+    { 20408, "Twilight Cultist Cowl - Silithus drop" },
+})
+COMPLETE.dark_cowl_cloth = true
+
+fill(C.cowl, {
+    { 3732, "Hooded Cowl - Hillsbrad quest" },
+    { 252447, "Defender's Leather Hood - Leatherworking" },
+    { 252456, "Totemic Leather Helm - Leatherworking" },
+    { 252513, "Trapper's Leather Helm - Leatherworking" },
+    { 252505, "Trapper's Leather Hood - Leatherworking" },
+    { 252448, "Totemic Leather Hood - Leatherworking" },
+    { 252506, "Stormrider's Leather Hood - Leatherworking" },
+    { 252515, "Wisdom's Leather Helm - Leatherworking" },
+    { 252507, "Wisdom's Leather Hood - Leatherworking" },
+    { 252504, "Brawler's Leather Hood - Leatherworking" },
+    { 252512, "Brawler's Leather Helm - Leatherworking" },
+    { 284401, "Sorrow's Shroud - Stonetalon rare drop" },
+    { 7048, "Azure Silk Hood - Tailoring 125" },
     { 4322, "Enchanter's Cowl - Tailoring 165" },
+    { 2621, "Cowl of Necromancy - Shadowforge Darkweaver drop" },
+    { 1280, "Cloaked Hood - Syndicate Assassin drop" },
+    { 278567, "Stromgarde Hood - Arathi quest reward" },
+    { 4323, "Shadow Hood - Tailoring" },
+    { 14111, "Felcloth Hood - Tailoring" },
     { 4039, "Nightsky Cowl - World drop" },
     { 7432, "Twilight Cowl - World drop" },
     { 4041, "Aurora Cowl - World drop" },
     { 8115, "Hibernal Cowl - World drop" },
     { 5608, "Living Cowl - World drop" },
-    { 22302, "Ironweave Cowl - Blackrock Spire drop" },
-    { 22225, "Dragonskin Cowl - World drop" },
-    { 7048, "Azure Silk Hood - Tailoring 125" },
-    { 4323, "Shadow Hood - Tailoring" },
     { 9849, "Conjurer's Hood - World drop" },
     { 9940, "Abjurer's Hood - World drop" },
-    { 14111, "Felcloth Hood - Tailoring" },
-    { 10782, "Hakkari Shroud - ST quest" },
     { 7691, "Embalmed Shroud - World drop" },
     { 2620, "Augural Shroud - World drop" },
-    { 2621, "Cowl of Necromancy - Shadowforge Darkweaver drop" },
-    { 1280, "Cloaked Hood - Syndicate Assassin drop" },
+    { 281539, "Bear Fur Cowl - Winterspring quest" },
+    { 282558, "Firebird's Cowl - Badlands rare drop" },
+    { 10782, "Hakkari Shroud - ST quest" },
+    { 279931, "Lost Researcher's Hood - Shaper's Terrace drop" },
+    { 279932, "Slime-Resistant Shroud - Shaper's Terrace quest" },
+    { 22302, "Ironweave Cowl - BRS drop" },
+    { 22225, "Dragonskin Cowl - BRS drop" },
 })
 
 ----------------------------------------------------------------------
@@ -1095,15 +1232,6 @@ fill(C.mountaineer_hood, {
 })
 COMPLETE.mountaineer_hood = true
 
-fill(C.dark_cowl, {
-    { 4039, "Nightsky Cowl - World drop" },
-    { 1280, "Cloaked Hood - Syndicate Assassin drop" },
-    { 2621, "Cowl of Necromancy - Shadowforge Darkweaver drop" },
-    { 19984, "Ebon Mask - Rogue quest" },
-    { 16707, "Shadowcraft Cap - Scholomance drop" },
-})
-COMPLETE.dark_cowl = true
-
 fill(C.dark_cape, {
     { 9635, "Master Apothecary Cape - Undercity quest" },
     { 6832, "Cloak of Blight - Duskwood quest" },
@@ -1157,37 +1285,6 @@ fill(C.cursed_items, {
     { 18425, "Kreeg's Mug - Dire Maul drop" },
 })
 COMPLETE.cursed_items = true
-
-----------------------------------------------------------------------
--- SHELL SHIELD (Witch Doctor)
--- Shields with tortoise / turtle shell visual
-----------------------------------------------------------------------
-
-fill(C.shell_shield, {
-    { 6447, "Worn Turtle Shell Shield - WC drop" },
-    { 13245, "Kresh's Back - WC drop" },
-    { 16660, "Driftmire Shield - Ashenvale quest reward" },
-    { 15342, "Pathfinder Guard - World drop" },
-    { 15466, "Clink Shield - Thousand Needles quest reward" },
-    { 15352, "Headhunter's Buckler - World drop" },
-    { 14916, "Jade Deflector - World drop" },
-    { 14902, "Saltstone Shield - World drop" },
-    { 9661, "Earthclasp Barrier - Feralas quest reward" },
-    { 10268, "Rhombeard Protector - LBRS drop" },
-    { 18535, "Milli's Shield - Dire Maul quest reward" },
-    { 18352, "Petrified Bark Shield - Dire Maul drop" },
-    { 18485, "Observer's Shield - Dire Maul drop" },
-})
-COMPLETE.shell_shield = true
-
-fill(C.farseer_shield, {
-    { 15466, "Clink Shield - Thousand Needles quest reward" },
-    { 14902, "Saltstone Shield - World drop" },
-    { 9661, "Earthclasp Barrier - Feralas quest reward" },
-    { 18535, "Milli's Shield - Dire Maul quest reward" },
-    { 18485, "Observer's Shield - Dire Maul drop" },
-})
-COMPLETE.farseer_shield = true
 
 fill(C.hw_staff, {
     { 20536, "Soul Harvester - Warlock quest" },
@@ -1250,16 +1347,32 @@ fill(C.anti_beast_neck, {
 COMPLETE.anti_beast_neck = true
 
 fill(C.block_value_neck, {
+    { 274955, "Clobrok's Block Rock - Riverglades quest reward" },
     { 267090, "Semblance of Twilight - Riverglades quest reward" },
+    { 10711 , "Dragon's Blood Necklace - SM drop" },
+    { 22981, "Gluth's Missing Collar - Naxx drop" },
 })
 COMPLETE.block_value_neck = true
 
 fill(C.block_value_ring, {
+    { 275000, "Zarmok's Plated Signet - Riverglades rare drop" },
     { 276333, "Sawyer Family Seal - Hyjal quest reward" },
 })
 COMPLETE.block_value_ring = true
 
+fill(C.block_value_ranged, {
+    { 11307, "Massive Longbow - Vendor" },
+})
+COMPLETE.block_value_ranged = true
+
+fill(C.block_value_melee, {
+    { 280022, "Scaleguard Scimitar - Shaper's Terrace drop" },
+})
+COMPLETE.block_value_melee = true
+
 fill(C.block_value_trinket, {
+    { 18466, "Royal Seal of Eldre'Thalas - Dire Maul quest reward" },
+    { 19431, "Styleen's Impeding Scarab - BWL drop" },
     { 23040, "Glyph of Deflection - Naxx drop" },
 })
 COMPLETE.block_value_trinket = true
@@ -1435,6 +1548,8 @@ fill(C.archmage_shoulders, {
 COMPLETE.archmage_shoulders = true
 
 fill(C.archmage_circlet, {
+    { 253951, "Silky Circlet - Tailoring" },
+    { 253977, "Filigreed Silky Circlet - Tailoring" },
     { 10139, "High Councillor's Circlet - World drop" },
     { 14436, "Windchaser Coronet - World drop" },
     { 10751, "Gemburst Circlet - ST quest reward" },
@@ -1562,10 +1677,14 @@ fill(C.totem_weapon, {
 })
 COMPLETE.totem_weapon = true
 
-fill(C.wildhammer_mace, {
+fill(C.wildhammer_weapon, {
+    { 286537, "Thunderstomp's Horn - Barrens rare drop" },
     { 9651, "Gryphon Rider's Stormhammer - Hinterlands quest reward" },
+    { 811, "Axe of the Deep Woods - World drop" },
+    { 15853, "Windreaper - Scholomance quest" },
+    { 12794, "Masterwork Stormhammer - Blacksmithing" },
 })
-COMPLETE.wildhammer_mace = true
+COMPLETE.wildhammer_weapon = true
 
 fill(C.pickaxe, {
     { 2048, "Anvilmar Hammer - Dun Morogh quest reward" },
@@ -1597,6 +1716,7 @@ fill(C.prospector_headgear, {
     { 284400, "Foreman's Helm - Stonetalon rare drop" },
     { 4048, "Emblazoned Hat - World drop" },
     { 8174, "Comfortable Leather Hat - Leatherworking 200" },
+    { 275028, "Twilight Mine Light - Riverglades quest" },
     { 9534, "Engineer's Guild Headpiece - ZF quest reward" },
     { 15156, "Nocturnal Cap - World drop" },
     { 19039, "Zorbin's Water Resistant Hat - Feralas quest reward" },
@@ -1728,7 +1848,18 @@ fill(C.vial_offhand, {
 COMPLETE.vial_offhand = true
 
 fill(C.nature_dagger, {
+    { 899,  "Venom Web Fang - Venom Web Spider drop" },
     { 279876,  "Plaguefang - RoL quest reward" },
+    { 4446,  "Blackvenom Blade - Redridge rare drop" },
+    { 5752,  "Wyvern Tailspike - Stonetalon rare drop" },
+    { 4449,  "Naraxis' Fang - Duskwood rare drop" },
+    { 6904,  "Bite of Serra'kis - BFD drop" },
+    { 9453,  "Toxic Revenger - Gnomeregan drop" },
+    { 285102,  "Darkmist Dirk - Dustwallow rare drop" },
+    { 9467,  "Gahz'rilla Fang - ZF drop" },
+    { 12582,  "Keris of Zul'Serak - BRS drop" },
+    { 11635,  "Hookfang Shanker - BRD drop" },
+    { 274271,  "Deadhead Blade - Hyjal quest reward" },
 })
 COMPLETE.nature_dagger = true
 

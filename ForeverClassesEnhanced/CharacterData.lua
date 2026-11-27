@@ -475,6 +475,10 @@ FCE.Characters = {
         gender      = "Female",
         selfFound   = true,
         professions = {},
+        recommendedProfession = {
+            name = "Tailoring",
+            reason = "A modest level of Tailoring is required to craft the Azure Silk Hood (125 Tailoring).",
+        },
         challenges  = {
             E("Faction Loyalist", 1),
         },
@@ -487,6 +491,7 @@ FCE.Characters = {
             E("Sword or dagger", 1),
             E("Shield", 5),
             E("Thrown", 10),
+            E("Elven hood", 26),
         },
         quests      = {
             Q("Sathrah's Sacrifice", 12, 2520),
@@ -968,7 +973,7 @@ FCE.Characters = {
             E("Axe & mace", 10),
             E("Wildhammer helm", 34),
             E("Flask trinket", 44),
-            E("Wildhammer mace", 50),
+            E("Wildhammer weapon", 50),
         },
         quests      = {
             Q("In Defense of the King's Lands", 17, 217),
@@ -2647,9 +2652,9 @@ FCE.Characters = {
         equipment   = {
             E("Staff", 1),
             E("Kirin Tor robes", 20),
+            E("Kirin Tor circlet", 25),
             E("Kirin Tor shoulders", 34),
             E("Kirin Tor cape", 52),
-            E("Kirin Tor circlet", 52),
         },
         challenges  = {},
         optionalChallenges = {
@@ -2976,7 +2981,7 @@ FCE.Characters = {
             E("Shadow wand", 15),
             E("Cultist robe", 45),
             E("Cultist shoulders", 45),
-            E("Cultist cowl", 60),
+            E("Cultist cowl", 45),
         },
         challenges  = {
             E("Drifter", 1),
@@ -3086,6 +3091,7 @@ FCE.Characters = {
         equipment   = {
             E("No wands", 1),
             E("Sword", 12, 33),
+            E("Dark cowl", 25),
             E("Armored weapon/off-hand", 34),
             E("140 stamina", 40),
             E("Armored rings", 45),
